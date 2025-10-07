@@ -1,0 +1,32 @@
+{
+  "$schema": "../../src/promptcontracts/spec/schema/pcsl-ep.schema.json",
+  "pcsl": "0.1.0",
+  "targets": [
+    {
+      "type": "ollama",
+      "model": "mistral",
+      "params": {
+        "temperature": 0
+      }
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "pwd_reset",
+      "input": "User: My password doesn't work."
+    },
+    {
+      "id": "billing",
+      "input": "User: I was double charged last month."
+    }
+  ],
+  "tolerances": {
+    "pc.check.json_valid": {
+      "max_fail_rate": 0.0
+    },
+    "pc.check.enum": {
+      "max_fail_rate": 0.01
+    }
+  }
+}
+

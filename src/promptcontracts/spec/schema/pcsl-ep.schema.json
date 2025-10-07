@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://promptcontracts.org/schemas/pcsl-ep.schema.json",
+  "title": "PCSL Evaluation Profile",
+  "description": "Schema for Evaluation Profile (EP) artefacts",
+  "type": "object",
+  "required": ["pcsl", "targets", "fixtures"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "pcsl": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "PCSL version (SemVer)"
+    },
+    "targets": {
+      "type": "array",
+      "description": "Model/provider targets",
+      "items": {
+        "type": "object",
+        "required": ["type", "model"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["openai", "ollama"],
+            "description": "Provider type"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model identifier"
+          },
+          "params": {
+            "type": "object",
+            "description": "Provider-specific parameters"
+          }
+        }
+      }
+    },
+    "fixtures": {
+      "type": "array",
+      "description": "Test input fixtures",
+      "items": {
+        "type": "object",
+        "required": ["id", "input"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Fixture identifier"
+          },
+          "input": {
+            "type": "string",
+            "description": "Input text"
+          }
+        }
+      }
+    },
+    "tolerances": {
+      "type": "object",
+      "description": "Map of check type to tolerance thresholds",
+      "patternProperties": {
+        ".*": {
+          "type": "object",
+          "properties": {
+            "max_fail_rate": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "Maximum acceptable failure rate (0.0-1.0)"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

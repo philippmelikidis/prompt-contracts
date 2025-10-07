@@ -1,0 +1,11 @@
+{
+  "$schema": "../../src/promptcontracts/spec/schema/pcsl-pd.schema.json",
+  "pcsl": "0.1.0",
+  "id": "support.ticket.classify.v1",
+  "io": {
+    "channel": "text",
+    "expects": "structured/json"
+  },
+  "prompt": "You are a support classifier. Reply ONLY with strict JSON with fields {category, priority, reason}. Do not use markdown formatting."
+}
+

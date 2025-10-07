@@ -1,0 +1,12 @@
+pcsl: "0.1.0"
+id: "simple.yaml.example"
+io:
+  channel: text
+  expects: structured/json
+prompt: |
+  You are a support bot. Classify the following ticket:
+  "My password doesn't work."
+  
+  Respond only with JSON in this exact format:
+  { "category": string, "priority": low|medium|high, "reason": string }
+
