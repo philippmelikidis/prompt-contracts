@@ -2,8 +2,8 @@
 
 import time
 import httpx
-from typing import Tuple
-from .base import AbstractAdapter
+from typing import Tuple, Optional, Dict, Any
+from .base import AbstractAdapter, Capability
 
 
 class OllamaAdapter(AbstractAdapter):
@@ -13,16 +13,26 @@ class OllamaAdapter(AbstractAdapter):
         super().__init__(model, params)
         self.base_url = base_url
     
-    def generate(self, prompt: str) -> Tuple[str, int]:
+    def capabilities(self) -> Capability:
+        """Return Ollama capabilities (no schema enforcement)."""
+        return Capability(
+            schema_guided_json=False,
+            tool_calling=False,
+            function_call_json=False
+        )
+    
+    def generate(self, prompt: str, schema: Optional[Dict[str, Any]] = None) -> Tuple[str, int]:
         """
         Generate response using Ollama API.
         
         Args:
             prompt: The prompt text
+            schema: Optional JSON schema (ignored by Ollama)
         
         Returns:
             (response_text, latency_ms)
         """
+        # Note: Ollama doesn't support schema-guided generation, so schema is ignored
         start_time = time.time()
         
         # Build request payload

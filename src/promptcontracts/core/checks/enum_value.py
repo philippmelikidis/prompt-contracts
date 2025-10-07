@@ -10,7 +10,10 @@ def enum_check(response_text: str, check_spec: Dict[str, Any], parsed_json: Any 
     
     Args:
         response_text: Raw response text
-        check_spec: Check configuration with 'field' (JSONPath) and 'allowed' array
+        check_spec: Check configuration with:
+            - 'field' (JSONPath)
+            - 'allowed' array
+            - 'case_insensitive' (optional bool, default False)
         parsed_json: Pre-parsed JSON object
     
     Returns:
@@ -21,6 +24,7 @@ def enum_check(response_text: str, check_spec: Dict[str, Any], parsed_json: Any 
     
     field_path = check_spec.get('field', '$')
     allowed_values = check_spec.get('allowed', [])
+    case_insensitive = check_spec.get('case_insensitive', False)
     
     try:
         jsonpath_expr = parse(field_path)
@@ -32,10 +36,22 @@ def enum_check(response_text: str, check_spec: Dict[str, Any], parsed_json: Any 
         # Check first match (typically there's only one)
         actual_value = matches[0].value
         
-        if actual_value in allowed_values:
-            return True, f"Value '{actual_value}' is in allowed values {allowed_values}", None
+        # Perform comparison
+        if case_insensitive and isinstance(actual_value, str):
+            # Case-insensitive comparison
+            actual_lower = actual_value.lower()
+            allowed_lower = [v.lower() if isinstance(v, str) else v for v in allowed_values]
+            
+            if actual_lower in allowed_lower:
+                return True, f"Value '{actual_value}' is in allowed values {allowed_values} (case-insensitive)", None
+            else:
+                return False, f"Value '{actual_value}' not in allowed values {allowed_values} (case-insensitive)", None
         else:
-            return False, f"Value '{actual_value}' not in allowed values {allowed_values}", None
+            # Case-sensitive comparison
+            if actual_value in allowed_values:
+                return True, f"Value '{actual_value}' is in allowed values {allowed_values}", None
+            else:
+                return False, f"Value '{actual_value}' not in allowed values {allowed_values}", None
             
     except Exception as e:
         return False, f"Error evaluating JSONPath '{field_path}': {e}", None

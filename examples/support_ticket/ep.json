@@ -27,6 +27,14 @@
     "pc.check.enum": {
       "max_fail_rate": 0.01
     }
+  },
+  "execution": {
+    "mode": "assist",
+    "max_retries": 1,
+    "auto_repair": {
+      "lowercase_fields": ["$.priority"],
+      "strip_markdown_fences": true
+    }
   }
 }
 

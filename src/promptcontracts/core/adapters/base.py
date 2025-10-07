@@ -1,7 +1,14 @@
 """Base adapter interface."""
 
 from abc import ABC, abstractmethod
-from typing import Tuple, Dict, Any
+from typing import Tuple, Dict, Any, Optional, NamedTuple
+
+
+class Capability(NamedTuple):
+    """Adapter capabilities."""
+    schema_guided_json: bool = False
+    tool_calling: bool = False
+    function_call_json: bool = False
 
 
 class AbstractAdapter(ABC):
@@ -18,13 +25,23 @@ class AbstractAdapter(ABC):
         self.model = model
         self.params = params or {}
     
+    def capabilities(self) -> Capability:
+        """
+        Return adapter capabilities.
+        
+        Returns:
+            Capability tuple with supported features
+        """
+        return Capability()
+    
     @abstractmethod
-    def generate(self, prompt: str) -> Tuple[str, int]:
+    def generate(self, prompt: str, schema: Optional[Dict[str, Any]] = None) -> Tuple[str, int]:
         """
         Generate a response from the LLM.
         
         Args:
             prompt: The prompt text
+            schema: Optional JSON schema for schema-guided generation (if supported)
         
         Returns:
             (response_text, latency_ms)

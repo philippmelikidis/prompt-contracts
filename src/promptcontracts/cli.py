@@ -50,10 +50,14 @@ def run_command(args):
         print(f"✓ Loaded PD: {args.pd}")
         print(f"✓ Loaded ES: {args.es}")
         print(f"✓ Loaded EP: {args.ep}")
+        
+        if args.save_io:
+            print(f"✓ Artifacts will be saved to: {args.save_io}")
+        
         print()
         
         # Run contract
-        runner = ContractRunner(pd, es, ep)
+        runner = ContractRunner(pd, es, ep, save_io_dir=args.save_io)
         results = runner.run()
         
         # Report results
@@ -108,6 +112,7 @@ def main():
     run_parser.add_argument('--ep', required=True, help='Path to Evaluation Profile')
     run_parser.add_argument('--report', choices=['cli', 'json', 'junit'], default='cli', help='Report format')
     run_parser.add_argument('--out', help='Output path for report (optional)')
+    run_parser.add_argument('--save-io', dest='save_io', help='Directory to save IO artifacts')
     
     args = parser.parse_args()
     
