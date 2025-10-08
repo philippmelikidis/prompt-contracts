@@ -1,0 +1,63 @@
+{
+  "pcsl_version": "0.2.0",
+  "target": "ollama:mistral",
+  "execution": {
+    "requested_mode": "assist",
+    "effective_mode": "assist",
+    "max_retries": 1,
+    "strict_enforce": false
+  },
+  "latency_ms": 1870,
+  "retries_used": 1,
+  "status": "FAIL",
+  "repair_details": {
+    "stripped_fences": true,
+    "lowercased_fields": [
+      "$.priority"
+    ]
+  },
+  "checks": [
+    {
+      "type": "pc.check.json_valid",
+      "passed": true,
+      "message": "Response is valid JSON",
+      "data": {
+        "category": "Billing",
+        "priority": "high",
+        "reason": "User was double charged last month"
+      }
+    },
+    {
+      "type": "pc.check.json_required",
+      "passed": true,
+      "message": "All required fields present: ['category', 'priority', 'reason']",
+      "data": null
+    },
+    {
+      "type": "pc.check.enum",
+      "passed": true,
+      "message": "Value 'high' is in allowed values ['low', 'medium', 'high'] (case-insensitive)",
+      "data": null
+    },
+    {
+      "type": "pc.check.regex_absent",
+      "passed": true,
+      "message": "Pattern '```' not found (as expected)",
+      "data": null
+    },
+    {
+      "type": "pc.check.token_budget",
+      "passed": true,
+      "message": "Token count ~6 <= 200",
+      "data": 6
+    },
+    {
+      "type": "pc.check.latency_budget",
+      "passed": false,
+      "message": "No latency data available",
+      "data": null
+    }
+  ],
+  "prompt_hash": "5a1153becb676a5bb8517a11f8b7e545152759cf743b6de0343183e17b6069b6",
+  "timestamp": "2025-10-08T15:24:47.553485"
+}

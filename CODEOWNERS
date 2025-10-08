@@ -1,0 +1,18 @@
+# Code owners for prompt-contracts
+# These owners will be automatically requested for review when someone opens a pull request.
+
+# Default owners for everything in the repo
+* @PhilipposMelikidis
+
+# PCSL Specification (requires careful review)
+/src/promptcontracts/spec/ @PhilipposMelikidis
+
+# JSON Schemas (breaking changes require approval)
+/src/promptcontracts/spec/schema/ @PhilipposMelikidis
+
+# Core runner and validation logic
+/src/promptcontracts/core/ @PhilipposMelikidis
+
+# GitHub workflows and CI
+/.github/ @PhilipposMelikidis
+

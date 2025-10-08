@@ -1,0 +1,5 @@
+ {
+  "category": "Billing",
+  "priority": "high",
+  "reason": "User was double charged last month"
+}

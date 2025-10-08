@@ -1,5 +1,11 @@
 # Prompt Contracts
 
+[![CI](https://github.com/PhilipposMelikidis/prompt-contracts/actions/workflows/ci.yml/badge.svg)](https://github.com/PhilipposMelikidis/prompt-contracts/actions/workflows/ci.yml)
+[![PyPI version](https://badge.fury.io/py/prompt-contracts.svg)](https://badge.fury.io/py/prompt-contracts)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 **Test your LLM prompts like code.**
 
 Prompt-Contracts is a specification and toolkit that brings contract testing to LLM prompt interactions. When models drift due to provider updates, parameter changes, or switches to local models, integrations can silently break. This framework enables structural, semantic, and behavioral validation of LLM responses.
