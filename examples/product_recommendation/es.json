@@ -1,0 +1,35 @@
+{
+  "$schema": "../../src/promptcontracts/spec/schema/pcsl-es.schema.json",
+  "pcsl": "0.1.0",
+  "checks": [
+    {
+      "type": "pc.check.json_valid"
+    },
+    {
+      "type": "pc.check.json_required",
+      "fields": ["products", "confidence_score", "reasoning"]
+    },
+    {
+      "type": "pc.check.enum",
+      "field": "$.products[*].category",
+      "allowed": ["electronics", "clothing", "books", "home", "sports", "beauty"]
+    },
+    {
+      "type": "pc.check.enum",
+      "field": "$.products[*].price_range",
+      "allowed": ["budget", "mid-range", "premium", "luxury"]
+    },
+    {
+      "type": "pc.check.regex_absent",
+      "pattern": "```"
+    },
+    {
+      "type": "pc.check.token_budget",
+      "max_out": 500
+    },
+    {
+      "type": "pc.check.latency_budget",
+      "p95_ms": 4000
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "../../src/promptcontracts/spec/schema/pcsl-pd.schema.json",
+  "pcsl": "0.1.0",
+  "id": "email.classification.v1",
+  "io": {
+    "channel": "text",
+    "expects": "structured/json"
+  },
+  "prompt": "You are an email classification assistant. Analyze the following email and classify it into the appropriate category. Respond ONLY with valid JSON containing the fields: category, urgency, sentiment, and summary. Do not use markdown formatting or code fences."
+}
