@@ -40,4 +40,3 @@ class CheckFailure(PromptContractsError):
         self.check_type = check_type
         self.details = details or {}
         super().__init__(f"Check '{check_type}' failed: {message}")
-

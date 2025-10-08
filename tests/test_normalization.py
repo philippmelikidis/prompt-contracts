@@ -2,9 +2,9 @@
 
 import pytest
 from promptcontracts.utils.normalization import (
-    strip_code_fences,
     lowercase_jsonpath_fields,
     normalize_output,
+    strip_code_fences,
 )
 
 
@@ -67,7 +67,7 @@ class TestLowercaseJsonpathFields:
 
     def test_invalid_json(self):
         """Test invalid JSON returns unchanged."""
-        json_text = 'not valid json'
+        json_text = "not valid json"
         result, modified = lowercase_jsonpath_fields(json_text, ["$.priority"])
         assert result == json_text
         assert len(modified) == 0
@@ -93,12 +93,9 @@ class TestNormalizeOutput:
     def test_normalize_with_fences_and_lowercase(self):
         """Test normalization with both fences and lowercase."""
         raw_text = '```json\n{"priority": "HIGH", "reason": "urgent"}\n```'
-        config = {
-            "strip_markdown_fences": True,
-            "lowercase_fields": ["$.priority"]
-        }
+        config = {"strip_markdown_fences": True, "lowercase_fields": ["$.priority"]}
         result, details = normalize_output(raw_text, config)
-        
+
         assert '{"priority": "high"' in result
         assert details["stripped_fences"] is True
         assert "$.priority" in details["lowercased_fields"]
@@ -108,7 +105,7 @@ class TestNormalizeOutput:
         raw_text = '```\n{"key": "value"}\n```'
         config = {"strip_markdown_fences": True}
         result, details = normalize_output(raw_text, config)
-        
+
         assert result == '{"key": "value"}'
         assert details["stripped_fences"] is True
         assert len(details["lowercased_fields"]) == 0
@@ -116,12 +113,9 @@ class TestNormalizeOutput:
     def test_normalize_lowercase_only(self):
         """Test normalization with only lowercase."""
         raw_text = '{"priority": "HIGH"}'
-        config = {
-            "strip_markdown_fences": False,
-            "lowercase_fields": ["$.priority"]
-        }
+        config = {"strip_markdown_fences": False, "lowercase_fields": ["$.priority"]}
         result, details = normalize_output(raw_text, config)
-        
+
         assert '"priority": "high"' in result
         assert details["stripped_fences"] is False
         assert "$.priority" in details["lowercased_fields"]
@@ -129,12 +123,9 @@ class TestNormalizeOutput:
     def test_normalize_no_changes(self):
         """Test normalization with no actual changes."""
         raw_text = '{"priority": "low"}'
-        config = {
-            "strip_markdown_fences": True,
-            "lowercase_fields": ["$.priority"]
-        }
+        config = {"strip_markdown_fences": True, "lowercase_fields": ["$.priority"]}
         result, details = normalize_output(raw_text, config)
-        
+
         assert result == raw_text
         assert details["stripped_fences"] is False
         assert len(details["lowercased_fields"]) == 0
@@ -144,8 +135,7 @@ class TestNormalizeOutput:
         raw_text = '```json\n{"key": "VALUE"}\n```'
         config = {}
         result, details = normalize_output(raw_text, config)
-        
+
         # Default is to strip fences
         assert result == '{"key": "VALUE"}'
         assert details["stripped_fences"] is True
-

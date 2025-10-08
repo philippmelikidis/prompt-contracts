@@ -60,3 +60,21 @@ run-example:  ## Run example contract
 pre-commit:  ## Run pre-commit hooks on all files
 	pre-commit run --all-files
 
+release-check:  ## Run all release checks (tests, lint, build, validate)
+	@echo "🚀 Running release checks for v0.2.0..."
+	@echo ""
+	@echo "1️⃣  Running tests..."
+	@pytest -v --tb=short
+	@echo ""
+	@echo "2️⃣  Validating examples..."
+	@prompt-contracts validate pd examples/support_ticket/pd.json
+	@prompt-contracts validate es examples/support_ticket/es.json
+	@prompt-contracts validate ep examples/support_ticket/ep.json
+	@echo ""
+	@echo "3️⃣  Building package..."
+	@python -m build
+	@echo ""
+	@echo "4️⃣  Checking package..."
+	@twine check dist/*
+	@echo ""
+	@echo "✅ All checks passed! Ready to release."

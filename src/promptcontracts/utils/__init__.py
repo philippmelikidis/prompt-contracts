@@ -1,19 +1,15 @@
 """Utility modules for prompt-contracts."""
 
 from .errors import (
+    AdapterError,
+    CheckFailure,
+    ExecutionError,
     PromptContractsError,
     SpecValidationError,
-    AdapterError,
-    ExecutionError,
-    CheckFailure,
 )
-from .normalization import (
-    strip_code_fences,
-    lowercase_jsonpath_fields,
-    normalize_output,
-)
-from .retry import retry_with_backoff
 from .hashing import compute_prompt_hash
+from .normalization import lowercase_jsonpath_fields, normalize_output, strip_code_fences
+from .retry import retry_with_backoff
 from .timestamps import get_iso_timestamp
 
 __all__ = [
@@ -29,4 +25,3 @@ __all__ = [
     "compute_prompt_hash",
     "get_iso_timestamp",
 ]
-

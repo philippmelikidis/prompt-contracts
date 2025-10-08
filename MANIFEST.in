@@ -1,6 +1,6 @@
 # Include specification files
-include src/promptcontracts/spec/**/*.md
-include src/promptcontracts/spec/schema/*.json
+recursive-include src/promptcontracts/spec *.md
+recursive-include src/promptcontracts/spec/schema *.json
 
 # Include documentation
 include README.md
@@ -21,4 +21,3 @@ recursive-exclude * *.py[co]
 recursive-exclude * .DS_Store
 recursive-exclude tests *
 recursive-exclude .github *
-
