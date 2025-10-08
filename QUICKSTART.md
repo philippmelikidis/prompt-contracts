@@ -41,8 +41,6 @@ pip install prompt-contracts
 
 This is the easiest way to get started. The package and all dependencies will be installed automatically.
 
-> **Note:** Package will be available on PyPI after the first release (v0.2.1). Until then, use Option 2.
-
 ### Option 2: Install from Source (For Development)
 
 ```bash

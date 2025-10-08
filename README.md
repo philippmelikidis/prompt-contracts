@@ -115,9 +115,7 @@ Prompt-Contracts implements the **Prompt Contract Specification Language (PCSL)*
 pip install prompt-contracts
 ```
 
-> **Note:** Package will be available on PyPI after the first release (v0.2.1). Until then, install from source.
-
-**From source:**
+**From source (for development):**
 
 ```bash
 git clone https://github.com/philippmelikidis/prompt-contracts.git
