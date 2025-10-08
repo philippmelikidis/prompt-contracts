@@ -26,14 +26,14 @@ def load_json_or_yaml(path: str) -> dict[str, Any]:
         try:
             return json.loads(content)
         except json.JSONDecodeError as e:
-            raise ValueError(f"Invalid JSON in {path}: {e}")
+            raise ValueError(f"Invalid JSON in {path}: {e}") from e
 
     # Try YAML
     if path_obj.suffix.lower() in [".yaml", ".yml"]:
         try:
             return yaml.safe_load(content)
         except yaml.YAMLError as e:
-            raise ValueError(f"Invalid YAML in {path}: {e}")
+            raise ValueError(f"Invalid YAML in {path}: {e}") from e
 
     # Auto-detect: try JSON first, then YAML
     try:
@@ -42,7 +42,7 @@ def load_json_or_yaml(path: str) -> dict[str, Any]:
         try:
             return yaml.safe_load(content)
         except yaml.YAMLError as e:
-            raise ValueError(f"File is neither valid JSON nor YAML: {e}")
+            raise ValueError(f"File is neither valid JSON nor YAML: {e}") from e
 
 
 def _get_schema_path(schema_name: str) -> Path:
@@ -68,9 +68,9 @@ def _validate_against_schema(
         jsonschema.validate(instance=data, schema=schema)
     except jsonschema.ValidationError as e:
         error_msg = f"{e.message}\nPath: {'.'.join(str(p) for p in e.path)}"
-        raise SpecValidationError(artefact_type, path, error_msg)
+        raise SpecValidationError(artefact_type, path, error_msg) from e
     except jsonschema.SchemaError as e:
-        raise SpecValidationError(artefact_type, path, f"Schema error in {schema_name}: {e}")
+        raise SpecValidationError(artefact_type, path, f"Schema error in {schema_name}: {e}") from e
 
 
 def load_pd(path: str) -> dict[str, Any]:
