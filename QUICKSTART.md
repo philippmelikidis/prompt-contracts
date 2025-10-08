@@ -33,16 +33,19 @@ Get up and running with Prompt-Contracts in 5 minutes.
 
 ## Installation
 
-### Step 1: Install Dependencies
+### Option 1: Install from PyPI (Recommended)
 
 ```bash
-cd /Users/PhilipposMelikidis/Desktop/prompt-contracts
-pip install -r requirements.txt
+pip install prompt-contracts
 ```
 
-### Step 2: Install Package
+This is the easiest way to get started. The package and all dependencies will be installed automatically.
+
+### Option 2: Install from Source (For Development)
 
 ```bash
+git clone https://github.com/philippmelikidis/prompt-contracts.git
+cd prompt-contracts
 pip install -e .
 ```
 
@@ -341,11 +344,17 @@ View coverage report: `open htmlcov/index.html`
 ### Error: "Module not found: promptcontracts"
 
 **Solution:**
+
+If installed from PyPI:
 ```bash
-pip install -e .
+pip install --upgrade prompt-contracts
 ```
 
-Ensure you're running from the project root directory.
+If installed from source:
+```bash
+cd prompt-contracts
+pip install -e .
+```
 
 ### Error: "Connection refused" with Ollama
 
