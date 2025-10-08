@@ -47,6 +47,7 @@ class ContractRunner:
         execution = ep.get("execution", {})
         self.exec_mode = execution.get("mode", "auto")
         self.max_retries = execution.get("max_retries", 1)
+        self.strict_enforce = execution.get("strict_enforce", False)
         self.auto_repair_cfg = execution.get(
             "auto_repair", {"strip_markdown_fences": True, "lowercase_fields": []}
         )
@@ -83,8 +84,12 @@ class ContractRunner:
             if adapter_capabilities.schema_guided_json:
                 return "enforce", False
             else:
-                # Fallback to assist when enforce not supported
-                return "assist", True
+                # If strict_enforce is True, mark as NONENFORCEABLE
+                # Otherwise fallback to assist
+                if self.strict_enforce:
+                    return "enforce", True  # NONENFORCEABLE
+                else:
+                    return "assist", False  # Fallback to assist
 
         if requested_mode == "auto":
             if adapter_capabilities.schema_guided_json:

@@ -89,6 +89,11 @@
           "default": 1,
           "description": "Maximum number of retry attempts on validation failure"
         },
+        "strict_enforce": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true and mode=enforce but not supported, mark NONENFORCEABLE instead of falling back"
+        },
         "auto_repair": {
           "type": "object",
           "description": "Auto-repair configuration for output normalization",
