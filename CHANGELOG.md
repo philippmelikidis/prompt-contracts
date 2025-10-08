@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2025-01-08
+
+### Added
+- **BEST_PRACTICES.md**: Comprehensive production guide covering:
+  - Contract design principles
+  - Execution mode selection strategies
+  - Writing effective prompts
+  - Designing expectation suites
+  - Fixture strategies
+  - Auto-repair configuration
+  - Tolerance tuning
+  - Production deployment patterns
+  - Testing & CI/CD integration
+  - Monitoring & observability
+  - Common pitfalls and solutions
+  - 3 real-world examples (content moderation, financial transactions, sentiment analysis)
+- New comprehensive examples:
+  - `email_classification/`: All 4 execution modes with sentiment analysis
+  - `product_recommendation/`: Personalized product recommendations
+- Enhanced documentation:
+  - Detailed execution modes explanation in README.md
+  - Comprehensive mode comparison in QUICKSTART.md
+  - Complete examples overview in examples/README.md
+  - All documentation translated to English
+
+### Changed
+- Improved README.md structure with Examples section
+- Enhanced QUICKSTART.md with detailed mode guides, decision trees, and production recommendations
+- Updated Table of Contents to include Best Practices guide
+
+### Documentation
+- All documentation now in English for international audience
+- Professional production-ready guidance
+- Real-world use case examples
+
+## [0.2.1] - 2025-01-07
+
 ### Added
 - Public Python API: `run_contract()` and `validate_artifact()`
 - Execution modes: `observe`, `assist`, `enforce`, `auto` with capability negotiation
@@ -26,7 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive utility modules (errors, normalization, retry, hashing, timestamps)
 
 ### Changed
-- Version bumped to 0.2.0
+- Version bumped to 0.2.1
 - Refactored package structure with `utils/` module
 - Enhanced EP schema to support `execution` configuration
 - Improved adapter interface with `capabilities()` method
@@ -74,4 +111,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [Unreleased]: https://github.com/PhilipposMelikidis/prompt-contracts/compare/v0.1.0...HEAD
 - [0.1.0]: https://github.com/PhilipposMelikidis/prompt-contracts/releases/tag/v0.1.0
-

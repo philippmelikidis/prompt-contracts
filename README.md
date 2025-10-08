@@ -12,16 +12,15 @@ Prompt-Contracts is a specification and toolkit that brings contract testing to 
 
 ---
 
-## What's New in v0.2.1
+## What's New in v0.2.2
 
-🎉 **Production-Ready Release** with enterprise-grade features:
+📘 **Documentation & Examples Release** - Production-ready guidance:
 
-- **🔒 Strict Enforcement Mode**: New `strict_enforce` flag prevents silent fallback when schema-guided JSON is unavailable
-- **🔄 Enhanced Mode Negotiation**: Improved auto-mode with intelligent capability detection and proper NONENFORCEABLE status
-- **🧹 Better Artifact Management**: Cleaned up repository structure, proper .gitignore for artifacts and temp files
-- **✅ Full Test Coverage**: 47 tests passing with comprehensive coverage of execution modes, normalization, and retry logic
-- **📦 PyPI Published**: Now available via `pip install prompt-contracts`
-- **🏗️ Production Stability**: All v0.2.0 features verified and tested in production scenarios
+- **📚 Best Practices Guide**: Comprehensive [BEST_PRACTICES.md](BEST_PRACTICES.md) covering contract design, execution modes, fixtures, auto-repair, CI/CD, and production deployment
+- **🎯 New Examples**: Email classification (all 4 modes) and product recommendations
+- **🌍 English Documentation**: Complete translation of all docs for international audience
+- **📖 Enhanced Guides**: Detailed execution mode explanations, decision trees, and real-world examples
+- **✨ 3 Real-World Examples**: Content moderation, financial transactions, and sentiment analysis patterns
 
 ---
 
@@ -34,11 +33,13 @@ Prompt-Contracts is a specification and toolkit that brings contract testing to 
   - [Artefact Types](#artefact-types)
   - [Execution Modes](#execution-modes)
   - [Status Codes](#status-codes)
+- [Examples](#examples)
 - [Installation](#installation)
 - [Usage](#usage)
   - [CLI Commands](#cli-commands)
   - [Execution Configuration](#execution-configuration)
   - [Artifact Saving](#artifact-saving)
+- [Best Practices](BEST_PRACTICES.md) 📘
 - [PCSL Specification](#pcsl-specification)
   - [Conformance Levels](#conformance-levels)
   - [Built-in Checks](#built-in-checks)
@@ -1077,8 +1078,10 @@ See LICENSE file for details.
 
 ## Support
 
-- **Documentation:** See `QUICKSTART.md` for getting started guide
+- **Documentation:** See [QUICKSTART.md](QUICKSTART.md) for getting started guide
+- **Best Practices:** Read [BEST_PRACTICES.md](BEST_PRACTICES.md) for production guidance
 - **Specification:** Read `src/promptcontracts/spec/pcsl-v0.1.md` for detailed spec
+- **Examples:** Explore [examples/](examples/) for real-world use cases
 - **Issues:** Report bugs and request features via GitHub Issues
 - **Discussions:** Join community discussions on GitHub Discussions
 
