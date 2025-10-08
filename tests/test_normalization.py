@@ -1,6 +1,7 @@
 """Tests for output normalization utilities."""
 
 import pytest
+
 from promptcontracts.utils.normalization import (
     lowercase_jsonpath_fields,
     normalize_output,
