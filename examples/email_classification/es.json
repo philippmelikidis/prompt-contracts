@@ -1,0 +1,40 @@
+{
+  "$schema": "../../src/promptcontracts/spec/schema/pcsl-es.schema.json",
+  "pcsl": "0.1.0",
+  "checks": [
+    {
+      "type": "pc.check.json_valid"
+    },
+    {
+      "type": "pc.check.json_required",
+      "fields": ["category", "urgency", "sentiment", "summary"]
+    },
+    {
+      "type": "pc.check.enum",
+      "field": "$.category",
+      "allowed": ["business", "personal", "spam", "support", "marketing"]
+    },
+    {
+      "type": "pc.check.enum",
+      "field": "$.urgency",
+      "allowed": ["low", "medium", "high", "critical"]
+    },
+    {
+      "type": "pc.check.enum",
+      "field": "$.sentiment",
+      "allowed": ["positive", "neutral", "negative"]
+    },
+    {
+      "type": "pc.check.regex_absent",
+      "pattern": "```"
+    },
+    {
+      "type": "pc.check.token_budget",
+      "max_out": 300
+    },
+    {
+      "type": "pc.check.latency_budget",
+      "p95_ms": 3000
+    }
+  ]
+}

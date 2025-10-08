@@ -1,0 +1,10 @@
+{
+  "$schema": "../../src/promptcontracts/spec/schema/pcsl-pd.schema.json",
+  "pcsl": "0.1.0",
+  "id": "product.recommendation.v1",
+  "io": {
+    "channel": "text",
+    "expects": "structured/json"
+  },
+  "prompt": "You are a product recommendation engine. Based on the user's preferences and requirements, recommend suitable products. Respond ONLY with valid JSON containing: products (array of product objects), confidence_score (0-1), reasoning (string). Each product should have: name, category, price_range, features (array). Do not use markdown formatting."
+}

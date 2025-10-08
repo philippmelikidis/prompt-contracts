@@ -1,0 +1,53 @@
+{
+  "$schema": "../../src/promptcontracts/spec/schema/pcsl-ep.schema.json",
+  "pcsl": "0.1.0",
+  "targets": [
+    {
+      "type": "ollama",
+      "model": "mistral",
+      "params": {
+        "temperature": 0.1
+      }
+    },
+    {
+      "type": "openai",
+      "model": "gpt-3.5-turbo",
+      "params": {
+        "temperature": 0.1
+      }
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "business_email",
+      "input": "Subject: Quarterly Review Meeting\n\nHi Team,\n\nI hope everyone is doing well. I'd like to schedule our quarterly review meeting for next week. Please let me know your availability.\n\nBest regards,\nJohn"
+    },
+    {
+      "id": "support_request",
+      "input": "Subject: URGENT - System Down\n\nOur production system is completely down and customers can't access our services. This is affecting thousands of users. Please help immediately!\n\nThanks,\nSarah"
+    },
+    {
+      "id": "spam_email",
+      "input": "Subject: WIN $1000 NOW!!!\n\nCongratulations! You've won $1000! Click here to claim your prize: http://fake-link.com\n\nAct now before it's too late!"
+    }
+  ],
+  "tolerances": {
+    "pc.check.json_valid": {
+      "max_fail_rate": 0.0
+    },
+    "pc.check.enum": {
+      "max_fail_rate": 0.05
+    },
+    "pc.check.token_budget": {
+      "max_fail_rate": 0.1
+    }
+  },
+  "execution": {
+    "mode": "auto",
+    "max_retries": 2,
+    "auto_repair": {
+      "lowercase_fields": ["$.category", "$.urgency", "$.sentiment"],
+      "strip_markdown_fences": true
+    }
+  }
+}

@@ -259,29 +259,183 @@ Defines execution context: models, test fixtures, and tolerance thresholds.
 
 ### Execution Modes
 
+Prompt-Contracts bietet vier Execution Modes mit unterschiedlichen Strategien zur Sicherstellung der Output-Qualität:
+
 #### observe (Validation Only)
-- No modifications to prompts or outputs
-- Pure validation against expectation suite
-- Status: PASS or FAIL only
+**Zweck:** Reine Validierung ohne jegliche Modifikationen
+**Verhalten:** Führt keine Änderungen am Prompt oder Output durch
+**Status-Codes:** PASS oder FAIL
+**Verwendung:** Monitoring, Testing, Baseline-Messungen
+
+```json
+{
+  "execution": {
+    "mode": "observe",
+    "max_retries": 0
+  }
+}
+```
+
+**Beispiel:**
+```bash
+prompt-contracts run \
+  --pd examples/email_classification/pd.json \
+  --es examples/email_classification/es.json \
+  --ep examples/email_classification/ep_observe.json
+```
 
 #### assist (Prompt Augmentation)
-- Automatically augments prompts with constraint blocks
-- Example: enum check generates "priority MUST be one of: low, medium, high"
-- Supports bounded retries with auto-repair
-- Status: PASS, REPAIRED, or FAIL
+**Zweck:** Automatische Verbesserung des Prompts mit Constraints
+**Verhalten:** Fügt automatisch generierte Constraint-Blöcke zum Prompt hinzu
+**Status-Codes:** PASS, REPAIRED, oder FAIL
+**Verwendung:** Produktionssysteme mit Retry-Logik
+
+Die `assist`-Mode reichert den Prompt automatisch mit strukturellen Anforderungen an:
+
+**Original Prompt:**
+```
+You are a support classifier. Reply with JSON containing category, priority, reason.
+```
+
+**Augmentierter Prompt (automatisch):**
+```
+You are a support classifier. Reply with JSON containing category, priority, reason.
+
+CONSTRAINTS:
+- Response MUST be valid JSON
+- Required fields: category, priority, reason
+- Field "priority" MUST be one of: low, medium, high
+- Do NOT use markdown code fences (```)
+```
+
+**Konfiguration:**
+```json
+{
+  "execution": {
+    "mode": "assist",
+    "max_retries": 2,
+    "auto_repair": {
+      "lowercase_fields": ["$.priority", "$.category"],
+      "strip_markdown_fences": true
+    }
+  }
+}
+```
+
+**Auto-Repair Capabilities:**
+- `strip_markdown_fences`: Entfernt ```json und ``` aus Responses
+- `lowercase_fields`: Normalisiert Felder zu lowercase (z.B. "High" → "high")
+
+**Beispiel:**
+```bash
+prompt-contracts run \
+  --pd examples/email_classification/pd.json \
+  --es examples/email_classification/es.json \
+  --ep examples/email_classification/ep_assist.json \
+  --save-io artifacts/
+```
 
 #### enforce (Schema-Guided JSON)
-- Uses adapter capabilities for schema-guided generation
-- Derives JSON Schema from expectation suite
-- OpenAI: Uses `response_format` with structured outputs
-- Falls back to assist if adapter doesn't support enforcement
-- Status: PASS, REPAIRED, FAIL, or NONENFORCEABLE
+**Zweck:** Nutzt Provider-Capabilities für garantierte JSON-Struktur
+**Verhalten:** Generiert JSON Schema aus ES und nutzt `response_format` (OpenAI)
+**Status-Codes:** PASS, REPAIRED, FAIL, oder NONENFORCEABLE
+**Verwendung:** Maximale Struktursicherheit mit unterstützenden Providern
+
+Der `enforce`-Modus nutzt native Provider-Features wie OpenAI's Structured Outputs:
+
+**Automatisch generiertes JSON Schema:**
+```json
+{
+  "type": "object",
+  "properties": {
+    "category": { "type": "string", "enum": ["business", "personal", "spam", "support", "marketing"] },
+    "priority": { "type": "string", "enum": ["low", "medium", "high"] },
+    "reason": { "type": "string" }
+  },
+  "required": ["category", "priority", "reason"],
+  "additionalProperties": false
+}
+```
+
+**Konfiguration:**
+```json
+{
+  "execution": {
+    "mode": "enforce",
+    "max_retries": 1,
+    "strict_enforce": false
+  }
+}
+```
+
+**Adapter-Unterstützung:**
+- ✅ **OpenAI**: Volle Unterstützung via `response_format`
+- ⚠️ **Ollama**: Fallback zu `assist` (keine Schema-Enforcement)
+- ⚠️ **Andere**: Capability-basierter Fallback
+
+**strict_enforce Flag:**
+- `false` (default): Silent fallback zu `assist` wenn Schema nicht unterstützt
+- `true`: Gibt NONENFORCEABLE Status zurück statt Fallback
+
+**Beispiel:**
+```bash
+prompt-contracts run \
+  --pd examples/email_classification/pd.json \
+  --es examples/email_classification/es.json \
+  --ep examples/email_classification/ep_enforce.json
+```
 
 #### auto (Adaptive)
-- Intelligently selects best mode based on adapter capabilities
-- Fallback chain: enforce → assist → observe
-- Default mode for maximum compatibility
-- Maximizes enforcement while maintaining broad support
+**Zweck:** Intelligente Auswahl des besten Modus basierend auf Capabilities
+**Verhalten:** Fallback-Kette: enforce → assist → observe
+**Status-Codes:** Abhängig vom gewählten Modus
+**Verwendung:** Standard-Modus für maximale Kompatibilität
+
+Der `auto`-Modus wählt automatisch den besten verfügbaren Modus:
+
+**Fallback-Logik:**
+1. Prüft Adapter-Capabilities
+2. Wenn `schema_guided_json=true` → verwendet `enforce`
+3. Sonst → verwendet `assist`
+4. Bei Fehlern → fallback zu `observe`
+
+**Konfiguration:**
+```json
+{
+  "execution": {
+    "mode": "auto",
+    "max_retries": 2,
+    "auto_repair": {
+      "lowercase_fields": ["$.priority"],
+      "strip_markdown_fences": true
+    }
+  }
+}
+```
+
+**Beispiel mit Multi-Provider:**
+```json
+{
+  "targets": [
+    { "type": "openai", "model": "gpt-4o-mini" },
+    { "type": "ollama", "model": "mistral" }
+  ],
+  "execution": { "mode": "auto" }
+}
+```
+
+**Resultat:**
+- OpenAI → verwendet `enforce` (hat schema_guided_json)
+- Ollama → verwendet `assist` (kein schema_guided_json)
+
+**Beispiel:**
+```bash
+prompt-contracts run \
+  --pd examples/email_classification/pd.json \
+  --es examples/email_classification/es.json \
+  --ep examples/email_classification/ep_auto.json \
+  --report cli
+```
 
 ### Status Codes
 
@@ -295,6 +449,78 @@ Defines execution context: models, test fixtures, and tolerance thresholds.
 - **GREEN**: All fixtures passed without repairs
 - **YELLOW**: Some fixtures repaired or marked nonenforceable
 - **RED**: One or more fixtures failed validation
+
+---
+
+## Examples
+
+Das Repository enthält mehrere vollständige Beispiele, die verschiedene Use Cases und Execution Modes demonstrieren:
+
+### Support Ticket Classification
+**Verzeichnis:** `examples/support_ticket/`
+**Use Case:** Klassifizierung von Support-Anfragen
+**Mode:** `assist`
+**Provider:** Ollama (Mistral)
+
+```bash
+prompt-contracts run \
+  --pd examples/support_ticket/pd.json \
+  --es examples/support_ticket/es.json \
+  --ep examples/support_ticket/ep.json \
+  --report cli
+```
+
+### Email Classification
+**Verzeichnis:** `examples/email_classification/`
+**Use Case:** E-Mail-Kategorisierung mit Sentiment-Analyse
+**Modes:** Alle vier Modi (`observe`, `assist`, `enforce`, `auto`)
+**Provider:** Ollama / OpenAI
+
+**Test mit verschiedenen Modi:**
+```bash
+# Observe Mode - Nur Validierung
+prompt-contracts run \
+  --pd examples/email_classification/pd.json \
+  --es examples/email_classification/es.json \
+  --ep examples/email_classification/ep_observe.json
+
+# Assist Mode - Mit Prompt-Augmentation
+prompt-contracts run \
+  --pd examples/email_classification/pd.json \
+  --es examples/email_classification/es.json \
+  --ep examples/email_classification/ep_assist.json
+
+# Enforce Mode - Schema-guided (OpenAI)
+prompt-contracts run \
+  --pd examples/email_classification/pd.json \
+  --es examples/email_classification/es.json \
+  --ep examples/email_classification/ep_enforce.json
+
+# Auto Mode - Adaptiv
+prompt-contracts run \
+  --pd examples/email_classification/pd.json \
+  --es examples/email_classification/es.json \
+  --ep examples/email_classification/ep_auto.json
+```
+
+### Product Recommendation
+**Verzeichnis:** `examples/product_recommendation/`
+**Use Case:** Personalisierte Produktempfehlungen
+**Mode:** `assist`
+**Provider:** Ollama (Mistral)
+
+```bash
+prompt-contracts run \
+  --pd examples/product_recommendation/pd.json \
+  --es examples/product_recommendation/es.json \
+  --ep examples/product_recommendation/ep.json \
+  --save-io artifacts/product_recs/
+```
+
+### Simple YAML Example
+**Verzeichnis:** `examples/simple_yaml/`
+**Use Case:** Minimales Beispiel in YAML-Format
+**Format:** YAML (wird zu JSON konvertiert)
 
 ---
 

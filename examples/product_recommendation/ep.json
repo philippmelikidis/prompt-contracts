@@ -1,0 +1,46 @@
+{
+  "$schema": "../../src/promptcontracts/spec/schema/pcsl-ep.schema.json",
+  "pcsl": "0.1.0",
+  "targets": [
+    {
+      "type": "ollama",
+      "model": "mistral",
+      "params": {
+        "temperature": 0.2
+      }
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "tech_savvy_user",
+      "input": "User Profile: Tech-savvy professional, budget: $500-1000, interested in: smartphones, laptops, smart home devices. Looking for latest technology with good value for money."
+    },
+    {
+      "id": "fitness_enthusiast",
+      "input": "User Profile: Fitness enthusiast, budget: $200-500, interested in: workout gear, sports equipment, health supplements. Prefers quality over quantity."
+    },
+    {
+      "id": "book_lover",
+      "input": "User Profile: Book lover and student, budget: $50-150, interested in: books, e-readers, study materials. Looking for educational and entertainment content."
+    }
+  ],
+  "tolerances": {
+    "pc.check.json_valid": {
+      "max_fail_rate": 0.0
+    },
+    "pc.check.enum": {
+      "max_fail_rate": 0.1
+    },
+    "pc.check.token_budget": {
+      "max_fail_rate": 0.15
+    }
+  },
+  "execution": {
+    "mode": "assist",
+    "max_retries": 2,
+    "auto_repair": {
+      "lowercase_fields": ["$.products[*].category", "$.products[*].price_range"],
+      "strip_markdown_fences": true
+    }
+  }
+}
