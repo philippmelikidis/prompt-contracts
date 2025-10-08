@@ -12,6 +12,19 @@ Prompt-Contracts is a specification and toolkit that brings contract testing to 
 
 ---
 
+## What's New in v0.2.1
+
+🎉 **Production-Ready Release** with enterprise-grade features:
+
+- **🔒 Strict Enforcement Mode**: New `strict_enforce` flag prevents silent fallback when schema-guided JSON is unavailable
+- **🔄 Enhanced Mode Negotiation**: Improved auto-mode with intelligent capability detection and proper NONENFORCEABLE status
+- **🧹 Better Artifact Management**: Cleaned up repository structure, proper .gitignore for artifacts and temp files
+- **✅ Full Test Coverage**: 47 tests passing with comprehensive coverage of execution modes, normalization, and retry logic
+- **📦 PyPI Published**: Now available via `pip install prompt-contracts`
+- **🏗️ Production Stability**: All v0.2.0 features verified and tested in production scenarios
+
+---
+
 ## Table of Contents
 
 - [Overview](#overview)
@@ -195,14 +208,14 @@ Declares validation checks as properties that must hold for every execution.
   "pcsl": "0.1.0",
   "checks": [
     { "type": "pc.check.json_valid" },
-    { 
-      "type": "pc.check.json_required", 
-      "fields": ["category", "priority", "reason"] 
+    {
+      "type": "pc.check.json_required",
+      "fields": ["category", "priority", "reason"]
     },
-    { 
-      "type": "pc.check.enum", 
-      "field": "$.priority", 
-      "allowed": ["low", "medium", "high"] 
+    {
+      "type": "pc.check.enum",
+      "field": "$.priority",
+      "allowed": ["low", "medium", "high"]
     },
     { "type": "pc.check.regex_absent", "pattern": "```" },
     { "type": "pc.check.token_budget", "max_out": 200 },
@@ -462,9 +475,9 @@ Validates presence of required fields at root level.
 - `fields` (array): Required field names
 
 ```json
-{ 
-  "type": "pc.check.json_required", 
-  "fields": ["category", "priority", "reason"] 
+{
+  "type": "pc.check.json_required",
+  "fields": ["category", "priority", "reason"]
 }
 ```
 
@@ -477,9 +490,9 @@ Validates field value against allowed enumeration.
 - `case_insensitive` (boolean, optional): Case-insensitive comparison
 
 ```json
-{ 
-  "type": "pc.check.enum", 
-  "field": "$.priority", 
+{
+  "type": "pc.check.enum",
+  "field": "$.priority",
   "allowed": ["low", "medium", "high"],
   "case_insensitive": false
 }
@@ -587,7 +600,7 @@ class CustomAdapter(AbstractAdapter):
             tool_calling=False,
             function_call_json=False
         )
-    
+
     def generate(self, prompt: str, schema=None):
         # Implementation
         return response_text, latency_ms
@@ -829,7 +842,7 @@ PCSL and prompt-contracts follow Semantic Versioning:
 
 ## License
 
-**Code:** MIT License  
+**Code:** MIT License
 **Documentation:** CC-BY 4.0
 
 See LICENSE file for details.
