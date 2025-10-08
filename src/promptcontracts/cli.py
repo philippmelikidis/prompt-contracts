@@ -4,6 +4,7 @@ import sys
 import argparse
 from pathlib import Path
 
+from . import __version__
 from .core.loader import load_pd, load_es, load_ep, load_json_or_yaml
 from .core.runner import ContractRunner
 from .core.reporters import CLIReporter, JSONReporter, JUnitReporter
@@ -96,6 +97,12 @@ def main():
     parser = argparse.ArgumentParser(
         description='prompt-contracts: Test your LLM prompts like code',
         formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    
+    parser.add_argument(
+        '--version',
+        action='version',
+        version=f'prompt-contracts {__version__}'
     )
     
     subparsers = parser.add_subparsers(dest='command', help='Command to run')

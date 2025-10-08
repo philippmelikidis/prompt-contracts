@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Dict, Any
 import jsonschema
 
+from promptcontracts.utils.errors import SpecValidationError
+
 
 def load_json_or_yaml(path: str) -> Dict[str, Any]:
     """Load a file as JSON or YAML and return a dict."""
@@ -50,7 +52,7 @@ def _get_schema_path(schema_name: str) -> Path:
     return schema_dir / schema_name
 
 
-def _validate_against_schema(data: Dict[str, Any], schema_name: str, artefact_type: str):
+def _validate_against_schema(data: Dict[str, Any], schema_name: str, artefact_type: str, path: str = ""):
     """Validate data against a PCSL schema."""
     schema_path = _get_schema_path(schema_name)
     
@@ -62,28 +64,46 @@ def _validate_against_schema(data: Dict[str, Any], schema_name: str, artefact_ty
     try:
         jsonschema.validate(instance=data, schema=schema)
     except jsonschema.ValidationError as e:
-        raise ValueError(f"Invalid {artefact_type}: {e.message}\nPath: {'.'.join(str(p) for p in e.path)}")
+        error_msg = f"{e.message}\nPath: {'.'.join(str(p) for p in e.path)}"
+        raise SpecValidationError(artefact_type, path, error_msg)
     except jsonschema.SchemaError as e:
-        raise ValueError(f"Schema error in {schema_name}: {e}")
+        raise SpecValidationError(artefact_type, path, f"Schema error in {schema_name}: {e}")
 
 
 def load_pd(path: str) -> Dict[str, Any]:
     """Load and validate a Prompt Definition (PD)."""
     data = load_json_or_yaml(path)
-    _validate_against_schema(data, "pcsl-pd.schema.json", "Prompt Definition")
+    _validate_against_schema(data, "pcsl-pd.schema.json", "Prompt Definition", path)
     return data
 
 
 def load_es(path: str) -> Dict[str, Any]:
     """Load and validate an Expectation Suite (ES)."""
     data = load_json_or_yaml(path)
-    _validate_against_schema(data, "pcsl-es.schema.json", "Expectation Suite")
+    _validate_against_schema(data, "pcsl-es.schema.json", "Expectation Suite", path)
     return data
 
 
 def load_ep(path: str) -> Dict[str, Any]:
     """Load and validate an Evaluation Profile (EP)."""
     data = load_json_or_yaml(path)
-    _validate_against_schema(data, "pcsl-ep.schema.json", "Evaluation Profile")
+    _validate_against_schema(data, "pcsl-ep.schema.json", "Evaluation Profile", path)
+    
+    # Apply default values for execution config
+    if "execution" not in data:
+        data["execution"] = {}
+    
+    execution = data["execution"]
+    execution.setdefault("mode", "auto")
+    execution.setdefault("max_retries", 1)
+    execution.setdefault("strict_enforce", False)
+    
+    if "auto_repair" not in execution:
+        execution["auto_repair"] = {}
+    
+    auto_repair = execution["auto_repair"]
+    auto_repair.setdefault("strip_markdown_fences", True)
+    auto_repair.setdefault("lowercase_fields", [])
+    
     return data
 

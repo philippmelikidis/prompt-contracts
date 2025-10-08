@@ -6,6 +6,6 @@ User: I was double charged last month.
 [CONSTRAINTS]
 - Output MUST be strict JSON.
 - Required fields: category, priority, reason.
-- `priority` MUST be exactly one of: low, medium, high (lowercase).
+- `priority` MUST be exactly one of: low, medium, high.
 - Do NOT include markdown code fences (```).
 - Keep response under 200 tokens/words.

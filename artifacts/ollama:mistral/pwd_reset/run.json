@@ -1,20 +1,20 @@
 {
-  "pcsl": "0.1.0",
+  "pcsl_version": "0.2.0",
   "target": "ollama:mistral",
-  "params": {
-    "temperature": 0
-  },
   "execution": {
-    "mode": "assist",
+    "requested_mode": "assist",
     "effective_mode": "assist",
-    "max_retries": 1
+    "max_retries": 1,
+    "strict_enforce": false
   },
-  "latency_ms": 5796,
-  "retries_used": 0,
-  "status": "PASS",
-  "repaired_details": {
-    "stripped_fences": false,
-    "lowercased_fields": []
+  "latency_ms": 2175,
+  "retries_used": 1,
+  "status": "FAIL",
+  "repair_details": {
+    "stripped_fences": true,
+    "lowercased_fields": [
+      "$.priority"
+    ]
   },
   "checks": [
     {
@@ -36,7 +36,7 @@
     {
       "type": "pc.check.enum",
       "passed": true,
-      "message": "Value 'high' is in allowed values ['low', 'medium', 'high']",
+      "message": "Value 'high' is in allowed values ['low', 'medium', 'high'] (case-insensitive)",
       "data": null
     },
     {
@@ -48,10 +48,16 @@
     {
       "type": "pc.check.token_budget",
       "passed": true,
-      "message": "Token count ~20 <= 200",
-      "data": 20
+      "message": "Token count ~13 <= 200",
+      "data": 13
+    },
+    {
+      "type": "pc.check.latency_budget",
+      "passed": false,
+      "message": "No latency data available",
+      "data": null
     }
   ],
-  "prompt_hash": "4b9738725248c9f94d09344f8e4df3e48d38aaf9abd9ab30a3fe3e7ac9f79def",
-  "timestamp": "2025-10-08T11:55:26.566503Z"
+  "prompt_hash": "62379d45b32e4af5e5561360ef1b171ca85ad78ed5d313ac1e849d7f42d0de3b",
+  "timestamp": "2025-10-08T15:24:43.266385"
 }
