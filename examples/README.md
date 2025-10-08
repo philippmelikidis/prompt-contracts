@@ -1,23 +1,23 @@
 # Prompt-Contracts Examples
 
-Dieses Verzeichnis enthält vollständige Beispiel-Contracts, die verschiedene Use Cases und Execution Modes demonstrieren.
+This directory contains complete example contracts demonstrating various use cases and execution modes.
 
-## 📁 Verfügbare Beispiele
+## 📁 Available Examples
 
 ### 1. Support Ticket Classification
-**Verzeichnis:** [`support_ticket/`](./support_ticket/)
-**Use Case:** Klassifizierung von Support-Anfragen
+**Directory:** [`support_ticket/`](./support_ticket/)
+**Use Case:** Support request classification
 **Execution Mode:** `assist`
 **Provider:** Ollama (Mistral)
 
-Klassifiziert Support-Tickets in Kategorien mit Priorität und Begründung.
+Classifies support tickets into categories with priority and reasoning.
 
-**Dateien:**
+**Files:**
 - `pd.json` - Prompt Definition
 - `es.json` - Expectation Suite (6 Checks)
 - `ep.json` - Evaluation Profile (2 Fixtures)
 
-**Ausführen:**
+**Run:**
 ```bash
 prompt-contracts run \
   --pd examples/support_ticket/pd.json \
@@ -29,43 +29,43 @@ prompt-contracts run \
 ---
 
 ### 2. Email Classification
-**Verzeichnis:** [`email_classification/`](./email_classification/)
-**Use Case:** E-Mail-Kategorisierung mit Sentiment-Analyse
-**Execution Modes:** Alle vier Modi (observe, assist, enforce, auto)
+**Directory:** [`email_classification/`](./email_classification/)
+**Use Case:** Email categorization with sentiment analysis
+**Execution Modes:** All four modes (observe, assist, enforce, auto)
 **Provider:** Ollama / OpenAI
 
-Analysiert E-Mails und klassifiziert sie nach Kategorie, Dringlichkeit und Sentiment.
+Analyzes emails and classifies them by category, urgency, and sentiment.
 
-**Dateien:**
+**Files:**
 - `pd.json` - Prompt Definition
 - `es.json` - Expectation Suite (8 Checks)
-- `ep_observe.json` - Observe Mode (Nur Validierung)
-- `ep_assist.json` - Assist Mode (Prompt-Augmentation)
-- `ep_enforce.json` - Enforce Mode (Schema-guided JSON, OpenAI)
-- `ep_auto.json` - Auto Mode (Adaptive)
+- `ep_observe.json` - Observe Mode (validation only)
+- `ep_assist.json` - Assist Mode (prompt augmentation)
+- `ep_enforce.json` - Enforce Mode (schema-guided JSON, OpenAI)
+- `ep_auto.json` - Auto Mode (adaptive)
 
-**Ausführen:**
+**Run:**
 ```bash
-# Observe Mode - Nur Validierung
+# Observe Mode - Validation only
 prompt-contracts run \
   --pd examples/email_classification/pd.json \
   --es examples/email_classification/es.json \
   --ep examples/email_classification/ep_observe.json
 
-# Assist Mode - Mit Prompt-Augmentation
+# Assist Mode - With prompt augmentation
 prompt-contracts run \
   --pd examples/email_classification/pd.json \
   --es examples/email_classification/es.json \
   --ep examples/email_classification/ep_assist.json
 
-# Enforce Mode - Schema-guided (benötigt OpenAI)
+# Enforce Mode - Schema-guided (requires OpenAI)
 export OPENAI_API_KEY="sk-..."
 prompt-contracts run \
   --pd examples/email_classification/pd.json \
   --es examples/email_classification/es.json \
   --ep examples/email_classification/ep_enforce.json
 
-# Auto Mode - Adaptiv
+# Auto Mode - Adaptive
 prompt-contracts run \
   --pd examples/email_classification/pd.json \
   --es examples/email_classification/es.json \
@@ -75,19 +75,19 @@ prompt-contracts run \
 ---
 
 ### 3. Product Recommendation
-**Verzeichnis:** [`product_recommendation/`](./product_recommendation/)
-**Use Case:** Personalisierte Produktempfehlungen
+**Directory:** [`product_recommendation/`](./product_recommendation/)
+**Use Case:** Personalized product recommendations
 **Execution Mode:** `assist`
 **Provider:** Ollama (Mistral)
 
-Generiert Produktempfehlungen basierend auf Benutzerpräferenzen.
+Generates product recommendations based on user preferences.
 
-**Dateien:**
+**Files:**
 - `pd.json` - Prompt Definition
 - `es.json` - Expectation Suite (7 Checks)
 - `ep.json` - Evaluation Profile (3 Fixtures)
 
-**Ausführen:**
+**Run:**
 ```bash
 prompt-contracts run \
   --pd examples/product_recommendation/pd.json \
@@ -99,15 +99,15 @@ prompt-contracts run \
 ---
 
 ### 4. Simple YAML Example
-**Verzeichnis:** [`simple_yaml/`](./simple_yaml/)
-**Use Case:** Minimales Beispiel in YAML-Format
+**Directory:** [`simple_yaml/`](./simple_yaml/)
+**Use Case:** Minimal example in YAML format
 **Format:** YAML
 
-Einfaches Beispiel, das zeigt, wie YAML-Contracts verwendet werden können.
+Simple example showing how YAML contracts can be used.
 
-**Ausführen:**
+**Run:**
 ```bash
-# YAML wird automatisch zu JSON konvertiert
+# YAML is automatically converted to JSON
 prompt-contracts validate pd examples/simple_yaml/contract.yaml
 ```
 
@@ -120,7 +120,7 @@ prompt-contracts validate pd examples/simple_yaml/contract.yaml
 pip install prompt-contracts
 ```
 
-### 2. Setup Ollama (für lokale Modelle)
+### 2. Setup Ollama (for local models)
 ```bash
 # Install Ollama
 brew install ollama
@@ -132,7 +132,7 @@ ollama serve
 ollama pull mistral
 ```
 
-### 3. Erstes Beispiel ausführen
+### 3. Run your first example
 ```bash
 prompt-contracts run \
   --pd examples/support_ticket/pd.json \
@@ -143,7 +143,7 @@ prompt-contracts run \
 
 ---
 
-## 📊 Execution Modes Vergleich
+## 📊 Execution Modes Comparison
 
 | Example | observe | assist | enforce | auto |
 |---------|---------|--------|---------|------|
@@ -152,20 +152,20 @@ prompt-contracts run \
 | product_recommendation | - | ✅ | - | - |
 | simple_yaml | - | - | - | - |
 
-### Mode Eigenschaften
+### Mode Properties
 
-| Mode | Prompt-Änderungen | Auto-Repair | Retry | Schema Enforcement |
-|------|-------------------|-------------|-------|-------------------|
-| **observe** | ❌ Keine | ❌ Nein | ❌ Nein | ❌ Nein |
-| **assist** | ✅ Constraints | ✅ Ja | ✅ Ja | ❌ Nein |
-| **enforce** | ✅ Schema | ✅ Ja | ✅ Ja | ✅ Ja (wenn unterstützt) |
-| **auto** | 🔄 Adaptiv | ✅ Ja | ✅ Ja | 🔄 Wenn verfügbar |
+| Mode | Prompt Changes | Auto-Repair | Retry | Schema Enforcement |
+|------|----------------|-------------|-------|-------------------|
+| **observe** | ❌ None | ❌ No | ❌ No | ❌ No |
+| **assist** | ✅ Constraints | ✅ Yes | ✅ Yes | ❌ No |
+| **enforce** | ✅ Schema | ✅ Yes | ✅ Yes | ✅ Yes (if supported) |
+| **auto** | 🔄 Adaptive | ✅ Yes | ✅ Yes | 🔄 When available |
 
 ---
 
 ## 🔧 Artifact Saving
 
-Speichern Sie alle Input/Output-Artefakte für detaillierte Analyse:
+Save all input/output artifacts for detailed analysis:
 
 ```bash
 prompt-contracts run \
@@ -177,20 +177,20 @@ prompt-contracts run \
   --out results.json
 ```
 
-**Artifact-Struktur:**
+**Artifact Structure:**
 ```
 artifacts/
   <target-id>/
     <fixture-id>/
-      input_final.txt      # Finaler Prompt (mit Constraints falls assist)
-      output_raw.txt       # Raw Model Response
-      output_norm.txt      # Normalisierter Output (nach Auto-Repair)
-      run.json            # Vollständige Execution Metadata
+      input_final.txt      # Final prompt (with constraints if assist)
+      output_raw.txt       # Raw model response
+      output_norm.txt      # Normalized output (after auto-repair)
+      run.json            # Complete execution metadata
 ```
 
 ---
 
-## 📝 Eigenen Contract erstellen
+## 📝 Creating Your Own Contract
 
 ### 1. Prompt Definition (pd.json)
 ```json
@@ -241,9 +241,9 @@ artifacts/
 
 ---
 
-## 📚 Weitere Ressourcen
+## 📚 Additional Resources
 
-- **Vollständige Dokumentation:** [README.md](../README.md)
+- **Complete Documentation:** [README.md](../README.md)
 - **Getting Started Guide:** [QUICKSTART.md](../QUICKSTART.md)
 - **PCSL Specification:** [pcsl-v0.1.md](../src/promptcontracts/spec/pcsl-v0.1.md)
 - **GitHub Repository:** https://github.com/philippmelikidis/prompt-contracts
@@ -252,15 +252,15 @@ artifacts/
 
 ## 🤝 Contributing
 
-Haben Sie ein interessantes Beispiel? Wir freuen uns über Pull Requests!
+Have an interesting example? We welcome pull requests!
 
-1. Fork das Repository
-2. Erstellen Sie Ihr Beispiel in `examples/your-example/`
-3. Fügen Sie eine Beschreibung zu dieser README hinzu
-4. Öffnen Sie einen Pull Request
+1. Fork the repository
+2. Create your example in `examples/your-example/`
+3. Add a description to this README
+4. Open a pull request
 
 ---
 
 ## 📄 License
 
-MIT License - siehe [LICENSE](../LICENSE) für Details
+MIT License - see [LICENSE](../LICENSE) for details
