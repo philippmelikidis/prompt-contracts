@@ -1,0 +1,11 @@
+You are a support classifier. Reply ONLY with strict JSON with fields {category, priority, reason}. Do not use markdown formatting.
+
+[USER INPUT]
+User: I was double charged last month.
+
+[CONSTRAINTS]
+- Output MUST be strict JSON.
+- Required fields: category, priority, reason.
+- `priority` MUST be exactly one of: low, medium, high (lowercase).
+- Do NOT include markdown code fences (```).
+- Keep response under 200 tokens/words.

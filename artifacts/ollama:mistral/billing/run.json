@@ -1,0 +1,57 @@
+{
+  "pcsl": "0.1.0",
+  "target": "ollama:mistral",
+  "params": {
+    "temperature": 0
+  },
+  "execution": {
+    "mode": "assist",
+    "effective_mode": "assist",
+    "max_retries": 1
+  },
+  "latency_ms": 2125,
+  "retries_used": 0,
+  "status": "PASS",
+  "repaired_details": {
+    "stripped_fences": false,
+    "lowercased_fields": []
+  },
+  "checks": [
+    {
+      "type": "pc.check.json_valid",
+      "passed": true,
+      "message": "Response is valid JSON",
+      "data": {
+        "category": "Billing",
+        "priority": "high",
+        "reason": "User was double charged last month"
+      }
+    },
+    {
+      "type": "pc.check.json_required",
+      "passed": true,
+      "message": "All required fields present: ['category', 'priority', 'reason']",
+      "data": null
+    },
+    {
+      "type": "pc.check.enum",
+      "passed": true,
+      "message": "Value 'high' is in allowed values ['low', 'medium', 'high']",
+      "data": null
+    },
+    {
+      "type": "pc.check.regex_absent",
+      "passed": true,
+      "message": "Pattern '```' not found (as expected)",
+      "data": null
+    },
+    {
+      "type": "pc.check.token_budget",
+      "passed": true,
+      "message": "Token count ~13 <= 200",
+      "data": 13
+    }
+  ],
+  "prompt_hash": "0e2903b05f32fc32ea5712ac654b65103b92e16b97f1616bce9fa4b35164698b",
+  "timestamp": "2025-10-08T11:55:28.699848Z"
+}
