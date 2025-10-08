@@ -317,32 +317,32 @@ prompt-contracts run \
 
 ## Understanding Execution Modes
 
-Prompt-Contracts bietet vier Execution Modes, die unterschiedliche Strategien zur Sicherstellung der LLM-Output-Qualität verwenden. Die Wahl des richtigen Modus hängt von Ihrem Use Case ab.
+Prompt-Contracts offers four execution modes that use different strategies to ensure LLM output quality. Choosing the right mode depends on your use case.
 
 ### Mode Comparison
 
-| Mode | Prompt-Änderungen | Auto-Repair | Retry | Schema Enforcement | Use Case |
-|------|-------------------|-------------|-------|-------------------|----------|
-| **observe** | ❌ Keine | ❌ Nein | ❌ Nein | ❌ Nein | Testing, Monitoring |
-| **assist** | ✅ Constraints hinzufügen | ✅ Ja | ✅ Ja | ❌ Nein | Produktion (alle Provider) |
-| **enforce** | ✅ Schema injection | ✅ Ja | ✅ Ja | ✅ Ja (wenn unterstützt) | Maximale Struktur-Garantie |
-| **auto** | 🔄 Adaptiv | ✅ Ja | ✅ Ja | 🔄 Wenn verfügbar | Standard (empfohlen) |
+| Mode | Prompt Changes | Auto-Repair | Retry | Schema Enforcement | Use Case |
+|------|----------------|-------------|-------|-------------------|----------|
+| **observe** | ❌ None | ❌ No | ❌ No | ❌ No | Testing, Monitoring |
+| **assist** | ✅ Add constraints | ✅ Yes | ✅ Yes | ❌ No | Production (all providers) |
+| **enforce** | ✅ Schema injection | ✅ Yes | ✅ Yes | ✅ Yes (if supported) | Maximum structure guarantee |
+| **auto** | 🔄 Adaptive | ✅ Yes | ✅ Yes | 🔄 When available | Default (recommended) |
 
 ### Mode 1: observe (Validation Only)
 
-**Wann verwenden:**
-- Baseline-Messungen
-- Monitoring von Produktionssystemen
-- A/B Tests ohne Eingriffe
-- Regression Testing
+**When to use:**
+- Baseline measurements
+- Production system monitoring
+- A/B tests without interventions
+- Regression testing
 
-**Wie es funktioniert:**
-1. Prompt wird unverändert an das Modell gesendet
-2. Response wird direkt validiert
-3. Keine Auto-Repair, keine Retries
-4. Nur PASS oder FAIL Status
+**How it works:**
+1. Prompt is sent unchanged to the model
+2. Response is validated directly
+3. No auto-repair, no retries
+4. Only PASS or FAIL status
 
-**Beispiel-Konfiguration:**
+**Example configuration:**
 ```json
 {
   "execution": {
@@ -352,7 +352,7 @@ Prompt-Contracts bietet vier Execution Modes, die unterschiedliche Strategien zu
 }
 ```
 
-**Ausführen:**
+**Run:**
 ```bash
 prompt-contracts run \
   --pd examples/email_classification/pd.json \
@@ -361,7 +361,7 @@ prompt-contracts run \
   --report cli
 ```
 
-**Typischer Output:**
+**Typical output:**
 ```
 TARGET ollama:mistral
   mode: observe
@@ -377,20 +377,20 @@ Summary: 5/6 checks passed — status: RED
 
 ### Mode 2: assist (Prompt Augmentation)
 
-**Wann verwenden:**
-- Produktionssysteme
-- Provider ohne Schema-Enforcement (Ollama, lokale Modelle)
-- Wenn Sie Kontrolle über Prompt-Augmentation wünschen
-- Standard für robuste Systeme
+**When to use:**
+- Production systems
+- Providers without schema enforcement (Ollama, local models)
+- When you want control over prompt augmentation
+- Standard for robust systems
 
-**Wie es funktioniert:**
-1. Leitet automatisch Constraints aus der Expectation Suite ab
-2. Fügt CONSTRAINTS-Block zum Prompt hinzu
-3. Bei Validierungs-Fehlern: Auto-Repair versuchen
-4. Bei Fehler nach Repair: Retry mit gleichem Prompt
-5. Status: PASS, REPAIRED, oder FAIL
+**How it works:**
+1. Automatically derives constraints from Expectation Suite
+2. Adds CONSTRAINTS block to prompt
+3. On validation failure: Attempt auto-repair
+4. On failure after repair: Retry with same prompt
+5. Status: PASS, REPAIRED, or FAIL
 
-**Constraint-Generierung:**
+**Constraint Generation:**
 
 **Expectation Suite:**
 ```json
@@ -403,7 +403,7 @@ Summary: 5/6 checks passed — status: RED
 }
 ```
 
-**Generierter Constraint-Block:**
+**Generated Constraint Block:**
 ```
 CONSTRAINTS:
 - Response MUST be valid JSON
@@ -421,7 +421,7 @@ CONSTRAINTS:
 }
 ```
 
-**Beispiel-Konfiguration:**
+**Example configuration:**
 ```json
 {
   "execution": {
@@ -435,7 +435,7 @@ CONSTRAINTS:
 }
 ```
 
-**Ausführen:**
+**Run:**
 ```bash
 prompt-contracts run \
   --pd examples/email_classification/pd.json \
@@ -444,7 +444,7 @@ prompt-contracts run \
   --save-io artifacts/
 ```
 
-**Typischer Output:**
+**Typical output:**
 ```
 TARGET ollama:mistral
   mode: assist
@@ -460,31 +460,31 @@ Fixture: business_email (latency: 2134ms, status: REPAIRED, retries: 0)
 Summary: 5/5 checks passed (1 REPAIRED) — status: YELLOW
 ```
 
-**Artifacts gespeichert unter:**
+**Artifacts saved to:**
 ```
 artifacts/ollama:mistral/business_email/
-  input_final.txt      # Prompt mit CONSTRAINTS-Block
+  input_final.txt      # Prompt with CONSTRAINTS block
   output_raw.txt       # ```json\n{"priority": "High", ...}\n```
   output_norm.txt      # {"priority": "high", ...}
-  run.json            # Vollständige Metadata
+  run.json            # Complete metadata
 ```
 
 ### Mode 3: enforce (Schema-Guided JSON)
 
-**Wann verwenden:**
+**When to use:**
 - OpenAI API (GPT-4, GPT-3.5, etc.)
-- Maximale Struktur-Garantie erforderlich
-- Kritische Produktionssysteme
-- Wenn JSON-Schema-Enforcement verfügbar ist
+- Maximum structure guarantee required
+- Critical production systems
+- When JSON Schema enforcement is available
 
-**Wie es funktioniert:**
-1. Generiert automatisch JSON Schema aus Expectation Suite
-2. Nutzt Provider's native Schema-Enforcement (z.B. OpenAI `response_format`)
-3. Falls nicht unterstützt: Fallback zu `assist` (oder NONENFORCEABLE wenn `strict_enforce=true`)
-4. Auto-Repair und Retry verfügbar
-5. Status: PASS, REPAIRED, FAIL, oder NONENFORCEABLE
+**How it works:**
+1. Automatically generates JSON Schema from Expectation Suite
+2. Uses provider's native schema enforcement (e.g., OpenAI `response_format`)
+3. If not supported: Fallback to `assist` (or NONENFORCEABLE if `strict_enforce=true`)
+4. Auto-repair and retry available
+5. Status: PASS, REPAIRED, FAIL, or NONENFORCEABLE
 
-**JSON Schema Generierung:**
+**JSON Schema Generation:**
 
 **Expectation Suite:**
 ```json
@@ -497,7 +497,7 @@ artifacts/ollama:mistral/business_email/
 }
 ```
 
-**Generiertes JSON Schema:**
+**Generated JSON Schema:**
 ```json
 {
   "type": "object",
@@ -520,11 +520,11 @@ artifacts/ollama:mistral/business_email/
 ```
 
 **Provider Support:**
-- ✅ **OpenAI**: Volle Unterstützung via `response_format={"type": "json_schema", ...}`
-- ❌ **Ollama**: Kein native Support → Fallback zu `assist`
-- ❌ **Andere**: Provider-abhängig
+- ✅ **OpenAI**: Full support via `response_format={"type": "json_schema", ...}`
+- ❌ **Ollama**: No native support → Fallback to `assist`
+- ❌ **Others**: Provider-dependent
 
-**Beispiel-Konfiguration:**
+**Example configuration:**
 ```json
 {
   "targets": [
@@ -543,12 +543,12 @@ artifacts/ollama:mistral/business_email/
 ```
 
 **strict_enforce Flag:**
-- `false` (default): Silent fallback zu `assist` wenn Schema-Enforcement nicht verfügbar
-- `true`: Gibt NONENFORCEABLE zurück statt Fallback
+- `false` (default): Silent fallback to `assist` when schema enforcement not available
+- `true`: Returns NONENFORCEABLE status instead of fallback
 
-**Ausführen:**
+**Run:**
 ```bash
-# Mit OpenAI (benötigt OPENAI_API_KEY)
+# With OpenAI (requires OPENAI_API_KEY)
 export OPENAI_API_KEY="sk-..."
 prompt-contracts run \
   --pd examples/email_classification/pd.json \
@@ -556,7 +556,7 @@ prompt-contracts run \
   --ep examples/email_classification/ep_enforce.json
 ```
 
-**Typischer Output (OpenAI):**
+**Typical output (OpenAI):**
 ```
 TARGET openai:gpt-4o-mini
   mode: enforce
@@ -570,7 +570,7 @@ Fixture: business_email (latency: 876ms, status: PASS, retries: 0)
 Summary: 5/5 checks passed — status: GREEN
 ```
 
-**Typischer Output (Ollama mit fallback):**
+**Typical output (Ollama with fallback):**
 ```
 TARGET ollama:mistral
   mode: enforce → assist (fallback)
@@ -582,30 +582,30 @@ Fixture: business_email (latency: 2013ms, status: REPAIRED, retries: 0)
 
 ### Mode 4: auto (Adaptive)
 
-**Wann verwenden:**
-- Standard-Modus für die meisten Use Cases
-- Multi-Provider Setups
-- Maximale Kompatibilität erforderlich
-- Keine spezifischen Mode-Präferenzen
+**When to use:**
+- Default mode for most use cases
+- Multi-provider setups
+- Maximum compatibility required
+- No specific mode preferences
 
-**Wie es funktioniert:**
-1. Prüft Adapter-Capabilities zur Laufzeit
-2. Wählt den besten verfügbaren Modus:
-   - Wenn `schema_guided_json=true` → verwendet `enforce`
-   - Sonst → verwendet `assist`
-   - Bei Fehlern → fallback zu `observe`
-3. Pro Target kann unterschiedlicher effektiver Modus gewählt werden
+**How it works:**
+1. Checks adapter capabilities at runtime
+2. Selects the best available mode:
+   - If `schema_guided_json=true` → uses `enforce`
+   - Otherwise → uses `assist`
+   - On errors → fallback to `observe`
+3. Different effective mode can be chosen per target
 
-**Fallback-Logik:**
+**Fallback Logic:**
 ```
 auto
-  ├─ Prüfe: adapter.capabilities().schema_guided_json?
-  │   ├─ JA  → enforce
-  │   └─ NEIN → assist
-  └─ Bei Fehler → observe
+  ├─ Check: adapter.capabilities().schema_guided_json?
+  │   ├─ YES  → enforce
+  │   └─ NO   → assist
+  └─ On error → observe
 ```
 
-**Beispiel-Konfiguration (Multi-Provider):**
+**Example configuration (Multi-Provider):**
 ```json
 {
   "targets": [
@@ -623,7 +623,7 @@ auto
 }
 ```
 
-**Ausführen:**
+**Run:**
 ```bash
 prompt-contracts run \
   --pd examples/email_classification/pd.json \
@@ -632,7 +632,7 @@ prompt-contracts run \
   --report cli
 ```
 
-**Typischer Output:**
+**Typical output:**
 ```
 TARGET openai:gpt-4o-mini
   mode: auto → enforce
@@ -658,7 +658,7 @@ Summary: 5/5 checks passed (1 REPAIRED) — status: YELLOW
 
 ### Retry and Auto-Repair Flow
 
-**Ablauf bei assist/enforce Mode:**
+**Flow for assist/enforce mode:**
 
 ```
 1. Execute Prompt
@@ -675,7 +675,7 @@ Summary: 5/5 checks passed (1 REPAIRED) — status: YELLOW
             └─ retries_left = 0 → ❌ Status: FAIL
 ```
 
-**Beispiel run.json (nach Repair):**
+**Example run.json (after repair):**
 ```json
 {
   "status": "REPAIRED",
@@ -694,26 +694,26 @@ Summary: 5/5 checks passed (1 REPAIRED) — status: YELLOW
 **Decision Tree:**
 
 ```
-Benötigen Sie nur Monitoring ohne Eingriffe?
-├─ JA  → observe
-└─ NEIN
-   └─ Verwenden Sie OpenAI und benötigen garantierte Struktur?
-      ├─ JA  → enforce
-      └─ NEIN
-         └─ Verwenden Sie mehrere Provider oder unsicher?
-            ├─ Mehrere Provider → auto
-            └─ Einzelner Provider → assist
+Do you need monitoring only without interventions?
+├─ YES  → observe
+└─ NO
+   └─ Using OpenAI and need guaranteed structure?
+      ├─ YES  → enforce
+      └─ NO
+         └─ Using multiple providers or uncertain?
+            ├─ Multiple providers → auto
+            └─ Single provider → assist
 ```
 
-**Produktions-Empfehlungen:**
+**Production Recommendations:**
 
-| Szenario | Empfohlener Mode | Begründung |
-|----------|------------------|------------|
-| OpenAI Produktion | `enforce` | Native Schema-Support |
-| Ollama/Lokale Modelle | `assist` | Robuste Prompt-Augmentation |
-| Multi-Provider | `auto` | Automatische Anpassung |
-| CI/CD Testing | `observe` | Keine Modifikationen |
-| Development | `assist` | Gutes Debugging |
+| Scenario | Recommended Mode | Rationale |
+|----------|------------------|-----------|
+| OpenAI Production | `enforce` | Native schema support |
+| Ollama/Local Models | `assist` | Robust prompt augmentation |
+| Multi-Provider | `auto` | Automatic adaptation |
+| CI/CD Testing | `observe` | No modifications |
+| Development | `assist` | Good debugging |
 
 ---
 
