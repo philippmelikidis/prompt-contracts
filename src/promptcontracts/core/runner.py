@@ -1,5 +1,8 @@
 """
-Main runner: orchestrate contract execution with enforcement and retries.
+Main runner: orchestrate contract execution with enforcement, sampling, and retries.
+
+Version 0.3.0: Added probabilistic sampling, enhanced parsing, repair policies,
+and capability negotiation.
 """
 
 import hashlib
@@ -9,17 +12,14 @@ from pathlib import Path
 from typing import Any
 
 from .adapters import OllamaAdapter, OpenAIAdapter
-from .validator import (
-    CheckRegistry,
-    Validator,
-    build_constraints_block,
-    derive_json_schema_from_es,
-    normalize_output,
-)
+from .capability import CapabilityNegotiator, ProviderCapabilities
+from .parser import json_loose
+from .sampling import SampleResult, create_sampler
+from .validator import CheckRegistry, Validator, build_constraints_block, derive_json_schema_from_es
 
 
 class ContractRunner:
-    """Execute PCSL contracts with enforcement modes."""
+    """Execute PCSL contracts with enforcement modes, sampling, and repair."""
 
     def __init__(
         self,
@@ -27,21 +27,27 @@ class ContractRunner:
         es: dict[str, Any],
         ep: dict[str, Any],
         save_io_dir: str | None = None,
+        embedding_adapter: Any = None,
+        judge_adapter: Any = None,
     ):
         """
-        Initialize runner with artefacts.
+        Initialize runner with artifacts.
 
         Args:
             pd: Prompt Definition
             es: Expectation Suite
             ep: Evaluation Profile
             save_io_dir: Optional directory to save IO artifacts
+            embedding_adapter: Optional embedding adapter for similarity checks
+            judge_adapter: Optional judge adapter for LLM-as-judge checks
         """
         self.pd = pd
         self.es = es
         self.ep = ep
         self.save_io_dir = Path(save_io_dir) if save_io_dir else None
         self.validator = Validator(CheckRegistry())
+        self.embedding_adapter = embedding_adapter
+        self.judge_adapter = judge_adapter
 
         # Parse execution config with defaults
         execution = ep.get("execution", {})
@@ -51,6 +57,23 @@ class ContractRunner:
         self.auto_repair_cfg = execution.get(
             "auto_repair", {"strip_markdown_fences": True, "lowercase_fields": []}
         )
+
+        # v0.3.0: Repair policy
+        self.repair_policy = execution.get(
+            "repair_policy",
+            {
+                "enabled": True,
+                "max_steps": 1,
+                "allowed": ["strip_markdown_fences", "json_loose_parse"],
+            },
+        )
+
+        # v0.3.0: Sampling config
+        sampling_cfg = ep.get("sampling", {})
+        self.n_samples = sampling_cfg.get("n", 1)
+        self.seed = sampling_cfg.get("seed")
+        self.aggregation = sampling_cfg.get("aggregation", "first")
+        self.bootstrap_samples = sampling_cfg.get("bootstrap_samples", 1000)
 
     def _create_adapter(self, target: dict[str, Any]):
         """Create an adapter for a target."""
@@ -66,38 +89,36 @@ class ContractRunner:
             raise ValueError(f"Unknown target type: {target_type}")
 
     def _determine_effective_mode(
-        self, requested_mode: str, adapter_capabilities
-    ) -> tuple[str, bool]:
+        self, requested_mode: str, adapter
+    ) -> tuple[str, bool, list[str]]:
         """
-        Determine effective execution mode based on capabilities.
+        Determine effective execution mode using capability negotiation.
 
         Returns:
-            (effective_mode, is_nonenforceable)
+            (effective_mode, is_nonenforceable, negotiation_log)
         """
-        if requested_mode == "observe":
-            return "observe", False
+        capabilities = adapter.capabilities()
 
-        if requested_mode == "assist":
-            return "assist", False
+        # Convert to ProviderCapabilities
+        provider_caps = ProviderCapabilities(
+            provider_type=adapter.__class__.__name__,
+            model_name=adapter.model,
+            schema_guided_json=capabilities.schema_guided_json,
+            function_calling=capabilities.tool_calling,
+            supports_seed=capabilities.supports_seed,
+            supports_temperature=capabilities.supports_temperature,
+            supports_top_p=capabilities.supports_top_p,
+        )
 
-        if requested_mode == "enforce":
-            if adapter_capabilities.schema_guided_json:
-                return "enforce", False
-            else:
-                # If strict_enforce is True, mark as NONENFORCEABLE
-                # Otherwise fallback to assist
-                if self.strict_enforce:
-                    return "enforce", True  # NONENFORCEABLE
-                else:
-                    return "assist", False  # Fallback to assist
+        # Negotiate mode
+        negotiator = CapabilityNegotiator(provider_caps, self.strict_enforce)
+        result = negotiator.negotiate(requested_mode)
 
-        if requested_mode == "auto":
-            if adapter_capabilities.schema_guided_json:
-                return "enforce", False
-            else:
-                return "assist", False
-
-        return "observe", False
+        return (
+            result.effective_mode,
+            result.is_nonenforceable,
+            result.negotiation_log,
+        )
 
     def _build_prompt(self, fixture: dict[str, Any], effective_mode: str) -> str:
         """Build final prompt with fixture input and optional constraints."""
@@ -114,6 +135,188 @@ class ContractRunner:
                 prompt += constraints
 
         return prompt
+
+    def _parse_output(self, raw_output: str, repair_steps: list[str]) -> tuple[str, Any, dict]:
+        """
+        Parse output with repair policy.
+
+        Args:
+            raw_output: Raw LLM output
+            repair_steps: List of allowed repair steps
+
+        Returns:
+            (normalized_output, parsed_json, repair_details)
+        """
+        normalized = raw_output
+        parsed = None
+        repair_details = {"steps_applied": []}
+
+        expects = self.pd.get("io", {}).get("expects", "text")
+
+        if expects == "structured/json":
+            # Try direct parse first
+            try:
+                parsed = json.loads(normalized)
+                return normalized, parsed, repair_details
+            except json.JSONDecodeError:
+                pass
+
+            # Apply repair steps
+            if self.repair_policy.get("enabled", True):
+                # Step 1: strip markdown fences
+                if "strip_markdown_fences" in repair_steps:
+                    from .parser import strip_markdown_fences
+
+                    stripped = strip_markdown_fences(normalized)
+                    if stripped != normalized:
+                        normalized = stripped
+                        repair_details["steps_applied"].append("strip_markdown_fences")
+                        try:
+                            parsed = json.loads(normalized)
+                            return normalized, parsed, repair_details
+                        except json.JSONDecodeError:
+                            pass
+
+                # Step 2: json_loose parse
+                if "json_loose_parse" in repair_steps:
+                    try:
+                        parsed = json_loose(raw_output)
+                        normalized = json.dumps(parsed)
+                        repair_details["steps_applied"].append("json_loose_parse")
+                        return normalized, parsed, repair_details
+                    except Exception:
+                        pass
+
+        return normalized, parsed, repair_details
+
+    def _validate_response(
+        self, response_text: str, parsed_json: Any = None
+    ) -> list[dict[str, Any]]:
+        """Run validation checks on response."""
+        checks = self.es.get("checks", [])
+
+        # Filter out latency checks (handled separately)
+        non_latency_checks = [c for c in checks if c.get("type") != "pc.check.latency_budget"]
+
+        return self.validator.run_checks(
+            check_specs=non_latency_checks,
+            response_text=response_text,
+            parsed_json=parsed_json,
+            embedding_adapter=self.embedding_adapter,
+            judge_adapter=self.judge_adapter,
+        )
+
+    def _run_single_sample(
+        self,
+        adapter,
+        schema: dict | None,
+        final_prompt: str,
+        sample_id: int,
+    ) -> SampleResult:
+        """
+        Run a single sample.
+
+        Args:
+            adapter: LLM adapter
+            schema: Optional JSON schema
+            final_prompt: Complete prompt
+            sample_id: Sample identifier
+
+        Returns:
+            SampleResult with output and check results
+        """
+        # Generate response
+        raw_output, latency_ms = adapter.generate(final_prompt, schema=schema)
+
+        # Parse and repair
+        repair_steps = self.repair_policy.get(
+            "allowed", ["strip_markdown_fences", "json_loose_parse"]
+        )
+        normalized_output, parsed_json, repair_details = self._parse_output(
+            raw_output, repair_steps
+        )
+
+        # Validate
+        check_results = self._validate_response(normalized_output, parsed_json)
+        checks_passed = all(r["passed"] for r in check_results)
+
+        return SampleResult(
+            sample_id=sample_id,
+            output=normalized_output,
+            parsed=parsed_json,
+            latency_ms=latency_ms,
+            checks_passed=checks_passed,
+            check_results=check_results,
+        )
+
+    def _run_fixture_with_sampling(
+        self,
+        adapter,
+        schema: dict | None,
+        final_prompt: str,
+        fixture_id: str,
+    ) -> dict[str, Any]:
+        """
+        Run a fixture with N-sampling and aggregation.
+
+        Returns fixture result dict with status, checks, sampling metadata, etc.
+        """
+        # Create sampler
+        sampler = create_sampler(
+            n=self.n_samples,
+            seed=self.seed,
+            aggregation=self.aggregation,
+            bootstrap_samples=self.bootstrap_samples,
+        )
+
+        # Generate samples
+        def generator(sample_id: int) -> SampleResult:
+            return self._run_single_sample(adapter, schema, final_prompt, sample_id)
+
+        aggregated = sampler.sample_n(generator)
+
+        # Determine status
+        if aggregated.all_passed:
+            status = "PASS"
+        else:
+            status = "FAIL"
+
+        # Build repair ledger from samples
+        repair_ledger = []
+        for sample in aggregated.samples:
+            if hasattr(sample, "repair_details"):
+                repair_ledger.append(sample.repair_details)
+
+        return {
+            "fixture_id": fixture_id,
+            "raw_output": aggregated.samples[0].output,  # First sample raw
+            "normalized_output": aggregated.selected_output,
+            "latency_ms": aggregated.total_latency_ms,
+            "mean_latency_ms": aggregated.mean_latency_ms,
+            "retries_used": 0,  # Retries deprecated in favor of sampling
+            "repair_details": {},
+            "repair_ledger": repair_ledger,
+            "status": status,
+            "checks": (
+                aggregated.selected_parsed
+                if aggregated.selected_parsed
+                else aggregated.samples[0].check_results
+            ),
+            "sampling_metadata": {
+                "n_samples": len(aggregated.samples),
+                "aggregation_policy": aggregated.aggregation_policy,
+                "pass_rate": aggregated.pass_rate,
+                "confidence_interval": aggregated.confidence_interval,
+                "samples": [
+                    {
+                        "sample_id": s.sample_id,
+                        "latency_ms": s.latency_ms,
+                        "checks_passed": s.checks_passed,
+                    }
+                    for s in aggregated.samples
+                ],
+            },
+        }
 
     def _save_artifacts(
         self,
@@ -158,101 +361,6 @@ class ContractRunner:
 
         return artifact_paths
 
-    def _validate_response(
-        self, response_text: str, parsed_json: Any = None
-    ) -> list[dict[str, Any]]:
-        """Run validation checks on response."""
-        checks = self.es.get("checks", [])
-
-        # Filter out latency checks (handled separately)
-        non_latency_checks = [c for c in checks if c.get("type") != "pc.check.latency_budget"]
-
-        return self.validator.run_checks(
-            check_specs=non_latency_checks, response_text=response_text, parsed_json=parsed_json
-        )
-
-    def _run_fixture_with_retry(
-        self, adapter, schema: dict | None, final_prompt: str, fixture_id: str
-    ) -> dict[str, Any]:
-        """
-        Run a fixture with retry and auto-repair logic.
-
-        Returns fixture result dict with status, checks, retries_used, etc.
-        """
-        retries_used = 0
-        raw_output = ""
-        normalized_output = ""
-        repair_details = {}
-        status = "FAIL"
-        all_check_results = []
-        total_latency = 0
-
-        for attempt in range(self.max_retries + 1):
-            # Generate response
-            raw_output, latency_ms = adapter.generate(final_prompt, schema=schema)
-            total_latency += latency_ms
-
-            # Start with raw output
-            normalized_output = raw_output
-            repair_details = {"stripped_fences": False, "lowercased_fields": []}
-
-            # Parse JSON if expected
-            parsed_json = None
-            if self.pd.get("io", {}).get("expects") == "structured/json":
-                try:
-                    parsed_json = json.loads(normalized_output)
-                except json.JSONDecodeError:
-                    pass
-
-            # Validate
-            check_results = self._validate_response(normalized_output, parsed_json)
-            all_passed = all(r["passed"] for r in check_results)
-
-            if all_passed:
-                status = "PASS" if attempt == 0 else "REPAIRED"
-                all_check_results = check_results
-                break
-
-            # If not passed and retries remain, try auto-repair
-            if attempt < self.max_retries:
-                retries_used += 1
-
-                # Apply auto-repair
-                normalized_output, repair_details = normalize_output(
-                    raw_output, self.auto_repair_cfg
-                )
-
-                # Re-parse after normalization
-                if self.pd.get("io", {}).get("expects") == "structured/json":
-                    try:
-                        parsed_json = json.loads(normalized_output)
-                    except json.JSONDecodeError:
-                        parsed_json = None
-
-                # Re-validate
-                check_results = self._validate_response(normalized_output, parsed_json)
-                all_passed = all(r["passed"] for r in check_results)
-
-                if all_passed:
-                    status = "REPAIRED"
-                    all_check_results = check_results
-                    break
-            else:
-                # Out of retries
-                all_check_results = check_results
-                status = "FAIL"
-
-        return {
-            "fixture_id": fixture_id,
-            "raw_output": raw_output,
-            "normalized_output": normalized_output,
-            "latency_ms": total_latency,
-            "retries_used": retries_used,
-            "repair_details": repair_details,
-            "status": status,
-            "checks": all_check_results,
-        }
-
     def run(self) -> dict[str, Any]:
         """
         Execute the contract and return results.
@@ -267,23 +375,25 @@ class ContractRunner:
         results = {
             "targets": [],
             "artifact_base_dir": str(self.save_io_dir) if self.save_io_dir else None,
+            "pcsl_version": "0.3.0",
         }
 
         for target in targets:
             adapter = self._create_adapter(target)
-            capabilities = adapter.capabilities()
 
-            # Determine effective mode
-            effective_mode, is_nonenforceable = self._determine_effective_mode(
-                self.exec_mode, capabilities
+            # Determine effective mode using capability negotiation
+            effective_mode, is_nonenforceable, negotiation_log = self._determine_effective_mode(
+                self.exec_mode, adapter
             )
 
             target_id = f"{target.get('type')}:{target.get('model')}"
 
             # Derive schema if enforce mode
             schema = None
-            if effective_mode == "enforce" and capabilities.schema_guided_json:
-                schema = derive_json_schema_from_es(self.es)
+            if effective_mode == "enforce":
+                capabilities = adapter.capabilities()
+                if capabilities.schema_guided_json:
+                    schema = derive_json_schema_from_es(self.es)
 
             target_result = {
                 "target": target,
@@ -292,7 +402,14 @@ class ContractRunner:
                     "requested_mode": self.exec_mode,
                     "effective_mode": effective_mode,
                     "is_nonenforceable": is_nonenforceable,
+                    "negotiation_log": negotiation_log,
                     "max_retries": self.max_retries,
+                    "repair_policy": self.repair_policy,
+                    "sampling": {
+                        "n": self.n_samples,
+                        "seed": self.seed,
+                        "aggregation": self.aggregation,
+                    },
                 },
                 "fixtures": [],
                 "summary": {},
@@ -306,8 +423,8 @@ class ContractRunner:
                 fixture_id = fixture.get("id")
                 final_prompt = self._build_prompt(fixture, effective_mode)
 
-                # Run with retry logic
-                fixture_result = self._run_fixture_with_retry(
+                # Run with sampling
+                fixture_result = self._run_fixture_with_sampling(
                     adapter, schema, final_prompt, fixture_id
                 )
 
@@ -321,18 +438,14 @@ class ContractRunner:
                     prompt_hash = hashlib.sha256(final_prompt.encode()).hexdigest()
 
                     metadata = {
-                        "pcsl": self.pd.get("pcsl", "0.1.0"),
+                        "pcsl": self.pd.get("pcsl", "0.3.0"),
                         "target": target_id,
                         "params": target.get("params", {}),
-                        "execution": {
-                            "requested_mode": self.exec_mode,
-                            "effective_mode": effective_mode,
-                            "max_retries": self.max_retries,
-                        },
+                        "execution": target_result["execution"],
                         "latency_ms": fixture_result["latency_ms"],
-                        "retries_used": fixture_result["retries_used"],
                         "status": fixture_result["status"],
-                        "repaired_details": fixture_result["repair_details"],
+                        "sampling_metadata": fixture_result.get("sampling_metadata", {}),
+                        "repair_ledger": fixture_result.get("repair_ledger", []),
                         "checks": fixture_result["checks"],
                         "prompt_hash": prompt_hash,
                         "timestamp": datetime.utcnow().isoformat() + "Z",
@@ -352,8 +465,9 @@ class ContractRunner:
                     "fixture_id": fixture_id,
                     "status": fixture_result["status"],
                     "latency_ms": fixture_result["latency_ms"],
-                    "retries_used": fixture_result["retries_used"],
-                    "repaired_details": fixture_result["repair_details"],
+                    "mean_latency_ms": fixture_result.get("mean_latency_ms", 0),
+                    "sampling_metadata": fixture_result.get("sampling_metadata", {}),
+                    "repair_ledger": fixture_result.get("repair_ledger", []),
                     "checks": fixture_result["checks"],
                 }
 
@@ -382,7 +496,7 @@ class ContractRunner:
             fixture_statuses = [f["status"] for f in target_result["fixtures"]]
             status_counts = {
                 "PASS": fixture_statuses.count("PASS"),
-                "REPAIRED": fixture_statuses.count("REPAIRED"),
+                "REPAIRED": 0,  # Deprecated in v0.3.0
                 "FAIL": fixture_statuses.count("FAIL"),
                 "NONENFORCEABLE": 1 if is_nonenforceable else 0,
             }
@@ -392,8 +506,6 @@ class ContractRunner:
                 status = "YELLOW"
             elif status_counts["FAIL"] > 0:
                 status = "RED"
-            elif status_counts["REPAIRED"] > 0:
-                status = "YELLOW"
             else:
                 status = "GREEN"
 

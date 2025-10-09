@@ -1,0 +1,35 @@
+{
+  "pcsl": "0.3.0",
+  "id": "extraction.eval.gpt4",
+  "version": "1.0.0",
+  "description": "Evaluation profile with probabilistic sampling",
+  "targets": [
+    {
+      "type": "openai",
+      "model": "gpt-4o-mini",
+      "params": {
+        "temperature": 0.0,
+        "max_tokens": 500
+      }
+    }
+  ],
+  "execution": {
+    "mode": "auto",
+    "max_retries": 0,
+    "strict_enforce": false
+  },
+  "fixtures": [
+    {
+      "id": "contact_1",
+      "input": "Hi, I'm Sarah Johnson. You can reach me at sarah.j@techcorp.com or call (555) 123-4567. I work at TechCorp Inc."
+    },
+    {
+      "id": "contact_2",
+      "input": "Contact: Dr. Michael Chen, email: mchen@research.org, Research Institute"
+    },
+    {
+      "id": "contact_3",
+      "input": "Name: Alice Smith\nEmail: alice.smith@startup.io\nPhone: +1-555-987-6543\nCompany: Startup.io"
+    }
+  ]
+}

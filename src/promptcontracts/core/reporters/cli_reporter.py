@@ -59,9 +59,10 @@ class CLIReporter:
         """Print a single fixture result."""
         fixture_id = fixture_result.get("fixture_id")
         latency_ms = fixture_result.get("latency_ms")
+        mean_latency_ms = fixture_result.get("mean_latency_ms", latency_ms)
         status = fixture_result.get("status", "UNKNOWN")
-        retries_used = fixture_result.get("retries_used", 0)
-        repaired_details = fixture_result.get("repaired_details", {})
+        sampling_meta = fixture_result.get("sampling_metadata", {})
+        repair_ledger = fixture_result.get("repair_ledger", [])
 
         # Status color
         status_colors = {
@@ -72,23 +73,26 @@ class CLIReporter:
         }
         status_color = status_colors.get(status, "white")
 
-        header = f"[bold]Fixture:[/bold] {fixture_id} (latency: {latency_ms}ms, status: [{status_color}]{status}[/{status_color}]"
-        if retries_used > 0:
-            header += f", retries: {retries_used}"
-        header += ")"
+        # Header with sampling info
+        n_samples = sampling_meta.get("n_samples", 1)
+        if n_samples > 1:
+            pass_rate = sampling_meta.get("pass_rate", 0.0)
+            ci = sampling_meta.get("confidence_interval")
+            header = f"[bold]Fixture:[/bold] {fixture_id} (n={n_samples}, mean latency: {mean_latency_ms:.1f}ms, pass rate: {pass_rate:.2f}"
+            if ci:
+                header += f" CI:[{ci[0]:.2f}, {ci[1]:.2f}]"
+            header += f", status: [{status_color}]{status}[/{status_color}])"
+        else:
+            header = f"[bold]Fixture:[/bold] {fixture_id} (latency: {latency_ms}ms, status: [{status_color}]{status}[/{status_color}])"
 
         self.console.print(header)
 
-        # Show repair details if any
-        if repaired_details.get("stripped_fences") or repaired_details.get("lowercased_fields"):
-            repairs = []
-            if repaired_details.get("stripped_fences"):
-                repairs.append("stripped fences")
-            if repaired_details.get("lowercased_fields"):
-                fields = repaired_details["lowercased_fields"]
-                repairs.append(f"lowercased {', '.join(fields)}")
-
-            self.console.print(f"  [dim]Repairs applied: {', '.join(repairs)}[/dim]")
+        # Show repair ledger if any
+        if repair_ledger:
+            repairs_applied = [r.get("steps_applied", []) for r in repair_ledger]
+            all_steps = [step for steps in repairs_applied for step in steps]
+            if all_steps:
+                self.console.print(f"  [dim]Repairs applied: {', '.join(set(all_steps))}[/dim]")
 
         # Print checks
         for check in fixture_result.get("checks", []):

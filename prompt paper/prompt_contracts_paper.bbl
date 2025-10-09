@@ -1,0 +1,248 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{19}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{} and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showURL}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showURL #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       {\relax}        \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[Achiam et~al\mbox{.}(2023)]%
+        {achiam2023gpt}
+\bibfield{author}{\bibinfo{person}{Josh Achiam}, \bibinfo{person}{Steven
+  Adler}, \bibinfo{person}{Sandhini Agarwal}, \bibinfo{person}{Lama Ahmad},
+  \bibinfo{person}{Ilge Akkaya}, \bibinfo{person}{Florencia~Leoni Aleman},
+  \bibinfo{person}{Diogo Almeida}, \bibinfo{person}{Janko Altenschmidt},
+  \bibinfo{person}{Sam Altman}, \bibinfo{person}{Shyamal Anadkat},
+  {et~al\mbox{.}}} \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{GPT-4 technical report}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2303.08774}}
+  (\bibinfo{year}{2023}).
+\newblock
+
+
+\bibitem[Bender et~al\mbox{.}(2021)]%
+        {bender2021stochasticparrots}
+\bibfield{author}{\bibinfo{person}{Emily~M Bender}, \bibinfo{person}{Timnit
+  Gebru}, \bibinfo{person}{Angelina McMillan-Major}, {and}
+  \bibinfo{person}{Shmargaret Shmitchell}.} \bibinfo{year}{2021}\natexlab{}.
+\newblock \showarticletitle{On the Dangers of Stochastic Parrots: Can Language
+  Models Be Too Big?}. In \bibinfo{booktitle}{\emph{FAccT}}.
+\newblock
+
+
+\bibitem[Brown et~al\mbox{.}(2020)]%
+        {brown2020language}
+\bibfield{author}{\bibinfo{person}{Tom Brown}, \bibinfo{person}{Benjamin Mann},
+  \bibinfo{person}{Nick Ryder}, \bibinfo{person}{Melanie Subbiah},
+  \bibinfo{person}{Jared~D Kaplan}, \bibinfo{person}{Prafulla Dhariwal},
+  \bibinfo{person}{Arvind Neelakantan}, \bibinfo{person}{Pranav Shyam},
+  \bibinfo{person}{Girish Sastry}, \bibinfo{person}{Amanda Askell},
+  {et~al\mbox{.}}} \bibinfo{year}{2020}\natexlab{}.
+\newblock \showarticletitle{Language models are few-shot learners}.
+\newblock \bibinfo{journal}{\emph{Advances in NeurIPS}}  \bibinfo{volume}{33}
+  (\bibinfo{year}{2020}), \bibinfo{pages}{1877--1901}.
+\newblock
+
+
+\bibitem[Chase(2023)]%
+        {langchain2023}
+\bibfield{author}{\bibinfo{person}{Harrison Chase}.}
+  \bibinfo{year}{2023}\natexlab{}.
+\newblock \bibinfo{title}{LangChain}.
+\newblock
+  \bibinfo{howpublished}{\url{https://github.com/langchain-ai/langchain}}.
+\newblock
+
+
+\bibitem[ES and James(2023)]%
+        {ragas2023}
+\bibfield{author}{\bibinfo{person}{Shahul ES} {and} \bibinfo{person}{Jithin
+  James}.} \bibinfo{year}{2023}\natexlab{}.
+\newblock \bibinfo{title}{RAGAS}.
+\newblock
+  \bibinfo{howpublished}{\url{https://github.com/explodinggradients/ragas}}.
+\newblock
+
+
+\bibitem[{European Parliament and Council}(2024)]%
+        {euaiact2024}
+\bibfield{author}{\bibinfo{person}{{European Parliament and Council}}.}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \bibinfo{title}{Regulation (EU) 2024/1689 on Artificial Intelligence
+  (AI Act)}.
+\newblock \bibinfo{howpublished}{Official Journal of the European Union}.
+\newblock
+\newblock
+\shownote{Available at: \url{https://artificialintelligenceact.eu/}}.
+
+
+\bibitem[Hendrycks et~al\mbox{.}(2021)]%
+        {hendrycks2021mmlu}
+\bibfield{author}{\bibinfo{person}{Dan Hendrycks}, \bibinfo{person}{Collin
+  Burns}, \bibinfo{person}{Steven Basart}, {et~al\mbox{.}}}
+  \bibinfo{year}{2021}\natexlab{}.
+\newblock \showarticletitle{Measuring Massive Multitask Language
+  Understanding}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2009.03300}}
+  (\bibinfo{year}{2021}).
+\newblock
+
+
+\bibitem[{ISO/IEC/IEEE}(2013)]%
+        {iso29119}
+\bibfield{author}{\bibinfo{person}{{ISO/IEC/IEEE}}.}
+  \bibinfo{year}{2013}\natexlab{}.
+\newblock \bibinfo{title}{{ISO/IEC/IEEE 29119-1:2013 Software and Systems
+  Engineering -- Software Testing -- Concepts and Definitions}}.
+\newblock
+
+
+\bibitem[Leike et~al\mbox{.}(2018)]%
+        {leike2018rewardmodeling}
+\bibfield{author}{\bibinfo{person}{Jan Leike}, \bibinfo{person}{David Krueger},
+  \bibinfo{person}{Robert Everett}, {et~al\mbox{.}}}
+  \bibinfo{year}{2018}\natexlab{}.
+\newblock \showarticletitle{Scalable Agent Alignment via Reward Modeling}. In
+  \bibinfo{booktitle}{\emph{NeurIPS Workshops}}.
+\newblock
+
+
+\bibitem[Liang et~al\mbox{.}(2022)]%
+        {liang2022holistic}
+\bibfield{author}{\bibinfo{person}{Percy Liang}, \bibinfo{person}{Rishi
+  Bommasani}, \bibinfo{person}{Tony Lee}, \bibinfo{person}{Dimitris Tsipras},
+  \bibinfo{person}{Dilara Soylu}, \bibinfo{person}{Michihiro Yasunaga},
+  \bibinfo{person}{Yian Zhang}, \bibinfo{person}{Deepak Narayanan},
+  \bibinfo{person}{Yuhuai Wu}, \bibinfo{person}{Ananya Kumar}, {et~al\mbox{.}}}
+  \bibinfo{year}{2022}\natexlab{}.
+\newblock \showarticletitle{Holistic evaluation of language models}. In
+  \bibinfo{booktitle}{\emph{Proceedings of NeurIPS}}.
+\newblock
+
+
+\bibitem[Meyer(1992)]%
+        {meyer1992applying}
+\bibfield{author}{\bibinfo{person}{Bertrand Meyer}.}
+  \bibinfo{year}{1992}\natexlab{}.
+\newblock \showarticletitle{Applying design by contract}.
+\newblock \bibinfo{journal}{\emph{Computer}} \bibinfo{volume}{25},
+  \bibinfo{number}{10} (\bibinfo{year}{1992}), \bibinfo{pages}{40--51}.
+\newblock
+
+
+\bibitem[{Microsoft Research}(2023)]%
+        {guidance2023}
+\bibfield{author}{\bibinfo{person}{{Microsoft Research}}.}
+  \bibinfo{year}{2023}\natexlab{}.
+\newblock \bibinfo{title}{Guidance}.
+\newblock \bibinfo{howpublished}{\url{https://github.com/microsoft/guidance}}.
+\newblock
+
+
+\bibitem[{OpenAI}(2023)]%
+        {openai2023structured}
+\bibfield{author}{\bibinfo{person}{{OpenAI}}.} \bibinfo{year}{2023}\natexlab{}.
+\newblock \bibinfo{title}{Structured Outputs in the API}.
+\newblock
+  \bibinfo{howpublished}{\url{https://platform.openai.com/docs/guides/structured-outputs}}.
+\newblock
+
+
+\bibitem[{OpenAPI Initiative}(2017)]%
+        {openapi2017}
+\bibfield{author}{\bibinfo{person}{{OpenAPI Initiative}}.}
+  \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{The OpenAPI Specification}. Linux Foundation.
+\newblock
+
+
+\bibitem[Ribeiro et~al\mbox{.}(2020)]%
+        {ribeiro2020beyond}
+\bibfield{author}{\bibinfo{person}{Marco~Tulio Ribeiro},
+  \bibinfo{person}{Tongshuang Wu}, \bibinfo{person}{Carlos Guestrin}, {and}
+  \bibinfo{person}{Sameer Singh}.} \bibinfo{year}{2020}\natexlab{}.
+\newblock \showarticletitle{Beyond accuracy: Behavioral testing of NLP models
+  with CheckList}.
+\newblock \bibinfo{journal}{\emph{Proceedings of ACL}} (\bibinfo{year}{2020}),
+  \bibinfo{pages}{4902--4912}.
+\newblock
+
+
+\bibitem[Russell(2019)]%
+        {russell2019human}
+\bibfield{author}{\bibinfo{person}{Stuart Russell}.}
+  \bibinfo{year}{2019}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{Human Compatible: Artificial Intelligence
+  and the Problem of Control}}.
+\newblock \bibinfo{publisher}{Viking}, \bibinfo{address}{New York}.
+\newblock
+
+
+\bibitem[{TruEra}(2023)]%
+        {trulens2023}
+\bibfield{author}{\bibinfo{person}{{TruEra}}.} \bibinfo{year}{2023}\natexlab{}.
+\newblock \bibinfo{title}{TruLens}.
+\newblock \bibinfo{howpublished}{\url{https://github.com/truera/trulens}}.
+\newblock
+
+
+\bibitem[Wei et~al\mbox{.}(2022)]%
+        {wei2022chain}
+\bibfield{author}{\bibinfo{person}{Jason Wei}, \bibinfo{person}{Xuezhi Wang},
+  \bibinfo{person}{Dale Schuurmans}, \bibinfo{person}{Maarten Bosma},
+  \bibinfo{person}{Brian Ichter}, \bibinfo{person}{Fei Xia},
+  \bibinfo{person}{Ed Chi}, \bibinfo{person}{Quoc Le}, {and}
+  \bibinfo{person}{Denny Zhou}.} \bibinfo{year}{2022}\natexlab{}.
+\newblock \showarticletitle{Chain-of-thought prompting elicits reasoning in
+  large language models}.
+\newblock \bibinfo{journal}{\emph{Advances in NeurIPS}}  \bibinfo{volume}{35}
+  (\bibinfo{year}{2022}), \bibinfo{pages}{24824--24837}.
+\newblock
+
+
+\bibitem[Zheng et~al\mbox{.}(2023)]%
+        {zheng2023judging}
+\bibfield{author}{\bibinfo{person}{Lianmin Zheng}, \bibinfo{person}{Wei-Lin
+  Chiang}, \bibinfo{person}{Ying Sheng}, \bibinfo{person}{Siyuan Zhuang},
+  \bibinfo{person}{Zhanghao Wu}, \bibinfo{person}{Yonghao Zhuang},
+  \bibinfo{person}{Zi Lin}, \bibinfo{person}{Zhuohan Li},
+  \bibinfo{person}{Dacheng Li}, \bibinfo{person}{Eric Xing}, {et~al\mbox{.}}}
+  \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{Judging LLM-as-a-judge with MT-bench and Chatbot
+  Arena}.
+\newblock \bibinfo{journal}{\emph{Advances in NeurIPS}}  \bibinfo{volume}{36}
+  (\bibinfo{year}{2023}).
+\newblock
+
+
+\end{thebibliography}

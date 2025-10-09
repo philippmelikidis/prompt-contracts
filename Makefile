@@ -1,7 +1,12 @@
-.PHONY: help install dev-install test lint format clean build publish
+.PHONY: help install dev-install setup test lint format clean build publish eval-small eval-full docker-build docker-run
 
 help:  ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+setup:  ## Set up development environment (v0.3.0)
+	pip install -e .
+	pip install -r requirements.txt
+	pip install sentence-transformers numpy  # Optional v0.3.0 deps
 
 install:  ## Install package
 	pip install -e .
@@ -49,6 +54,9 @@ validate-examples:  ## Validate example artifacts
 	prompt-contracts validate pd examples/support_ticket/pd.json
 	prompt-contracts validate es examples/support_ticket/es.json
 	prompt-contracts validate ep examples/support_ticket/ep.json
+	prompt-contracts validate pd examples/extraction/pd.json
+	prompt-contracts validate es examples/extraction/es.json
+	prompt-contracts validate ep examples/extraction/ep.json
 
 run-example:  ## Run example contract
 	prompt-contracts run \
@@ -57,11 +65,37 @@ run-example:  ## Run example contract
 		--ep examples/support_ticket/ep.json \
 		--report cli
 
+eval-small:  ## Run small evaluation suite (v0.3.0)
+	@echo "Running small evaluation suite..."
+	prompt-contracts run \
+		--pd examples/extraction/pd.json \
+		--es examples/extraction/es.json \
+		--ep examples/extraction/ep.json \
+		--n 2 --seed 42 \
+		--save-io artifacts/eval-small \
+		--report json --out results-small.json
+
+eval-full:  ## Run full evaluation suite (v0.3.0)
+	@echo "Running full evaluation suite with N=10 sampling..."
+	prompt-contracts run \
+		--pd examples/extraction/pd.json \
+		--es examples/extraction/es.json \
+		--ep examples/extraction/ep.json \
+		--n 10 --seed 42 \
+		--save-io artifacts/eval-full \
+		--report json --out results-full.json
+
+docker-build:  ## Build Docker image (v0.3.0)
+	docker build -t prompt-contracts:0.3.0 .
+
+docker-run:  ## Run Docker container interactively
+	docker run -it --rm -v $(PWD)/examples:/workspace/examples prompt-contracts:0.3.0 /bin/bash
+
 pre-commit:  ## Run pre-commit hooks on all files
 	pre-commit run --all-files
 
 release-check:  ## Run all release checks (tests, lint, build, validate)
-	@echo "🚀 Running release checks for v0.2.0..."
+	@echo "🚀 Running release checks for v0.3.0..."
 	@echo ""
 	@echo "1️⃣  Running tests..."
 	@pytest -v --tb=short
@@ -70,6 +104,9 @@ release-check:  ## Run all release checks (tests, lint, build, validate)
 	@prompt-contracts validate pd examples/support_ticket/pd.json
 	@prompt-contracts validate es examples/support_ticket/es.json
 	@prompt-contracts validate ep examples/support_ticket/ep.json
+	@prompt-contracts validate pd examples/extraction/pd.json
+	@prompt-contracts validate es examples/extraction/es.json
+	@prompt-contracts validate ep examples/extraction/ep.json
 	@echo ""
 	@echo "3️⃣  Building package..."
 	@python -m build

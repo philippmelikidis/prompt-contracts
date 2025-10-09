@@ -71,6 +71,25 @@ def run_command(args):
             print(f"✓ Loaded ES: {args.es}")
             print(f"✓ Loaded EP: {args.ep}")
 
+        # v0.3.0: Override EP with CLI flags
+        if args.n is not None or args.seed is not None:
+            ep.setdefault("sampling", {})
+            if args.n is not None:
+                ep["sampling"]["n"] = args.n
+            if args.seed is not None:
+                ep["sampling"]["seed"] = args.seed
+
+        # Override target params with CLI flags
+        for target in ep.get("targets", []):
+            params = target.setdefault("params", {})
+            if args.temperature is not None:
+                params["temperature"] = args.temperature
+            if args.top_p is not None:
+                params["top_p"] = args.top_p
+            if args.seed is not None and args.n is None:
+                # Use seed for generation if not doing sampling
+                params["seed"] = args.seed
+
         if args.save_io and args.verbose:
             print(f"✓ Artifacts will be saved to: {args.save_io}")
             print()
@@ -195,6 +214,35 @@ Exit codes:
         dest="save_io",
         help="Directory to save execution artifacts (input_final.txt, output_raw.txt, output_norm.txt, run.json)",
     )
+
+    # v0.3.0: Sampling and generation parameters
+    run_parser.add_argument(
+        "--n",
+        type=int,
+        help="Number of samples to generate per fixture (overrides EP.sampling.n)",
+    )
+    run_parser.add_argument(
+        "--seed",
+        type=int,
+        help="Random seed for reproducibility (overrides EP.sampling.seed)",
+    )
+    run_parser.add_argument(
+        "--temperature",
+        type=float,
+        help="Temperature for generation (overrides target params)",
+    )
+    run_parser.add_argument(
+        "--top-p",
+        dest="top_p",
+        type=float,
+        help="Top-p for generation (overrides target params)",
+    )
+    run_parser.add_argument(
+        "--baseline",
+        choices=["structural-only", "none", "enforce"],
+        help="Baseline mode for comparison (v0.3.0 experimental)",
+    )
+
     run_parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
 
     args = parser.parse_args()

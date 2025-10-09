@@ -1,0 +1,28 @@
+{
+  "pcsl": "0.3.0",
+  "id": "extraction.contact_info.suite",
+  "version": "1.0.0",
+  "description": "Validation suite for contact info extraction",
+  "checks": [
+    {
+      "type": "pc.check.json_valid",
+      "description": "Response must be valid JSON"
+    },
+    {
+      "type": "pc.check.json_required",
+      "fields": ["name", "email"],
+      "description": "Must include name and email fields"
+    },
+    {
+      "type": "pc.check.regex_present",
+      "pattern": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}",
+      "description": "Email must be valid format"
+    },
+    {
+      "type": "pc.check.contains_any",
+      "options": ["phone", "company"],
+      "case_sensitive": false,
+      "description": "Should include phone or company"
+    }
+  ]
+}

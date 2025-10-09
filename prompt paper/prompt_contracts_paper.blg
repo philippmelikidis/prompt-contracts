@@ -1,0 +1,79 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: prompt_contracts_paper.aux
+The style file: ACM-Reference-Format.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Database file #1: references.bib
+"{" immediately follows a field name---line 128 of file references.bib
+ :   title
+ :        {Robustness testing of language models: A survey},
+I'm skipping whatever remains of this entry
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=200001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
+Warning--no number and no volume in achiam2023gpt
+Warning--page numbers missing in both pages and numpages fields in achiam2023gpt
+Warning--empty publisher in bender2021stochasticparrots
+Warning--empty address in bender2021stochasticparrots
+Warning--page numbers missing in both pages and numpages fields in bender2021stochasticparrots
+Warning--no number and no volume in hendrycks2021mmlu
+Warning--page numbers missing in both pages and numpages fields in hendrycks2021mmlu
+Warning--empty publisher in leike2018rewardmodeling
+Warning--empty address in leike2018rewardmodeling
+Warning--page numbers missing in both pages and numpages fields in leike2018rewardmodeling
+Warning--empty publisher in liang2022holistic
+Warning--empty address in liang2022holistic
+Warning--page numbers missing in both pages and numpages fields in liang2022holistic
+Warning--empty booktitle in openapi2017
+Warning--empty publisher in openapi2017
+Warning--empty address in openapi2017
+Warning--page numbers missing in both pages and numpages fields in openapi2017
+Warning--no number and no volume in ribeiro2020beyond
+Warning--page numbers missing in both pages and numpages fields in zheng2023judging
+You've used 19 entries,
+            6056 wiz_defined-function locations,
+            1577 strings with 20954 characters,
+and the built_in function-call counts, 19704 in all, are:
+= -- 2438
+> -- 799
+< -- 0
++ -- 265
+- -- 284
+* -- 1414
+:= -- 2072
+add.period$ -- 93
+call.type$ -- 19
+change.case$ -- 150
+chr.to.int$ -- 19
+cite$ -- 38
+duplicate$ -- 1644
+empty$ -- 1168
+format.name$ -- 324
+if$ -- 4692
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 50
+newline$ -- 188
+num.names$ -- 133
+pop$ -- 693
+preamble$ -- 1
+purify$ -- 302
+quote$ -- 0
+skip$ -- 598
+stack$ -- 0
+substring$ -- 1231
+swap$ -- 119
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 457
+warning$ -- 19
+while$ -- 109
+width$ -- 0
+write$ -- 382
+(There was 1 error message)

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "prompt-contracts"
-version = "0.2.3"
+version = "0.3.0"
 description = "Contract testing framework for LLM prompts - PCSL (Prompt Contract Specification Language)"
 readme = "README.md"
 requires-python = ">=3.10"

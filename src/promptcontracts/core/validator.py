@@ -10,11 +10,16 @@ from typing import Any
 from jsonpath_ng import parse as jsonpath_parse
 
 from .checks import (
+    contains_all_check,
+    contains_any_check,
     enum_check,
     json_required_check,
     json_valid_check,
+    judge_check,
     latency_budget_check,
     regex_absent_check,
+    regex_present_check,
+    similarity_check,
     token_budget_check,
 )
 
@@ -34,6 +39,12 @@ class CheckRegistry:
         self.register("pc.check.regex_absent", regex_absent_check)
         self.register("pc.check.token_budget", token_budget_check)
         self.register("pc.check.latency_budget", latency_budget_check)
+        # v0.3.0 semantic checks
+        self.register("pc.check.contains_all", contains_all_check)
+        self.register("pc.check.contains_any", contains_any_check)
+        self.register("pc.check.regex_present", regex_present_check)
+        self.register("pc.check.similarity", similarity_check)
+        self.register("pc.check.judge", judge_check)
 
     def register(self, check_type: str, check_func: Callable):
         """Register a check function."""
