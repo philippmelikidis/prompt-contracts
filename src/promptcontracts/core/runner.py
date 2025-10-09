@@ -123,21 +123,40 @@ class ContractRunner:
         raw_output: str,
         normalized_output: str,
         metadata: dict[str, Any],
-    ):
-        """Save IO artifacts to disk."""
+    ) -> dict[str, str]:
+        """
+        Save IO artifacts to disk.
+
+        Returns dict with absolute paths to all artifact files.
+        """
         if not self.save_io_dir:
-            return
+            return {}
 
         artifact_dir = self.save_io_dir / target_id / fixture_id
         artifact_dir.mkdir(parents=True, exist_ok=True)
 
-        # Save files
-        (artifact_dir / "input_final.txt").write_text(final_prompt)
-        (artifact_dir / "output_raw.txt").write_text(raw_output)
-        (artifact_dir / "output_norm.txt").write_text(normalized_output)
-        (artifact_dir / "run.json").write_text(json.dumps(metadata, indent=2))
+        # Save files and get absolute paths
+        input_path = artifact_dir / "input_final.txt"
+        output_raw_path = artifact_dir / "output_raw.txt"
+        output_norm_path = artifact_dir / "output_norm.txt"
+        run_json_path = artifact_dir / "run.json"
 
-        return str(artifact_dir)
+        input_path.write_text(final_prompt)
+        output_raw_path.write_text(raw_output)
+        output_norm_path.write_text(normalized_output)
+
+        # Add artifact paths to metadata before saving
+        artifact_paths = {
+            "input_final": str(input_path.absolute()),
+            "output_raw": str(output_raw_path.absolute()),
+            "output_norm": str(output_norm_path.absolute()),
+            "run": str(run_json_path.absolute()),
+        }
+        metadata["artifact_paths"] = artifact_paths
+
+        run_json_path.write_text(json.dumps(metadata, indent=2))
+
+        return artifact_paths
 
     def _validate_response(
         self, response_text: str, parsed_json: Any = None
@@ -295,8 +314,8 @@ class ContractRunner:
                 all_latencies.append(fixture_result["latency_ms"])
                 all_check_results.extend(fixture_result["checks"])
 
-                # Save artifacts
-                artifact_path = None
+                # Save artifacts and get paths
+                artifact_paths = {}
                 if self.save_io_dir:
                     # Compute prompt hash
                     prompt_hash = hashlib.sha256(final_prompt.encode()).hexdigest()
@@ -306,7 +325,7 @@ class ContractRunner:
                         "target": target_id,
                         "params": target.get("params", {}),
                         "execution": {
-                            "mode": self.exec_mode,
+                            "requested_mode": self.exec_mode,
                             "effective_mode": effective_mode,
                             "max_retries": self.max_retries,
                         },
@@ -319,7 +338,7 @@ class ContractRunner:
                         "timestamp": datetime.utcnow().isoformat() + "Z",
                     }
 
-                    artifact_path = self._save_artifacts(
+                    artifact_paths = self._save_artifacts(
                         target_id,
                         fixture_id,
                         final_prompt,
@@ -329,17 +348,20 @@ class ContractRunner:
                     )
 
                 # Add to results
-                target_result["fixtures"].append(
-                    {
-                        "fixture_id": fixture_id,
-                        "status": fixture_result["status"],
-                        "latency_ms": fixture_result["latency_ms"],
-                        "retries_used": fixture_result["retries_used"],
-                        "repaired_details": fixture_result["repair_details"],
-                        "checks": fixture_result["checks"],
-                        "artifact_path": artifact_path,
-                    }
-                )
+                fixture_result_item = {
+                    "fixture_id": fixture_id,
+                    "status": fixture_result["status"],
+                    "latency_ms": fixture_result["latency_ms"],
+                    "retries_used": fixture_result["retries_used"],
+                    "repaired_details": fixture_result["repair_details"],
+                    "checks": fixture_result["checks"],
+                }
+
+                # Add artifact paths if they were saved
+                if artifact_paths:
+                    fixture_result_item["artifact_paths"] = artifact_paths
+
+                target_result["fixtures"].append(fixture_result_item)
 
             # Run latency budget checks if any
             latency_checks = [c for c in checks if c.get("type") == "pc.check.latency_budget"]
