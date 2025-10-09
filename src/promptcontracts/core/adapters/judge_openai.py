@@ -53,7 +53,9 @@ class OpenAIJudgeAdapter(JudgeAdapter):
         try:
             import openai
         except ImportError as e:
-            raise ImportError("openai not installed. Install with: pip install openai") from e
+            raise ImportError(
+                "openai not installed. Install with: pip install openai"
+            ) from e
 
         self.model = model
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
