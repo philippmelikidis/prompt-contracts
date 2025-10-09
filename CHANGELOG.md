@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.2.3] - 2025-01-08
+## [0.2.3] - 2025-10-09
 
 ### Fixed
 - strict_enforce semantics now properly returns NONENFORCEABLE status instead of silent fallback when schema enforcement is requested but unavailable
@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - All documentation synchronized with actual implementation behavior
 - Examples section expanded with real output snippets
 
-## [0.2.2] - 2025-01-08
+## [0.2.2] - 2025-10-08
 
 ### Added
 - **BEST_PRACTICES.md**: Comprehensive production guide covering:
@@ -62,7 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Professional production-ready guidance
 - Real-world use case examples
 
-## [0.2.1] - 2025-01-07
+## [0.2.1] - 2025-10-08
 
 ### Added
 - Public Python API: `run_contract()` and `validate_artifact()`
