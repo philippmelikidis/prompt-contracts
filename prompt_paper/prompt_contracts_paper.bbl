@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{19}
+\begin{thebibliography}{12}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -36,20 +36,6 @@
 \providecommand\natexlab[1]{#1}
 \providecommand\showeprint[2][]{arXiv:#2}
 
-\bibitem[Achiam et~al\mbox{.}(2023)]%
-        {achiam2023gpt}
-\bibfield{author}{\bibinfo{person}{Josh Achiam}, \bibinfo{person}{Steven
-  Adler}, \bibinfo{person}{Sandhini Agarwal}, \bibinfo{person}{Lama Ahmad},
-  \bibinfo{person}{Ilge Akkaya}, \bibinfo{person}{Florencia~Leoni Aleman},
-  \bibinfo{person}{Diogo Almeida}, \bibinfo{person}{Janko Altenschmidt},
-  \bibinfo{person}{Sam Altman}, \bibinfo{person}{Shyamal Anadkat},
-  {et~al\mbox{.}}} \bibinfo{year}{2023}\natexlab{}.
-\newblock \showarticletitle{GPT-4 technical report}.
-\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2303.08774}}
-  (\bibinfo{year}{2023}).
-\newblock
-
-
 \bibitem[Bender et~al\mbox{.}(2021)]%
         {bender2021stochasticparrots}
 \bibfield{author}{\bibinfo{person}{Emily~M Bender}, \bibinfo{person}{Timnit
@@ -60,20 +46,6 @@
 \newblock
 
 
-\bibitem[Brown et~al\mbox{.}(2020)]%
-        {brown2020language}
-\bibfield{author}{\bibinfo{person}{Tom Brown}, \bibinfo{person}{Benjamin Mann},
-  \bibinfo{person}{Nick Ryder}, \bibinfo{person}{Melanie Subbiah},
-  \bibinfo{person}{Jared~D Kaplan}, \bibinfo{person}{Prafulla Dhariwal},
-  \bibinfo{person}{Arvind Neelakantan}, \bibinfo{person}{Pranav Shyam},
-  \bibinfo{person}{Girish Sastry}, \bibinfo{person}{Amanda Askell},
-  {et~al\mbox{.}}} \bibinfo{year}{2020}\natexlab{}.
-\newblock \showarticletitle{Language models are few-shot learners}.
-\newblock \bibinfo{journal}{\emph{Advances in NeurIPS}}  \bibinfo{volume}{33}
-  (\bibinfo{year}{2020}), \bibinfo{pages}{1877--1901}.
-\newblock
-
-
 \bibitem[Chase(2023)]%
         {langchain2023}
 \bibfield{author}{\bibinfo{person}{Harrison Chase}.}
@@ -81,16 +53,6 @@
 \newblock \bibinfo{title}{LangChain}.
 \newblock
   \bibinfo{howpublished}{\url{https://github.com/langchain-ai/langchain}}.
-\newblock
-
-
-\bibitem[ES and James(2023)]%
-        {ragas2023}
-\bibfield{author}{\bibinfo{person}{Shahul ES} {and} \bibinfo{person}{Jithin
-  James}.} \bibinfo{year}{2023}\natexlab{}.
-\newblock \bibinfo{title}{RAGAS}.
-\newblock
-  \bibinfo{howpublished}{\url{https://github.com/explodinggradients/ragas}}.
 \newblock
 
 
@@ -124,16 +86,6 @@
   \bibinfo{year}{2013}\natexlab{}.
 \newblock \bibinfo{title}{{ISO/IEC/IEEE 29119-1:2013 Software and Systems
   Engineering -- Software Testing -- Concepts and Definitions}}.
-\newblock
-
-
-\bibitem[Leike et~al\mbox{.}(2018)]%
-        {leike2018rewardmodeling}
-\bibfield{author}{\bibinfo{person}{Jan Leike}, \bibinfo{person}{David Krueger},
-  \bibinfo{person}{Robert Everett}, {et~al\mbox{.}}}
-  \bibinfo{year}{2018}\natexlab{}.
-\newblock \showarticletitle{Scalable Agent Alignment via Reward Modeling}. In
-  \bibinfo{booktitle}{\emph{NeurIPS Workshops}}.
 \newblock
 
 
@@ -195,38 +147,6 @@
   with CheckList}.
 \newblock \bibinfo{journal}{\emph{Proceedings of ACL}} (\bibinfo{year}{2020}),
   \bibinfo{pages}{4902--4912}.
-\newblock
-
-
-\bibitem[Russell(2019)]%
-        {russell2019human}
-\bibfield{author}{\bibinfo{person}{Stuart Russell}.}
-  \bibinfo{year}{2019}\natexlab{}.
-\newblock \bibinfo{booktitle}{\emph{Human Compatible: Artificial Intelligence
-  and the Problem of Control}}.
-\newblock \bibinfo{publisher}{Viking}, \bibinfo{address}{New York}.
-\newblock
-
-
-\bibitem[{TruEra}(2023)]%
-        {trulens2023}
-\bibfield{author}{\bibinfo{person}{{TruEra}}.} \bibinfo{year}{2023}\natexlab{}.
-\newblock \bibinfo{title}{TruLens}.
-\newblock \bibinfo{howpublished}{\url{https://github.com/truera/trulens}}.
-\newblock
-
-
-\bibitem[Wei et~al\mbox{.}(2022)]%
-        {wei2022chain}
-\bibfield{author}{\bibinfo{person}{Jason Wei}, \bibinfo{person}{Xuezhi Wang},
-  \bibinfo{person}{Dale Schuurmans}, \bibinfo{person}{Maarten Bosma},
-  \bibinfo{person}{Brian Ichter}, \bibinfo{person}{Fei Xia},
-  \bibinfo{person}{Ed Chi}, \bibinfo{person}{Quoc Le}, {and}
-  \bibinfo{person}{Denny Zhou}.} \bibinfo{year}{2022}\natexlab{}.
-\newblock \showarticletitle{Chain-of-thought prompting elicits reasoning in
-  large language models}.
-\newblock \bibinfo{journal}{\emph{Advances in NeurIPS}}  \bibinfo{volume}{35}
-  (\bibinfo{year}{2022}), \bibinfo{pages}{24824--24837}.
 \newblock
 
 

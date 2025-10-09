@@ -13,9 +13,7 @@ from typing import Any
 class JudgeAdapter:
     """Base class for judge adapters."""
 
-    def judge(
-        self, prompt: str, budget: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    def judge(self, prompt: str, budget: dict[str, Any] | None = None) -> dict[str, Any]:
         """
         Evaluate using LLM judge.
 
@@ -58,9 +56,7 @@ class OpenAIJudgeAdapter(JudgeAdapter):
 
         self.client = OpenAI(api_key=self.api_key)
 
-    def judge(
-        self, prompt: str, budget: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    def judge(self, prompt: str, budget: dict[str, Any] | None = None) -> dict[str, Any]:
         """
         Evaluate using OpenAI judge.
 
@@ -83,8 +79,7 @@ class OpenAIJudgeAdapter(JudgeAdapter):
                     {
                         "role": "system",
                         "content": (
-                            "You are an expert evaluator. "
-                            "Provide clear PASS/FAIL verdicts."
+                            "You are an expert evaluator. " "Provide clear PASS/FAIL verdicts."
                         ),
                     },
                     {"role": "user", "content": prompt},
@@ -128,9 +123,7 @@ class OpenAIJudgeAdapter(JudgeAdapter):
             Tuple of (verdict, explanation)
         """
         verdict_match = re.search(r"VERDICT:\s*(PASS|FAIL)", text, re.IGNORECASE)
-        explanation_match = re.search(
-            r"EXPLANATION:\s*(.+)", text, re.IGNORECASE | re.DOTALL
-        )
+        explanation_match = re.search(r"EXPLANATION:\s*(.+)", text, re.IGNORECASE | re.DOTALL)
 
         if verdict_match:
             verdict = verdict_match.group(1).upper() == "PASS"
@@ -166,9 +159,7 @@ class DummyJudgeAdapter(JudgeAdapter):
         """
         self.default_verdict = default_verdict
 
-    def judge(
-        self, prompt: str, budget: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    def judge(self, prompt: str, budget: dict[str, Any] | None = None) -> dict[str, Any]:
         """
         Return dummy judgment.
 
