@@ -58,7 +58,9 @@ class OpenAIJudgeAdapter(JudgeAdapter):
         self.model = model
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         if not self.api_key:
-            raise ValueError("OpenAI API key not provided and OPENAI_API_KEY not set")
+            raise ValueError(
+                "OpenAI API key not provided and OPENAI_API_KEY not set"
+            )
 
         self.client = openai.OpenAI(api_key=self.api_key)
 
@@ -151,11 +153,10 @@ class OpenAIJudgeAdapter(JudgeAdapter):
             else:
                 verdict = False  # Default to fail if unclear
 
-        explanation = (
-            explanation_match.group(1).strip()
-            if explanation_match
-            else text.strip()[:200]
-        )
+        if explanation_match:
+            explanation = explanation_match.group(1).strip()
+        else:
+            explanation = text.strip()[:200]
 
         return verdict, explanation
 
