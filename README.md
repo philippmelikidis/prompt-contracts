@@ -12,15 +12,18 @@ Prompt-Contracts is a specification and toolkit that brings contract testing to 
 
 ---
 
-## What's New in v0.2.3
+## What's New in v0.3.0
 
-**Patch Release** - Improved CLI, artifact paths, and documentation:
+**Major Release** - Probabilistic Contracts & Semantic Validation:
 
-- **CLI Enhancements**: Better help text with examples, verbose mode (-v), clarified exit codes
-- **Absolute Artifact Paths**: All artifact paths in run.json and JSON reporter now use absolute paths
-- **strict_enforce Fix**: Properly returns NONENFORCEABLE status when enforcement unavailable
-- **TROUBLESHOOTING Guide**: New comprehensive troubleshooting documentation
-- **Documentation Sync**: All docs updated to match actual implementation behavior
+- **N-Sampling**: Generate multiple samples with configurable aggregation (majority/all/any/first)
+- **Bootstrap Confidence Intervals**: Statistical validation with δ=0.95 confidence
+- **Semantic Checks**: `contains_all`, `contains_any`, `regex_present`, `similarity` (embedding-based)
+- **LLM-as-Judge**: Automated evaluation with budget tracking
+- **Enhanced Parsing**: `json_loose()` and `regex_extract()` for robust output handling
+- **Repair Policies**: Structured normalization with repair ledgers
+- **Compliance Documentation**: ISO/IEC/IEEE 29119 and EU AI Act mapping
+- **Formal Capability Negotiation**: μ(Acap, Mreq) → Mactual for adapters
 
 ---
 
@@ -39,7 +42,7 @@ Prompt-Contracts is a specification and toolkit that brings contract testing to 
   - [CLI Commands](#cli-commands)
   - [Execution Configuration](#execution-configuration)
   - [Artifact Saving](#artifact-saving)
-- [Best Practices](BEST_PRACTICES.md) 📘
+- [Best Practices](BEST_PRACTICES.md)
 - [PCSL Specification](#pcsl-specification)
   - [Conformance Levels](#conformance-levels)
   - [Built-in Checks](#built-in-checks)
