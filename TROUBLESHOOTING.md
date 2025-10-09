@@ -378,6 +378,39 @@ pip install --upgrade prompt-contracts
 
 ## Provider-Specific Issues
 
+### Ollama: Schema Enforcement Not Supported
+
+**Important:** Ollama and most local models currently **do not support** schema-guided JSON enforcement. This is **expected behavior**, not an error.
+
+**What This Means:**
+- Ollama automatically falls back to `assist` mode (even if `mode: enforce` is requested)
+- Assist mode adds intelligent constraints to prompts and applies auto-repair
+- This provides robust output validation without requiring native schema support
+- **Recommended:** Use `mode: assist` or `mode: auto` for Ollama
+
+**Example EP Configuration for Ollama:**
+```json
+{
+  "targets": [
+    { "type": "ollama", "model": "mistral", "params": {"temperature": 0.3} }
+  ],
+  "execution": {
+    "mode": "assist",  // or "auto" for automatic fallback
+    "max_retries": 2,
+    "auto_repair": {
+      "strip_markdown_fences": true,
+      "lowercase_fields": ["$.category", "$.priority"]
+    }
+  }
+}
+```
+
+**Why Assist Mode is Recommended:**
+- ✅ Automatically adds constraint blocks to prompts
+- ✅ Auto-repair fixes common issues (markdown fences, casing)
+- ✅ Works reliably with local models
+- ✅ No API costs, privacy-first
+
 ### Ollama: Model Not Found
 
 **Problem:** `Model 'mistral' not found`

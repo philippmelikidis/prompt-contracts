@@ -196,6 +196,66 @@ Summary: 11/11 checks passed (0 PASS, 2 REPAIRED) — status: YELLOW
 
 ---
 
+## Demo Runs: Comparing Providers
+
+### Demo 1: Ollama with Assist Mode (REPAIRED)
+
+Test auto-repair with a local model that produces imperfect output:
+
+```bash
+prompt-contracts run \
+  --pd examples/test_repair/pd_force_bad.json \
+  --es examples/test_repair/es.json \
+  --ep examples/test_repair/ep_assist_force.json \
+  --save-io artifacts/demo_ollama \
+  --verbose
+```
+
+**Expected Result:**
+- **Status**: `REPAIRED` (Yellow)
+- **Mode**: `assist`
+- **Repairs**: Stripped markdown fences, lowercased fields
+- **Artifacts**: `artifacts/demo_ollama/` contains raw vs normalized output
+- **Exit Code**: `0` (success after repair)
+
+**What This Demonstrates:**
+- Ollama produces output with markdown fences and wrong casing
+- Auto-repair normalizes output automatically
+- All checks pass after repair
+- Recommended mode for local models
+
+### Demo 2: OpenAI with Enforce Mode (PASS)
+
+Test schema-guided enforcement with OpenAI:
+
+```bash
+# Set your API key first
+export OPENAI_API_KEY='your-api-key-here'
+
+# Use email classification example with enforce mode
+prompt-contracts run \
+  --pd examples/email_classification/pd.json \
+  --es examples/email_classification/es.json \
+  --ep examples/email_classification/ep_enforce.json \
+  --save-io artifacts/demo_openai \
+  --verbose
+```
+
+**Expected Result:**
+- **Status**: `PASS` (Green)
+- **Mode**: `enforce`
+- **Repairs**: None needed (schema enforcement prevents errors)
+- **Artifacts**: `artifacts/demo_openai/` shows clean output
+- **Exit Code**: `0` (first-try success)
+
+**What This Demonstrates:**
+- OpenAI enforces JSON schema natively via `response_format`
+- Output is correct on first attempt (no repair needed)
+- Guaranteed structure compliance
+- Best mode for production OpenAI usage
+
+---
+
 ## Using OpenAI Instead
 
 ### Set API Key
