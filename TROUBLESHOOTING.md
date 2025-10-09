@@ -567,5 +567,5 @@ If your issue isn't covered here:
 
 ---
 
-**Last Updated:** 2025-01-08
+**Last Updated:** 2025-10-09
 **Version:** 0.2.3
