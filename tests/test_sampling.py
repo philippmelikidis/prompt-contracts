@@ -1,6 +1,7 @@
 """Tests for sampling module."""
 
 import pytest
+
 from promptcontracts.core.sampling import SampleResult, create_sampler
 
 

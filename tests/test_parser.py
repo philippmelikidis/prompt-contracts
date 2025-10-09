@@ -1,6 +1,7 @@
 """Tests for parser module."""
 
 import pytest
+
 from promptcontracts.core.parser import (
     ParseError,
     extract_json_field,

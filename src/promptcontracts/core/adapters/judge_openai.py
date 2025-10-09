@@ -13,11 +13,7 @@ from typing import Any
 class JudgeAdapter:
     """Base class for judge adapters."""
 
-    def judge(
-        self,
-        prompt: str,
-        budget: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    def judge(self, prompt: str, budget: dict[str, Any] | None = None) -> dict[str, Any]:
         """
         Evaluate using LLM judge.
 
@@ -38,11 +34,7 @@ class OpenAIJudgeAdapter(JudgeAdapter):
     Requires: pip install openai
     """
 
-    def __init__(
-        self,
-        model: str = "gpt-3.5-turbo",
-        api_key: str | None = None,
-    ):
+    def __init__(self, model: str = "gpt-3.5-turbo", api_key: str | None = None):
         """
         Initialize OpenAI judge adapter.
 
@@ -51,24 +43,20 @@ class OpenAIJudgeAdapter(JudgeAdapter):
             api_key: OpenAI API key (defaults to OPENAI_API_KEY env var)
         """
         try:
-            import openai
+            from openai import OpenAI
         except ImportError as e:
-            raise ImportError(
-                "openai not installed. Install with: pip install openai"
-            ) from e
+            msg = "openai not installed. Install with: pip install openai"
+            raise ImportError(msg) from e
 
         self.model = model
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         if not self.api_key:
-            raise ValueError("OpenAI API key not provided and OPENAI_API_KEY not set")
+            msg = "OpenAI API key not provided and OPENAI_API_KEY not set"
+            raise ValueError(msg)
 
-        self.client = openai.OpenAI(api_key=self.api_key)
+        self.client = OpenAI(api_key=self.api_key)
 
-    def judge(
-        self,
-        prompt: str,
-        budget: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    def judge(self, prompt: str, budget: dict[str, Any] | None = None) -> dict[str, Any]:
         """
         Evaluate using OpenAI judge.
 
@@ -90,19 +78,20 @@ class OpenAIJudgeAdapter(JudgeAdapter):
                 messages=[
                     {
                         "role": "system",
-                        "content": "You are an expert evaluator. Provide clear PASS/FAIL verdicts.",
+                        "content": (
+                            "You are an expert evaluator. " "Provide clear PASS/FAIL verdicts."
+                        ),
                     },
                     {"role": "user", "content": prompt},
                 ],
                 max_tokens=max_tokens,
-                temperature=0.0,  # Deterministic for consistency
+                temperature=0.0,
             )
 
             latency_ms = (time.time() - start_time) * 1000
             response_text = response.choices[0].message.content or ""
             tokens_used = response.usage.total_tokens if response.usage else 0
 
-            # Parse verdict
             verdict, explanation = self._parse_verdict(response_text)
 
             return {
@@ -133,26 +122,23 @@ class OpenAIJudgeAdapter(JudgeAdapter):
         Returns:
             Tuple of (verdict, explanation)
         """
-        # Look for VERDICT: PASS or VERDICT: FAIL
         verdict_match = re.search(r"VERDICT:\s*(PASS|FAIL)", text, re.IGNORECASE)
-        explanation_match = re.search(
-            r"EXPLANATION:\s*(.+)", text, re.IGNORECASE | re.DOTALL
-        )
+        explanation_match = re.search(r"EXPLANATION:\s*(.+)", text, re.IGNORECASE | re.DOTALL)
 
         if verdict_match:
             verdict = verdict_match.group(1).upper() == "PASS"
         else:
-            # Fallback: look for PASS/FAIL anywhere in text
             if "PASS" in text.upper() and "FAIL" not in text.upper():
                 verdict = True
             elif "FAIL" in text.upper():
                 verdict = False
             else:
-                verdict = False  # Default to fail if unclear
+                verdict = False
 
-        explanation = (
-            explanation_match.group(1).strip() if explanation_match else text.strip()[:200]
-        )
+        if explanation_match:
+            explanation = explanation_match.group(1).strip()
+        else:
+            explanation = text.strip()[:200]
 
         return verdict, explanation
 
@@ -173,11 +159,7 @@ class DummyJudgeAdapter(JudgeAdapter):
         """
         self.default_verdict = default_verdict
 
-    def judge(
-        self,
-        prompt: str,
-        budget: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    def judge(self, prompt: str, budget: dict[str, Any] | None = None) -> dict[str, Any]:
         """
         Return dummy judgment.
 
@@ -198,9 +180,7 @@ class DummyJudgeAdapter(JudgeAdapter):
 
 
 def create_judge_adapter(
-    adapter_type: str = "openai",
-    model: str = "gpt-3.5-turbo",
-    **kwargs: Any,
+    adapter_type: str = "openai", model: str = "gpt-3.5-turbo", **kwargs: Any
 ) -> JudgeAdapter:
     """
     Create a judge adapter.
