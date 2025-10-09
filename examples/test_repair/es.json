@@ -1,0 +1,31 @@
+{
+  "$schema": "../../src/promptcontracts/spec/schema/pcsl-es.schema.json",
+  "pcsl": "0.1.0",
+  "checks": [
+    {
+      "type": "pc.check.json_valid"
+    },
+    {
+      "type": "pc.check.json_required",
+      "fields": ["category", "priority", "reason"]
+    },
+    {
+      "type": "pc.check.enum",
+      "field": "$.category",
+      "allowed": ["technical", "billing", "other"]
+    },
+    {
+      "type": "pc.check.enum",
+      "field": "$.priority",
+      "allowed": ["low", "medium", "high"]
+    },
+    {
+      "type": "pc.check.regex_absent",
+      "pattern": "```"
+    },
+    {
+      "type": "pc.check.token_budget",
+      "max_out": 200
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "../../src/promptcontracts/spec/schema/pcsl-pd.schema.json",
+  "pcsl": "0.1.0",
+  "id": "test.repair.v1",
+  "io": {
+    "channel": "text",
+    "expects": "structured/json"
+  },
+  "prompt": "Classify this support ticket. Reply with JSON containing:\n- category: technical, billing, or other\n- priority: low, medium, or high\n- reason: brief explanation\n\nIMPORTANT: Use proper capitalization (e.g., 'Technical', 'High') and wrap your response in markdown code fences."
+}

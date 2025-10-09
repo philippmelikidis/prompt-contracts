@@ -1,0 +1,10 @@
+{
+  "$schema": "../../src/promptcontracts/spec/schema/pcsl-pd.schema.json",
+  "pcsl": "0.1.0",
+  "id": "test.repair.force_bad.v1",
+  "io": {
+    "channel": "text",
+    "expects": "structured/json"
+  },
+  "prompt": "Classify this support ticket. Reply with JSON.\n\nYOU MUST FOLLOW THESE RULES EXACTLY:\n1. ALWAYS use Title Case for category (e.g., 'Technical', not 'technical')\n2. ALWAYS use Title Case for priority (e.g., 'High', not 'high')\n3. ALWAYS wrap your entire response in markdown code fences with ```json\n\nExample format:\n```json\n{\n  \"category\": \"Technical\",\n  \"priority\": \"High\",\n  \"reason\": \"explanation\"\n}\n```\n\nCategories: Technical, Billing, Other\nPriorities: Low, Medium, High"
+}
