@@ -110,7 +110,7 @@ venv\Scripts\activate  # Windows
 
 **Problem:** `Unknown check type: pc.check.custom`
 
-**Solution:** Only these check types are supported in v0.2.x:
+**Solution:** Only these check types are supported in v0.2.x (v0.3.0 adds semantic checks):
 - `pc.check.json_valid`
 - `pc.check.json_required`
 - `pc.check.enum`
@@ -369,7 +369,7 @@ jq '.targets[].fixtures[].artifact_paths' results.json
 
 **Problem:** Artifact paths in run.json are relative.
 
-**Solution:** This was fixed in v0.2.3. Upgrade:
+**Solution:** This was fixed in v0.2.3. Upgrade to v0.3.0 for the latest fixes:
 ```bash
 pip install --upgrade prompt-contracts
 ```
@@ -600,5 +600,5 @@ If your issue isn't covered here:
 
 ---
 
-**Last Updated:** 2025-10-09
-**Version:** 0.2.3
+**Last Updated:** 2025-01-09
+**Version:** 0.3.0

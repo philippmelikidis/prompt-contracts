@@ -36,16 +36,22 @@
 1. Gehe zu: https://github.com/philippmelikidis/prompt-contracts/releases/new
 
 2. Fülle aus:
-   - **Tag**: `v0.2.0` (muss mit pyproject.toml Version übereinstimmen!)
+   - **Tag**: `v0.3.0` (muss mit pyproject.toml Version übereinstimmen!)
    - **Target**: `dev` oder `main`
-   - **Title**: `Release v0.2.0`
+   - **Title**: `Release v0.3.0: Probabilistic Contracts & Semantic Validation`
    - **Description**:
      ```markdown
-     ## What's New
-     - Professional v0.2.0 release
-     - Full PCSL implementation with enforcement modes
-     - Auto-repair & bounded retries
-     - Comprehensive CI/CD pipeline
+     ## What's New in v0.3.0
+
+     **Major Release** - Probabilistic Contracts & Semantic Validation:
+
+     - **N-Sampling**: Generate multiple samples with configurable aggregation
+     - **Bootstrap Confidence Intervals**: Statistical validation with δ=0.95
+     - **Semantic Checks**: `contains_all`, `similarity`, `judge` (LLM-as-judge)
+     - **Enhanced Parsing**: `json_loose()` and `regex_extract()`
+     - **Repair Policies**: Structured normalization with repair ledgers
+     - **Compliance Documentation**: ISO/IEC/IEEE 29119, EU AI Act mapping
+     - **Formal Capability Negotiation**: μ(Acap, Mreq) → Mactual
 
      ## Installation
      pip install prompt-contracts
