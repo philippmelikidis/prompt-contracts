@@ -1,0 +1,24 @@
+{
+  "pcsl": "0.3.0",
+  "id": "summarization.article.suite",
+  "version": "1.0.0",
+  "description": "Validation suite for article summarization",
+  "checks": [
+    {
+      "type": "pc.check.token_budget",
+      "max_tokens": 100,
+      "description": "Summary must be concise (max 100 tokens)"
+    },
+    {
+      "type": "pc.check.contains_all",
+      "required": [".", "main"],
+      "case_sensitive": false,
+      "description": "Must be complete sentence mentioning main points"
+    },
+    {
+      "type": "pc.check.regex_absent",
+      "pattern": "(\\n\\n|\\t)",
+      "description": "Should not have excessive whitespace"
+    }
+  ]
+}

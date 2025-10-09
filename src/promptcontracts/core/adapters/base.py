@@ -10,6 +10,10 @@ class Capability(NamedTuple):
     schema_guided_json: bool = False
     tool_calling: bool = False
     function_call_json: bool = False
+    supports_seed: bool = False
+    supports_temperature: bool = True
+    supports_top_p: bool = True
+    max_tokens: int | None = None
 
 
 class AbstractAdapter(ABC):
@@ -21,7 +25,7 @@ class AbstractAdapter(ABC):
 
         Args:
             model: Model identifier
-            params: Provider-specific parameters
+            params: Provider-specific parameters (temperature, top_p, seed, max_tokens, etc.)
         """
         self.model = model
         self.params = params or {}

@@ -17,7 +17,15 @@ class OllamaAdapter(AbstractAdapter):
 
     def capabilities(self) -> Capability:
         """Return Ollama capabilities (no schema enforcement)."""
-        return Capability(schema_guided_json=False, tool_calling=False, function_call_json=False)
+        return Capability(
+            schema_guided_json=False,
+            tool_calling=False,
+            function_call_json=False,
+            supports_seed=True,
+            supports_temperature=True,
+            supports_top_p=True,
+            max_tokens=None,
+        )
 
     def generate(self, prompt: str, schema: dict[str, Any] | None = None) -> tuple[str, int]:
         """
@@ -41,9 +49,16 @@ class OllamaAdapter(AbstractAdapter):
         }
 
         # Add optional parameters
+        options = {}
         if "temperature" in self.params:
-            payload["options"] = payload.get("options", {})
-            payload["options"]["temperature"] = self.params["temperature"]
+            options["temperature"] = self.params["temperature"]
+        if "top_p" in self.params:
+            options["top_p"] = self.params["top_p"]
+        if "seed" in self.params:
+            options["seed"] = self.params["seed"]
+
+        if options:
+            payload["options"] = options
 
         # Make request
         with httpx.Client(timeout=120.0) as client:

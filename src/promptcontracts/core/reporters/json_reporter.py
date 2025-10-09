@@ -16,15 +16,23 @@ class JSONReporter:
             results: Results from ContractRunner
             output_path: Path to write JSON (if None, print to stdout)
         """
-        # Enrich results with metadata
+        # Enrich results with metadata (v0.3.0)
         enriched = {
             **results,
             "_metadata": {
+                "pcsl_version": results.get("pcsl_version", "0.3.0"),
                 "artifact_base_dir": results.get("artifact_base_dir"),
                 "timestamp": (
-                    results.get("targets", [{}])[0].get("fixtures", [{}])[0].get("timestamp")
+                    results.get("targets", [{}])[0]
+                    .get("fixtures", [{}])[0]
+                    .get("artifact_paths", {})
+                    .get("run")
                     if results.get("targets")
                     else None
+                ),
+                "sampling_enabled": any(
+                    t.get("execution", {}).get("sampling", {}).get("n", 1) > 1
+                    for t in results.get("targets", [])
                 ),
             },
         }

@@ -1,0 +1,11 @@
+{
+  "pcsl": "0.3.0",
+  "id": "extraction.contact_info",
+  "version": "1.0.0",
+  "description": "Extract structured contact information from text",
+  "prompt": "Extract contact information from the following text and return it as JSON with fields: name, email, phone, company.",
+  "io": {
+    "channel": "text",
+    "expects": "structured/json"
+  }
+}

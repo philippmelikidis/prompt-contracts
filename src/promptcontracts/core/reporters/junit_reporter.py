@@ -38,12 +38,32 @@ class JUnitReporter:
             for fixture_result in target_result.get("fixtures", []):
                 fixture_id = fixture_result.get("fixture_id")
                 fixture_status = fixture_result.get("status", "UNKNOWN")
-                repaired_details = fixture_result.get("repaired_details", {})
+                sampling_meta = fixture_result.get("sampling_metadata", {})
+                repair_ledger = fixture_result.get("repair_ledger", [])
 
                 for check in fixture_result.get("checks", []):
                     testcase = ET.SubElement(testsuite, "testcase")
                     testcase.set("name", f"{fixture_id}.{check.get('type')}")
                     testcase.set("classname", target_name)
+
+                    # Add latency and sampling metadata as properties
+                    properties = ET.SubElement(testcase, "properties")
+                    if sampling_meta:
+                        prop = ET.SubElement(properties, "property")
+                        prop.set("name", "n_samples")
+                        prop.set("value", str(sampling_meta.get("n_samples", 1)))
+
+                        if "pass_rate" in sampling_meta:
+                            prop = ET.SubElement(properties, "property")
+                            prop.set("name", "pass_rate")
+                            prop.set("value", f"{sampling_meta['pass_rate']:.2f}")
+
+                        if "confidence_interval" in sampling_meta:
+                            ci = sampling_meta["confidence_interval"]
+                            if ci:
+                                prop = ET.SubElement(properties, "property")
+                                prop.set("name", "confidence_interval")
+                                prop.set("value", f"[{ci[0]:.2f}, {ci[1]:.2f}]")
 
                     # FAIL and NONENFORCEABLE map to <failure/>
                     if not check.get("passed") or fixture_status in ["FAIL", "NONENFORCEABLE"]:
@@ -54,19 +74,13 @@ class JUnitReporter:
                         failure.set("message", failure_msg)
                         failure.text = failure_msg
 
-                    # REPAIRED -> pass with system-out note
-                    elif fixture_status == "REPAIRED" and check.get("passed"):
+                    # Add repair ledger to system-out if available
+                    elif repair_ledger and check.get("passed"):
                         system_out = ET.SubElement(testcase, "system-out")
-                        repairs = []
-                        if repaired_details.get("stripped_fences"):
-                            repairs.append("stripped_fences")
-                        if repaired_details.get("lowercased_fields"):
-                            repairs.append(
-                                f"lowercased: {', '.join(repaired_details['lowercased_fields'])}"
-                            )
-                        system_out.text = (
-                            f"REPAIRED: {'; '.join(repairs)}" if repairs else "REPAIRED"
-                        )
+                        repairs_applied = [r.get("steps_applied", []) for r in repair_ledger]
+                        all_steps = [step for steps in repairs_applied for step in steps]
+                        if all_steps:
+                            system_out.text = f"Repairs applied: {', '.join(set(all_steps))}"
 
         # Pretty print XML
         xml_str = minidom.parseString(ET.tostring(testsuites)).toprettyxml(indent="  ")

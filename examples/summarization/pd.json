@@ -1,0 +1,11 @@
+{
+  "pcsl": "0.3.0",
+  "id": "summarization.article",
+  "version": "1.0.0",
+  "description": "Summarize article to 2-3 sentences",
+  "prompt": "Summarize the following article in 2-3 clear sentences. Focus on the main points.",
+  "io": {
+    "channel": "text",
+    "expects": "unstructured/text"
+  }
+}

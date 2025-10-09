@@ -5,6 +5,93 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-01-09
+
+### Added
+
+#### Core Features
+- **Probabilistic Sampling**: N-sampling with configurable aggregation policies (majority, all, any, first)
+- **Bootstrap Confidence Intervals**: Statistical confidence bounds for pass rates
+- **Formal Capability Negotiation**: μ(Acap, Mreq) -> Mactual mapping with detailed logs
+- **Enhanced Parsing**: json_loose() for fault-tolerant JSON extraction, regex_extract() utilities
+- **Repair Policy Framework**: Structured repair_policy with allowed steps and max_steps
+- **Metrics Module**: Comprehensive metrics including validation_success, task_accuracy, repair_rate, latency_ms, overhead_pct, provider_consistency
+
+#### Semantic Checks
+- **pc.check.contains_all**: Verify all required substrings present
+- **pc.check.contains_any**: Verify at least one option present
+- **pc.check.regex_present**: Pattern matching with flags support
+- **pc.check.similarity**: Semantic similarity using embeddings (requires sentence-transformers)
+- **pc.check.judge**: LLM-as-judge for subjective quality evaluation
+
+#### Adapters
+- **embeddings_local.py**: Local embedding adapter using sentence-transformers MiniLM
+- **judge_openai.py**: OpenAI-based LLM-as-judge adapter
+- Enhanced OpenAI/Ollama adapters with seed, top_p support
+
+#### CLI Enhancements
+- **--n**: Override sampling count per fixture
+- **--seed**: Set random seed for reproducibility
+- **--temperature**: Override generation temperature
+- **--top-p**: Override top-p sampling parameter
+- **--baseline**: Experimental baseline comparison mode
+
+#### Documentation
+- **COMPLIANCE.md**: Mapping to ISO/IEC/IEEE 29119, EU AI Act, NIST AI RMF
+- **MIGRATION_0.2_to_0.3.md**: Comprehensive migration guide
+- Dockerfile for reproducible environments
+- Makefile targets: setup, eval-small, eval-full, docker-build
+
+#### Examples
+- extraction: Contact info extraction with probabilistic sampling
+- summarization: Article summarization with semantic checks
+
+#### Testing
+- Unit tests for sampling.py (aggregation policies, bootstrap CI)
+- Unit tests for parser.py (json_loose, regex_extract)
+- Unit tests for semantic checks
+
+### Changed
+
+- **Runner Architecture**: Completely rewritten to integrate sampling, parsing, and repair
+- **Execution Results**: Enhanced with sampling_metadata, repair_ledger, negotiation_log
+- **Reporters**: Updated CLI/JSON/JUnit to display sampling info, confidence intervals, repair ledgers
+- **Status Values**: Simplified to PASS/FAIL (REPAIRED deprecated, tracked in repair_ledger)
+- **CheckRegistry**: Extended with new semantic and judge check types
+
+### Deprecated
+
+- **max_retries**: Use sampling.n instead (still works for backward compatibility)
+- **REPAIRED status**: Repairs now tracked in repair_ledger, status is PASS or FAIL
+
+### Fixed
+
+- Improved JSON parsing resilience with json_loose()
+- Better error messages in capability negotiation
+- More robust repair tracking with structured ledger
+
+### Technical Details
+
+#### API Changes
+- ContractRunner accepts optional embedding_adapter and judge_adapter
+- SamplingConfig dataclass for N-sampling configuration
+- ProviderCapabilities with extended fields (supports_seed, supports_temperature, supports_top_p)
+
+#### Performance
+- Parallel sample execution (when n > 1)
+- Bootstrap CI computed only when bootstrap_samples > 0
+- Optimized JSON schema derivation
+
+### Compliance
+
+This release enables compliance with:
+- ISO/IEC/IEEE 29119 (Software Testing Standards)
+- EU AI Act Articles 9, 10, 12, 13, 14, 15
+- IEEE 730 (Software Quality Assurance)
+- NIST AI Risk Management Framework
+
+See docs/COMPLIANCE.md for detailed mapping.
+
 ## [Unreleased]
 
 ## [0.2.3] - 2025-10-09

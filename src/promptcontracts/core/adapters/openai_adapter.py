@@ -17,7 +17,15 @@ class OpenAIAdapter(AbstractAdapter):
 
     def capabilities(self) -> Capability:
         """Return OpenAI capabilities."""
-        return Capability(schema_guided_json=True, tool_calling=True, function_call_json=False)
+        return Capability(
+            schema_guided_json=True,
+            tool_calling=True,
+            function_call_json=False,
+            supports_seed=True,
+            supports_temperature=True,
+            supports_top_p=True,
+            max_tokens=None,
+        )
 
     def generate(self, prompt: str, schema: dict[str, Any] | None = None) -> tuple[str, int]:
         """
@@ -35,6 +43,8 @@ class OpenAIAdapter(AbstractAdapter):
         # Default parameters
         temperature = self.params.get("temperature", 0)
         max_tokens = self.params.get("max_tokens", None)
+        top_p = self.params.get("top_p")
+        seed = self.params.get("seed")
 
         # Build request params
         request_params = {
@@ -45,6 +55,12 @@ class OpenAIAdapter(AbstractAdapter):
 
         if max_tokens:
             request_params["max_tokens"] = max_tokens
+
+        if top_p is not None:
+            request_params["top_p"] = top_p
+
+        if seed is not None:
+            request_params["seed"] = seed
 
         # Add schema-guided JSON if schema provided
         if schema:

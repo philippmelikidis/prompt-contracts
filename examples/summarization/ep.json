@@ -1,0 +1,24 @@
+{
+  "pcsl": "0.3.0",
+  "id": "summarization.eval",
+  "version": "1.0.0",
+  "description": "Evaluation with semantic checks",
+  "targets": [
+    {
+      "type": "openai",
+      "model": "gpt-4o-mini",
+      "params": {
+        "temperature": 0.3
+      }
+    }
+  ],
+  "execution": {
+    "mode": "assist"
+  },
+  "fixtures": [
+    {
+      "id": "article_1",
+      "input": "Artificial intelligence is transforming healthcare. Machine learning algorithms can now detect diseases from medical images with accuracy rivaling human experts. Recent studies show AI-powered diagnostic tools reducing error rates by 30% while speeding up analysis by 50%. However, experts caution that human oversight remains critical."
+    }
+  ]
+}
