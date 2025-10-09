@@ -324,7 +324,7 @@ CONSTRAINTS:
 ```
 
 **Auto-Repair Capabilities:**
-- `strip_markdown_fences`: Removes ```json and ``` from responses
+- `strip_markdown_fences`: Removes ```json code fences from responses
 - `lowercase_fields`: Normalizes fields to lowercase (e.g., "High" → "high")
 
 **Example:**
@@ -522,6 +522,56 @@ prompt-contracts run \
 **Directory:** `examples/simple_yaml/`
 **Use Case:** Minimal example in YAML format
 **Format:** YAML (converted to JSON)
+
+### Test Auto-Repair
+**Directory:** `examples/test_repair/`
+**Use Case:** Demonstrates auto-repair functionality
+**Mode:** `assist` with forced bad output
+**Provider:** Ollama (Mistral)
+
+This example intentionally prompts the LLM to produce output that violates constraints (capitalized enums, markdown fences), then demonstrates how auto-repair fixes it:
+
+```bash
+prompt-contracts run \
+  --pd examples/test_repair/pd_force_bad.json \
+  --es examples/test_repair/es.json \
+  --ep examples/test_repair/ep_assist_force.json \
+  --save-io artifacts/repair_test \
+  --verbose
+```
+
+**Example Output:**
+```
+TARGET ollama:mistral
+  mode: assist
+
+Fixture: password_issue (latency: 7909ms, status: REPAIRED, retries: 1)
+  Repairs applied: stripped fences, lowercased $.category, $.priority
+  ✓ PASS | pc.check.json_valid
+         Response is valid JSON
+  ✓ PASS | pc.check.json_required
+         All required fields present: ['category', 'priority', 'reason']
+  ✓ PASS | pc.check.enum
+         Value 'technical' is in allowed values ['technical', 'billing', 'other']
+  ✓ PASS | pc.check.enum
+         Value 'high' is in allowed values ['low', 'medium', 'high']
+  ✓ PASS | pc.check.regex_absent
+         Pattern '```' not found (as expected)
+  ✓ PASS | pc.check.token_budget
+         Token count ~6 <= 200
+
+============================================================
+Summary: 6/6 checks passed (1 REPAIRED) — status: YELLOW
+============================================================
+
+📁 Artifacts saved to: artifacts/repair_test
+```
+
+**What happened:**
+- LLM produced: ` {"category": "Technical", "priority": "High", ...}`
+- Auto-repair: stripped fences, lowercased fields
+- Final output: `{"category": "technical", "priority": "high", ...}`
+- Status: `REPAIRED` (all checks passed after repair)
 
 ---
 
@@ -780,18 +830,29 @@ Validates p95 latency across all fixtures.
 
 ## Adapters
 
+### Provider Support Matrix
+
+| Provider | Schema Enforcement | Mode Support | Status |
+|----------|-------------------|--------------|--------|
+| ✅ **OpenAI** | Full support via `response_format` | All modes (observe, assist, enforce, auto) | Production-ready |
+| ⚠️ **Ollama** | Falls back to assist (no schema enforcement) | observe, assist, auto | Recommended for local models |
+| ⚠️ **Others** | Use capability-based fallback adapters | observe, assist, auto | Extensible via custom adapters |
+
+**Important:** Assist fallback is the **recommended** mode for providers without schema enforcement (like Ollama and most local models). This is **not an error** — assist mode adds intelligent constraints to prompts and applies auto-repair, providing robust output validation without requiring native schema support.
+
 ### OpenAI Adapter
 
 Uses OpenAI SDK with full schema enforcement support.
 
 **Capabilities:**
-- `schema_guided_json`: True
+- `schema_guided_json`: True (via `response_format`)
 - `tool_calling`: True
 - `function_call_json`: False
 
 **Features:**
 - Structured output via `response_format` with JSON Schema
 - Enables `enforce` mode for guaranteed structure
+- Automatic fallback to `assist` when `enforce` unavailable
 - Parameter support: temperature, max_tokens
 
 **Configuration:**
@@ -816,9 +877,10 @@ Supports local model execution via Ollama API.
 - `function_call_json`: False
 
 **Features:**
-- Local model execution
+- Local model execution (privacy-first, cost-effective)
 - HTTP API integration
-- Falls back to `assist` mode in auto/enforce
+- Automatically uses `assist` mode with constraint augmentation
+- Auto-repair handles common issues (markdown fences, casing)
 - Parameter support: temperature
 
 **Configuration:**
@@ -831,6 +893,8 @@ Supports local model execution via Ollama API.
   }
 }
 ```
+
+**Note:** Ollama works best with `mode: assist` or `mode: auto` in your EP. The framework will automatically add constraints to prompts and apply normalization to ensure reliable structured outputs.
 
 ### Custom Adapters
 

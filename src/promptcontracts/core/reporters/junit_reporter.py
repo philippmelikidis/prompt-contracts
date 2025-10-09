@@ -37,16 +37,36 @@ class JUnitReporter:
             # Add test cases for each check
             for fixture_result in target_result.get("fixtures", []):
                 fixture_id = fixture_result.get("fixture_id")
+                fixture_status = fixture_result.get("status", "UNKNOWN")
+                repaired_details = fixture_result.get("repaired_details", {})
 
                 for check in fixture_result.get("checks", []):
                     testcase = ET.SubElement(testsuite, "testcase")
                     testcase.set("name", f"{fixture_id}.{check.get('type')}")
                     testcase.set("classname", target_name)
 
-                    if not check.get("passed"):
+                    # FAIL and NONENFORCEABLE map to <failure/>
+                    if not check.get("passed") or fixture_status in ["FAIL", "NONENFORCEABLE"]:
                         failure = ET.SubElement(testcase, "failure")
-                        failure.set("message", check.get("message", "Check failed"))
-                        failure.text = check.get("message", "Check failed")
+                        failure_msg = check.get("message", "Check failed")
+                        if fixture_status == "NONENFORCEABLE":
+                            failure_msg = f"NONENFORCEABLE: {failure_msg}"
+                        failure.set("message", failure_msg)
+                        failure.text = failure_msg
+
+                    # REPAIRED -> pass with system-out note
+                    elif fixture_status == "REPAIRED" and check.get("passed"):
+                        system_out = ET.SubElement(testcase, "system-out")
+                        repairs = []
+                        if repaired_details.get("stripped_fences"):
+                            repairs.append("stripped_fences")
+                        if repaired_details.get("lowercased_fields"):
+                            repairs.append(
+                                f"lowercased: {', '.join(repaired_details['lowercased_fields'])}"
+                            )
+                        system_out.text = (
+                            f"REPAIRED: {'; '.join(repairs)}" if repairs else "REPAIRED"
+                        )
 
         # Pretty print XML
         xml_str = minidom.parseString(ET.tostring(testsuites)).toprettyxml(indent="  ")

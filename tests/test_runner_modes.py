@@ -1,10 +1,12 @@
 """Tests for execution modes and mode negotiation."""
 
+import tempfile
+from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
-
 from promptcontracts.core.adapters.base import Capability
+from promptcontracts.core.loader import load_ep
 
 
 class TestModeNegotiation:
@@ -249,3 +251,137 @@ class TestStatusCodes:
             status = "FAIL"
 
         assert status == "NONENFORCEABLE"
+
+
+class TestEPLoaderDefaults:
+    """Test EP loader applies execution defaults correctly."""
+
+    def test_ep_without_execution_block(self):
+        """Test EP without execution block gets defaults applied."""
+        # Create minimal EP
+        ep_content = """{
+            "pcsl": "0.1.0",
+            "targets": [{"type": "ollama", "model": "mistral"}],
+            "fixtures": [{"id": "test", "input": "test"}]
+        }"""
+
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+            f.write(ep_content)
+            ep_path = f.name
+
+        try:
+            ep = load_ep(ep_path)
+
+            # Check defaults were applied
+            assert "execution" in ep
+            assert ep["execution"]["mode"] == "auto"
+            assert ep["execution"]["max_retries"] == 1
+            assert ep["execution"]["strict_enforce"] is False
+            assert ep["execution"]["auto_repair"]["strip_markdown_fences"] is True
+            assert ep["execution"]["auto_repair"]["lowercase_fields"] == []
+        finally:
+            Path(ep_path).unlink()
+
+    def test_ep_with_partial_execution_block(self):
+        """Test EP with partial execution block gets remaining defaults."""
+        ep_content = """{
+            "pcsl": "0.1.0",
+            "targets": [{"type": "ollama", "model": "mistral"}],
+            "fixtures": [{"id": "test", "input": "test"}],
+            "execution": {
+                "mode": "assist"
+            }
+        }"""
+
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+            f.write(ep_content)
+            ep_path = f.name
+
+        try:
+            ep = load_ep(ep_path)
+
+            # Check custom value preserved
+            assert ep["execution"]["mode"] == "assist"
+
+            # Check defaults applied for missing fields
+            assert ep["execution"]["max_retries"] == 1
+            assert ep["execution"]["strict_enforce"] is False
+            assert ep["execution"]["auto_repair"]["strip_markdown_fences"] is True
+        finally:
+            Path(ep_path).unlink()
+
+    def test_ep_strict_enforce_true(self):
+        """Test EP with strict_enforce=true prevents fallback."""
+        ep_content = """{
+            "pcsl": "0.1.0",
+            "targets": [{"type": "ollama", "model": "mistral"}],
+            "fixtures": [{"id": "test", "input": "test"}],
+            "execution": {
+                "mode": "enforce",
+                "strict_enforce": true
+            }
+        }"""
+
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+            f.write(ep_content)
+            ep_path = f.name
+
+        try:
+            ep = load_ep(ep_path)
+
+            # Verify strict_enforce is set
+            assert ep["execution"]["mode"] == "enforce"
+            assert ep["execution"]["strict_enforce"] is True
+
+            # Simulate adapter without schema support
+            capability = Capability(
+                schema_guided_json=False, tool_calling=False, function_call_json=False
+            )
+
+            # Should result in NONENFORCEABLE, not fallback to assist
+            if ep["execution"]["mode"] == "enforce" and not capability.schema_guided_json:
+                if ep["execution"]["strict_enforce"]:
+                    status = "NONENFORCEABLE"
+                else:
+                    status = "fallback_to_assist"
+
+            assert status == "NONENFORCEABLE"
+        finally:
+            Path(ep_path).unlink()
+
+    def test_ep_strict_enforce_false_allows_fallback(self):
+        """Test EP with strict_enforce=false allows fallback to assist."""
+        ep_content = """{
+            "pcsl": "0.1.0",
+            "targets": [{"type": "ollama", "model": "mistral"}],
+            "fixtures": [{"id": "test", "input": "test"}],
+            "execution": {
+                "mode": "enforce",
+                "strict_enforce": false
+            }
+        }"""
+
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+            f.write(ep_content)
+            ep_path = f.name
+
+        try:
+            ep = load_ep(ep_path)
+
+            assert ep["execution"]["strict_enforce"] is False
+
+            # Simulate adapter without schema support
+            capability = Capability(
+                schema_guided_json=False, tool_calling=False, function_call_json=False
+            )
+
+            # Should fallback to assist
+            if ep["execution"]["mode"] == "enforce" and not capability.schema_guided_json:
+                if ep["execution"]["strict_enforce"]:
+                    effective_mode = "NONENFORCEABLE"
+                else:
+                    effective_mode = "assist"
+
+            assert effective_mode == "assist"
+        finally:
+            Path(ep_path).unlink()
