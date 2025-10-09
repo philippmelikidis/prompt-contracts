@@ -12,15 +12,15 @@ Prompt-Contracts is a specification and toolkit that brings contract testing to 
 
 ---
 
-## What's New in v0.2.2
+## What's New in v0.2.3
 
-📘 **Documentation & Examples Release** - Production-ready guidance:
+**Patch Release** - Improved CLI, artifact paths, and documentation:
 
-- **📚 Best Practices Guide**: Comprehensive [BEST_PRACTICES.md](BEST_PRACTICES.md) covering contract design, execution modes, fixtures, auto-repair, CI/CD, and production deployment
-- **🎯 New Examples**: Email classification (all 4 modes) and product recommendations
-- **🌍 English Documentation**: Complete translation of all docs for international audience
-- **📖 Enhanced Guides**: Detailed execution mode explanations, decision trees, and real-world examples
-- **✨ 3 Real-World Examples**: Content moderation, financial transactions, and sentiment analysis patterns
+- **CLI Enhancements**: Better help text with examples, verbose mode (-v), clarified exit codes
+- **Absolute Artifact Paths**: All artifact paths in run.json and JSON reporter now use absolute paths
+- **strict_enforce Fix**: Properly returns NONENFORCEABLE status when enforcement unavailable
+- **TROUBLESHOOTING Guide**: New comprehensive troubleshooting documentation
+- **Documentation Sync**: All docs updated to match actual implementation behavior
 
 ---
 
@@ -569,16 +569,35 @@ prompt-contracts run \
   --ep <path-to-ep> \
   [--report cli|json|junit] \
   [--out <output-path>] \
-  [--save-io <artifacts-directory>]
+  [--save-io <artifacts-directory>] \
+  [-v|--verbose]
 ```
 
 **Arguments:**
-- `--pd`: Path to Prompt Definition (required)
-- `--es`: Path to Expectation Suite (required)
-- `--ep`: Path to Evaluation Profile (required)
+- `--pd`: Path to Prompt Definition (JSON/YAML, required)
+- `--es`: Path to Expectation Suite (JSON/YAML, required)
+- `--ep`: Path to Evaluation Profile (JSON/YAML, required)
 - `--report`: Report format - cli (default), json, or junit
 - `--out`: Output path for report file (optional)
-- `--save-io`: Directory to save execution artifacts (optional)
+- `--save-io`: Directory to save execution artifacts (input_final.txt, output_raw.txt, output_norm.txt, run.json)
+- `-v, --verbose`: Enable verbose output
+
+**Exit Codes:**
+- `0`: All fixtures passed or were repaired successfully
+- `1`: One or more fixtures failed or marked NONENFORCEABLE
+- `2`: PD/ES/EP validation error (schema mismatch)
+- `3`: Runtime/adapter error
+
+**Example with artifacts:**
+```bash
+prompt-contracts run \
+  --pd examples/support_ticket/pd.json \
+  --es examples/support_ticket/es.json \
+  --ep examples/support_ticket/ep.json \
+  --save-io artifacts/ \
+  --report json --out results.json \
+  --verbose
+```
 
 ### Execution Configuration
 
@@ -1080,6 +1099,7 @@ See LICENSE file for details.
 
 - **Documentation:** See [QUICKSTART.md](QUICKSTART.md) for getting started guide
 - **Best Practices:** Read [BEST_PRACTICES.md](BEST_PRACTICES.md) for production guidance
+- **Troubleshooting:** Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for common issues and solutions
 - **Specification:** Read `src/promptcontracts/spec/pcsl-v0.1.md` for detailed spec
 - **Examples:** Explore [examples/](examples/) for real-world use cases
 - **Issues:** Report bugs and request features via GitHub Issues

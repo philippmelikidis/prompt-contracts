@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.3] - 2025-01-08
+
+### Fixed
+- strict_enforce semantics now properly returns NONENFORCEABLE status instead of silent fallback when schema enforcement is requested but unavailable
+- Absolute artifact paths now included in JSON reporter and run.json under "artifact_paths" field
+- Enum case-insensitive comparison now works consistently without mutating payload
+
+### Changed
+- CLI help text enhanced with examples and usage patterns
+- Exit codes clarified and documented (0=success, 1=failure/nonenforceable, 2=validation error, 3=runtime error)
+- effective_mode now logged in CLI output and included in all run.json files
+- Verbose mode added with -v/--verbose flag for detailed output
+- Improved error messages with better categorization (validation vs runtime errors)
+
+### Documentation
+- README updated with CLI syntax and exit code table
+- TROUBLESHOOTING.md added with common issues and solutions
+- All documentation synchronized with actual implementation behavior
+- Examples section expanded with real output snippets
+
 ## [0.2.2] - 2025-01-08
 
 ### Added
