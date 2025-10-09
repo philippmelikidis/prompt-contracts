@@ -53,9 +53,7 @@ class OpenAIJudgeAdapter(JudgeAdapter):
         try:
             import openai
         except ImportError as e:
-            raise ImportError(
-                "openai not installed. Install with: pip install openai"
-            ) from e
+            raise ImportError("openai not installed. Install with: pip install openai") from e
 
         self.model = model
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
@@ -90,7 +88,10 @@ class OpenAIJudgeAdapter(JudgeAdapter):
                 messages=[
                     {
                         "role": "system",
-                        "content": "You are an expert evaluator. Provide clear PASS/FAIL verdicts.",
+                        "content": (
+                            "You are an expert evaluator. "
+                            "Provide clear PASS/FAIL verdicts."
+                        ),
                     },
                     {"role": "user", "content": prompt},
                 ],
@@ -151,7 +152,9 @@ class OpenAIJudgeAdapter(JudgeAdapter):
                 verdict = False  # Default to fail if unclear
 
         explanation = (
-            explanation_match.group(1).strip() if explanation_match else text.strip()[:200]
+            explanation_match.group(1).strip()
+            if explanation_match
+            else text.strip()[:200]
         )
 
         return verdict, explanation
