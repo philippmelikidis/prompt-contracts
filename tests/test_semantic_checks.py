@@ -1,6 +1,7 @@
 """Tests for semantic checks."""
 
 import pytest
+
 from promptcontracts.core.checks.semantic import (
     contains_all_check,
     contains_any_check,

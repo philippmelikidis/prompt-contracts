@@ -5,6 +5,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
+
 from promptcontracts.core.adapters.base import Capability
 from promptcontracts.core.loader import load_ep
 
