@@ -135,7 +135,9 @@ class OpenAIJudgeAdapter(JudgeAdapter):
         """
         # Look for VERDICT: PASS or VERDICT: FAIL
         verdict_match = re.search(r"VERDICT:\s*(PASS|FAIL)", text, re.IGNORECASE)
-        explanation_match = re.search(r"EXPLANATION:\s*(.+)", text, re.IGNORECASE | re.DOTALL)
+        explanation_match = re.search(
+            r"EXPLANATION:\s*(.+)", text, re.IGNORECASE | re.DOTALL
+        )
 
         if verdict_match:
             verdict = verdict_match.group(1).upper() == "PASS"
