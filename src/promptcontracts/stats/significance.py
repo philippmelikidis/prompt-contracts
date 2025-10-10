@@ -5,7 +5,6 @@ Provides McNemar's test for binary outcomes and bootstrap-based
 difference CIs for continuous metrics.
 """
 
-
 import numpy as np
 from scipy import stats
 
