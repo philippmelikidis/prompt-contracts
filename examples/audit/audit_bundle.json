@@ -1,0 +1,165 @@
+{
+  "audit_bundle_version": "1.0",
+  "system": {
+    "use_case": "Healthcare Support Ticket Classification",
+    "risk_level": "high-risk",
+    "eu_ai_act_article": "Article 6(2)",
+    "deployment_date": "2025-10-10",
+    "system_version": "0.3.2"
+  },
+  "contracts": {
+    "ep": {
+      "content": {
+        "prompt_template": "Classify this healthcare support ticket: {input_text}",
+        "model": "gpt-4o-mini",
+        "temperature": 0.0,
+        "seed": 42
+      },
+      "sha256": "2253d10e3fccf625876a9904c6fe512804fe0352b2b4be04d5d22d96d02a0ddf"
+    },
+    "es": {
+      "content": {
+        "output_schema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "enum": [
+                "urgent",
+                "routine",
+                "billing",
+                "technical"
+              ]
+            },
+            "priority": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            }
+          },
+          "required": [
+            "category",
+            "priority"
+          ]
+        }
+      },
+      "sha256": "8699b916b0572fdb3f74401b6612e6a2e955be99d77f9d5ea7f8e2dac83aeaf6"
+    },
+    "pd": {
+      "content": {
+        "checks": [
+          {
+            "type": "json_valid",
+            "severity": "error"
+          },
+          {
+            "type": "json_required",
+            "severity": "error",
+            "keys": [
+              "category",
+              "priority"
+            ]
+          },
+          {
+            "type": "enum_value",
+            "severity": "error",
+            "field": "category",
+            "allowed": [
+              "urgent",
+              "routine",
+              "billing",
+              "technical"
+            ]
+          },
+          {
+            "type": "latency_budget",
+            "severity": "warn",
+            "max_ms": 3000
+          }
+        ]
+      },
+      "sha256": "83d8565072fb34112083277261f26970d42923c615a680b8e07aa56ee478f4f8"
+    }
+  },
+  "artifacts": {
+    "input_final.txt": {
+      "content": "Classify this healthcare support ticket: Patient experiencing severe chest pain, requesting immediate callback.",
+      "sha256": "bdea87827d8f61f8552ae6a5f3afdfd7fdafff8f06d802f72eb40f0bc922f688"
+    },
+    "output_raw.txt": {
+      "content": "```json\n{\"category\": \"urgent\", \"priority\": 5}\n```",
+      "sha256": "9e50dbf5aec15e46587663171dab18ac232294b47e7289479e4083594f44c2be"
+    },
+    "output_norm.txt": {
+      "content": "{\"category\": \"urgent\", \"priority\": 5}",
+      "sha256": "a55bf4009bcd70f3bf7e6faaf6e0ca8982eb1392a9a8221191a2d167f40f7085"
+    },
+    "run.json": {
+      "content": {
+        "timestamp": "2025-10-10T12:53:06.762530",
+        "seed": 42,
+        "temperature": 0.0,
+        "model": "gpt-4o-mini",
+        "checks_passed": [
+          "json_valid",
+          "json_required",
+          "enum_value"
+        ],
+        "checks_warned": [],
+        "checks_failed": [],
+        "repair_ledger": [
+          {
+            "step": "strip_markdown_fences",
+            "applied": true,
+            "semantic_change": false
+          }
+        ],
+        "prompt_hash_sha256": "bdea87827d8f61f8552ae6a5f3afdfd7fdafff8f06d802f72eb40f0bc922f688",
+        "output_hash_sha256": "a55bf4009bcd70f3bf7e6faaf6e0ca8982eb1392a9a8221191a2d167f40f7085",
+        "latency_ms": 1245,
+        "tokens_used": 87
+      },
+      "sha256": "fc224929ec3021bb0b9b45f6c169fe7570bd96e7203eb285fc910440c989bd6b"
+    }
+  },
+  "compliance": {
+    "iso_29119_8_3": {
+      "requirement": "Test log with inputs, outputs, timestamps",
+      "status": "compliant",
+      "evidence": [
+        "run.json contains timestamp, seed, all I/O"
+      ]
+    },
+    "eu_ai_act_art_12": {
+      "requirement": "Immutable audit trail with SHA-256 hashes",
+      "status": "compliant",
+      "evidence": [
+        "All artifacts have SHA-256 hashes",
+        "Repair ledger included"
+      ]
+    },
+    "eu_ai_act_art_13": {
+      "requirement": "Transparency through capability negotiation log",
+      "status": "compliant",
+      "evidence": [
+        "Checks clearly document validation steps",
+        "Repair ledger shows transformations"
+      ]
+    },
+    "eu_ai_act_art_14": {
+      "requirement": "Human oversight mechanisms",
+      "status": "compliant",
+      "evidence": [
+        "Failed checks trigger human review",
+        "Repair ledger allows verification"
+      ]
+    }
+  },
+  "metadata": {
+    "created": "2025-10-10T12:53:06.762578",
+    "promptcontracts_version": "0.3.2",
+    "python_version": "3.11.7",
+    "reproducibility_seed": 42,
+    "audit_bundle_sha256": "b474fc685adfa301d57b762185ac82004bab7c516211f39b5c55d92563021190"
+  }
+}

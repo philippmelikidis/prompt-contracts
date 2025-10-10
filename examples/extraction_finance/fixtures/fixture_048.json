@@ -1,0 +1,15 @@
+{
+  "input_text": "Meta Platforms announced a $20 billion share buyback program.",
+  "expected_output": {
+    "entities": [
+      {
+        "type": "ORGANIZATION",
+        "value": "Meta Platforms"
+      },
+      {
+        "type": "MONEY",
+        "value": "$20 billion"
+      }
+    ]
+  }
+}

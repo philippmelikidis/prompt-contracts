@@ -1,0 +1,7 @@
+{
+  "input_text": "The European Union approved new regulations for AI systems today, requiring transparency and human oversight for high-risk applications. The AI Act will take effect in 2026, giving companies two years to comply. Violations could result in fines up to 6% of global revenue. Privacy advocates praised the move while tech companies expressed concerns about implementation costs.",
+  "expected_output": {
+    "summary": "EU approved AI Act requiring transparency for high-risk systems, effective 2026 with penalties up to 6% of revenue.",
+    "length": 18
+  }
+}

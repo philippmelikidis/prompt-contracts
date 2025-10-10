@@ -1,0 +1,6 @@
+{
+  "prompt_template": "Summarize the following news article in one concise sentence (max 25 words).\n\nArticle: {input_text}\n\nRespond with JSON containing 'summary' and 'length' (word count) fields.",
+  "model": "gpt-4o-mini",
+  "temperature": 0.0,
+  "seed": 42
+}

@@ -1,0 +1,7 @@
+{
+  "input_text": "Electric vehicle sales in the US reached record levels in Q3 2024, with over 300,000 units sold. Tesla maintained market leadership with 48% share, followed by Ford and GM. Analysts attribute growth to improved battery technology, expanded charging infrastructure, and federal tax incentives. Industry experts predict EVs will represent 30% of new car sales by 2027.",
+  "expected_output": {
+    "summary": "US EV sales hit record 300k in Q3 2024, led by Tesla with 48% market share, expected to reach 30% by 2027.",
+    "length": 22
+  }
+}

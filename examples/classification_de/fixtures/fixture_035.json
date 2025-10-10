@@ -1,0 +1,7 @@
+{
+  "input_text": "Lieferung war pünktlich, Artikel wie beschrieben.",
+  "expected_output": {
+    "sentiment": "positive",
+    "confidence": 0.93
+  }
+}

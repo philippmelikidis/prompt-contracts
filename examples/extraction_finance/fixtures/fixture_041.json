@@ -1,0 +1,15 @@
+{
+  "input_text": "Apple Inc. reported Q3 revenue of $81.4 billion, beating analyst expectations.",
+  "expected_output": {
+    "entities": [
+      {
+        "type": "ORGANIZATION",
+        "value": "Apple"
+      },
+      {
+        "type": "MONEY",
+        "value": "$81.4 billion"
+      }
+    ]
+  }
+}

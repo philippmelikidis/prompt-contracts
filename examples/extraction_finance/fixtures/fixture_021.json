@@ -1,0 +1,19 @@
+{
+  "input_text": "Microsoft acquired OpenAI's GPT technology for $10 billion.",
+  "expected_output": {
+    "entities": [
+      {
+        "type": "ORGANIZATION",
+        "value": "Microsoft"
+      },
+      {
+        "type": "ORGANIZATION",
+        "value": "OpenAI"
+      },
+      {
+        "type": "MONEY",
+        "value": "$10 billion"
+      }
+    ]
+  }
+}

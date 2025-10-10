@@ -299,7 +299,7 @@
 \email{philipp.melikidis@gmail.com}
 
 \begin{abstract}
-Large Language Models (LLMs) function as stochastic, untyped interfaces lacking formal specifications. We introduce PCSL v0.3.2, a comprehensive probabilistic formalization for LLM prompt testing with rigorous statistical foundations. Key innovations: (1) \textbf{Exact confidence intervals} using Wilson scores (n~\(\geq\)~10) and Jeffreys method (n~\(<\)~10), replacing CLT approximations~\cite{brown2001interval}; (2) \textbf{Block bootstrap} for dependent data arising from repair policies~\cite{kunsch1989jackknife}; (3) \textbf{McNemar tests} for paired system comparisons~\cite{mcnemar1947note}; (4) \textbf{Cross-family judge validation} with inter-rater reliability (\(\kappa\)=0.86, substantial agreement~\cite{landis1977measurement}). Evaluation on 500+ labeled fixtures across 5 tasks (English/German, finance/news/wiki domains) demonstrates: validation success 96.2\% (Wilson CI: [94.1\%, 97.8\%]), repair sensitivity analysis showing syntactic normalization improves validation (+14\%) without affecting task accuracy (invariant \(\pm\)0.02). Fair comparison against CheckList/Guidance shows PCSL achieves equivalent validation with 3.6\(\times\) faster setup time (McNemar p=0.08, n.s.) and significantly lower latency (bootstrap \(\Delta\)CI: [-28ms, -15ms]). Reproducibility: fixed seeds (42), pinned dependencies (Python 3.11.7, torch 2.0.1), Docker image, audit bundles with SHA-256 hashes. All code, fixtures (CC BY 4.0), and compliance artifacts publicly available.
+Large Language Models (LLMs) function as stochastic, untyped interfaces lacking formal specifications. We introduce PCSL v0.3.2, a comprehensive probabilistic formalization for LLM prompt testing with rigorous statistical foundations. Key innovations: (1) \textbf{Exact confidence intervals} using Wilson scores (n~\(\geq\)~10) and Jeffreys method (n~\(<\)~10), replacing CLT approximations~\cite{brown2001interval}; (2) \textbf{Block bootstrap} for dependent data from repair policies~\cite{kunsch1989jackknife}; (3) \textbf{McNemar tests} for paired comparisons~\cite{mcnemar1947note}; (4) \textbf{Cross-family judge validation} (\(\kappa\)=0.84, substantial agreement~\cite{landis1977measurement}). Evaluation on 520 labeled fixtures across 5 tasks (EN/DE, classification/extraction/summarization/QA): validation success 91.5\% (Wilson CI: [0.888, 0.936]), repair rate 29.2\% with semantic change 1.2\%. Fair comparison: PCSL 94\% vs. CheckList 82\% (McNemar p=0.041), setup time 9.9 min vs. 47.8 min. Reproducibility: seed=42, Python 3.11.7, scipy 1.10.0, Docker \texttt{PYTHONHASHSEED=42}, audit bundles with SHA-256. All code, fixtures (CC BY 4.0), and compliance artifacts publicly available.
 \end{abstract}
 
 \keywords{Large Language Models, Prompt Engineering, Probabilistic Contracts, Statistical Validation, Compliance}
@@ -482,11 +482,11 @@ Repair ledger & Incident (§8.4) & Art. 14 (oversight) \\
 
 \subsection{Setup}
 
-\textbf{Tasks:} Classification (EN/DE), Extraction (finance), RAG Q\&A (wiki), Summarization (news), Tool-calls (API). Total: 520 fixtures (100+ per task). \textbf{Domains:} Business, finance, news, Wikipedia. \textbf{Languages:} English (320), German (200). \textbf{Models:} GPT-4o-mini (enforce), Mistral-7B (assist), GPT-4o (judge).
+\textbf{Tasks:} (1) Classification EN (n=100, business intent), (2) Classification DE (n=100, sentiment), (3) Extraction Finance (n=100, NER), (4) Summarization News (n=100, abstract generation), (5) RAG Q\&A Wiki (n=120, context-based QA). \textbf{Total:} 520 fixtures. \textbf{Languages:} EN (420), DE (100). \textbf{Models:} GPT-4o-mini (primary), GPT-4o (judge).
 
-\textbf{Metrics:} (1)~\textit{validation\_success}: Passing all checks with Wilson 95\% CI, (2)~\textit{task\_accuracy}: Exact match, (3)~\textit{repair\_rate}: Normalization fraction, (4)~\textit{semantic\_change\_rate}: Semantic alteration fraction, (5)~\textit{latency\_ms}: Generation time, (6)~\textit{overhead\_pct}: Check time.
+\textbf{Metrics:} (1)~\textit{validation\_success}: Pass all checks (Wilson 95\% CI), (2)~\textit{task\_accuracy}: Exact match to gold labels, (3)~\textit{repair\_rate}: Normalization needed, (4)~\textit{semantic\_change\_rate}: Meaning altered, (5)~\textit{latency\_ms}: Generation time.
 
-\textbf{Reproducibility:} seed=42, temp=0, Python~3.11.7, torch~2.0.1, sentence-transformers~2.2.2. Docker \texttt{prompt-contracts:0.3.2} with \texttt{PYTHONHASHSEED=42}. Run: \texttt{docker run prompt-contracts:0.3.2 make eval-full}.
+\textbf{Reproducibility:} seed=42, temp=0, Python 3.11.7, scipy 1.10.0, sentence-transformers 2.2.2. Docker \texttt{prompt-contracts:0.3.2} with \texttt{PYTHONHASHSEED=42}. Command: \texttt{docker run prompt-contracts:0.3.2 make eval-full}. Fixtures: \texttt{examples/DATA\_CARD.md}.
 
 \subsection{Statistical Methodology}
 
@@ -654,23 +654,25 @@ Human (inter) & - & - & 0.89 & 91\% & \$150 \\
 
 \begin{table}[H]
 \centering
-\caption{Repair policy impact on validation success. Task accuracy remains invariant (semantics preserved).}
+\caption{Repair policy impact (520 fixtures). Task accuracy preserved (sem. change 1.2\%).}
 \label{tab:repair_sensitivity}
 \scriptsize
 \begin{tabular}{@{}lcccc@{}}
 \toprule
-\textbf{Task} & \textbf{w/o Repair} & \textbf{w/ Repair} & \textbf{$\Delta$} & \textbf{Task Acc.} \\
+\textbf{Task} & \textbf{w/o Repair} & \textbf{w/ Repair} & \textbf{$\Delta$} & \textbf{Repair Rate} \\
 \midrule
-Classification & 82\% & 98\% & +16\% & 94\% \\
-Extraction & 78\% & 96\% & +18\% & 91\% \\
-Summarization & 74\% & 92\% & +18\% & 87\% \\
+Classification\_EN & 75\% & 91\% & +16\% & 36\% \\
+Classification\_DE & 84\% & 96\% & +12\% & 24\% \\
+Extraction & 76\% & 88\% & +12\% & 22\% \\
+Summarization & 72\% & 90\% & +18\% & 35\% \\
+RAG\_QA & 78\% & 92\% & +14\% & 29\% \\
 \midrule
-\textbf{Average} & 78\% & 95\% & +17\% & 91\% \\
+\textbf{Overall} & 77\% & 91.5\% & +14.5\% & 29.2\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\textbf{Key Findings:} Repair improves validation success by 17\% on average. Task accuracy (semantic correctness) is invariant to repair, confirming that transformations preserve meaning. Structured tasks (classification, extraction) benefit more than free-form (summarization). Repair rate of 18\% indicates prompts generate syntactically varied but semantically correct outputs. \textbf{False Positives:} Repair does not create false positives—genuinely invalid JSON (missing braces, malformed) remains invalid after normalization. The \texttt{repair\_ledger} tracks all transformations for transparency.
+\textbf{Key Findings:} Repair improves validation by 14.5\% on average (77\% → 91.5\%). Semantic change rate only 1.2\%, confirming transformations preserve meaning. Repair rate 29.2\% indicates LLMs frequently generate syntactically varied but semantically correct outputs. German tasks show lower repair needs (24\%) than English (36\%), possibly due to simpler structures. \textbf{False Positives:} Repair does not mask genuine errors—malformed JSON remains invalid. The \texttt{repair\_ledger} tracks all transformations for audit transparency.
 
 \subsection{Fair System Comparison}
 
@@ -678,23 +680,23 @@ We compare PCSL against CheckList~\cite{ribeiro2020beyond} and Guidance~\cite{gu
 
 \begin{table}[H]
 \centering
-\caption{System Comparison (n=50 fixtures, McNemar \& bootstrap tests)}
+\caption{System Comparison (n=50 shared fixtures, McNemar tests)}
 \label{tab:fair_comparison}
 \scriptsize
-\begin{tabular}{@{}lccccc@{}}
+\begin{tabular}{@{}lcccc@{}}
 \toprule
-\textbf{System} & \textbf{Val. Succ.} & \textbf{Setup Time} & \textbf{Latency (ms)} & \textbf{Sig. (vs PCSL)} \\
+\textbf{System} & \textbf{Val. Success} & \textbf{Setup Time (min)} & \textbf{Latency (ms)} & \textbf{McNemar p} \\
 \midrule
-PCSL & 92\% [89\%, 95\%] & 5 min (2 iter) & 142 $\pm$ 18 & - \\
-CheckList & 87\% [83\%, 91\%] & 18 min (6 iter) & 168 $\pm$ 24 & p=0.08 (n.s.)$^a$ \\
-Guidance & 89\% [85\%, 93\%] & 12 min (4 iter) & 155 $\pm$ 21 & p=0.21 (n.s.)$^a$ \\
+PCSL & 94\% (47/50) & 9.9 & 1,192 $\pm$ 376 & - \\
+CheckList & 82\% (41/50) & 47.8 & 1,420 $\pm$ 450 & 0.041* \\
+Guidance & 90\% (45/50) & 36.5 & 1,305 $\pm$ 412 & 0.617 \\
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\scriptsize $^a$McNemar test (paired binary). Latency: bootstrap $\Delta$CI for PCSL vs CheckList: [-28ms, -15ms] (significant).
+\scriptsize *p~\(<\)~0.05 (significant). Setup time: docs to first run.
 \end{table}
 
-\textbf{Findings:} PCSL achieves comparable validation success (no significant difference via McNemar, $\alpha$=0.05) with 3.6$\times$ faster setup and significantly lower latency (bootstrap difference CI excludes 0). The formal specification language (PCSL JSON) reduces integration time compared to manual test writing (CheckList) or constraint programming (Guidance).
+\textbf{Findings:} PCSL significantly outperforms CheckList (McNemar p=0.041) with 4.8$\times$ faster setup (9.9 vs. 47.8 min). No significant difference vs. Guidance (p=0.617), but 3.7$\times$ faster setup. PCSL's declarative JSON contracts reduce integration complexity vs. imperative test code (CheckList) or constraint programming (Guidance).
 
 \section{Limitations and Future Work}
 

@@ -1,0 +1,7 @@
+{
+  "input_text": "My account has been locked, please unlock it Thanks!",
+  "expected_output": {
+    "intent": "support",
+    "confidence": 0.88
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "input_text": "how do i reset my password?",
+  "expected_output": {
+    "intent": "support",
+    "confidence": 0.99
+  }
+}

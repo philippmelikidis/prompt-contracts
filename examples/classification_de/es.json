@@ -1,0 +1,17 @@
+{
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "sentiment": {
+        "type": "string",
+        "enum": ["positive", "negative", "neutral"]
+      },
+      "confidence": {
+        "type": "number",
+        "minimum": 0.0,
+        "maximum": 1.0
+      }
+    },
+    "required": ["sentiment", "confidence"]
+  }
+}

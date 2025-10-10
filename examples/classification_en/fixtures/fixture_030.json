@@ -1,0 +1,7 @@
+{
+  "input_text": "when will my order arrive?",
+  "expected_output": {
+    "intent": "inquiry",
+    "confidence": 0.95
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "input_context": "The Eiffel Tower is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. The tower is 330 metres (1,083 ft) tall, about the same height as an 81-story building.",
+  "input_question": "How tall is the Eiffel Tower?",
+  "expected_output": {
+    "answer": "330 metres (1,083 ft)",
+    "confidence": 0.9
+  }
+}

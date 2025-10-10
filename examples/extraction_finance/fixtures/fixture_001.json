@@ -1,0 +1,19 @@
+{
+  "input_text": "NVIDIA stock jumped 15% after earnings exceeded $13 billion.",
+  "expected_output": {
+    "entities": [
+      {
+        "type": "ORGANIZATION",
+        "value": "NVIDIA"
+      },
+      {
+        "type": "MONEY",
+        "value": "$13 billion"
+      },
+      {
+        "type": "PERCENTAGE",
+        "value": "15%"
+      }
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "checks": [
+    {
+      "type": "json_valid",
+      "severity": "error"
+    },
+    {
+      "type": "json_required",
+      "severity": "error",
+      "keys": ["answer", "confidence"]
+    },
+    {
+      "type": "latency_budget",
+      "severity": "warn",
+      "max_ms": 4000
+    },
+    {
+      "type": "token_budget",
+      "severity": "warn",
+      "max_tokens": 200
+    }
+  ]
+}

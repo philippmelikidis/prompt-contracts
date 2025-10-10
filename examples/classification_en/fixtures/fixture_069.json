@@ -1,0 +1,7 @@
+{
+  "input_text": "Can you help me upgrade to the premium plan? Thanks!",
+  "expected_output": {
+    "intent": "upgrade",
+    "confidence": 0.9
+  }
+}

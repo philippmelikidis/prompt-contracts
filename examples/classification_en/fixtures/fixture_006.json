@@ -1,0 +1,7 @@
+{
+  "input_text": "Do you offer student discounts? Thanks!",
+  "expected_output": {
+    "intent": "pricing",
+    "confidence": 0.88
+  }
+}

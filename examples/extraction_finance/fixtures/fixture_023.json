@@ -1,0 +1,11 @@
+{
+  "input_text": "The Federal Reserve announced a 25 basis point rate increase yesterday.",
+  "expected_output": {
+    "entities": [
+      {
+        "type": "ORGANIZATION",
+        "value": "Federal Reserve"
+      }
+    ]
+  }
+}

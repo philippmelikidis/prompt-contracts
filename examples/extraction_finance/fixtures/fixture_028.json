@@ -1,0 +1,19 @@
+{
+  "input_text": "Amazon's AWS division grew 37% year-over-year in Q2 2024.",
+  "expected_output": {
+    "entities": [
+      {
+        "type": "ORGANIZATION",
+        "value": "Amazon"
+      },
+      {
+        "type": "ORGANIZATION",
+        "value": "AWS"
+      },
+      {
+        "type": "PERCENTAGE",
+        "value": "37%"
+      }
+    ]
+  }
+}

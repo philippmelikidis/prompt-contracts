@@ -1,0 +1,7 @@
+{
+  "input_text": "I'd like to schedule a demo with your sales team",
+  "expected_output": {
+    "intent": "sales",
+    "confidence": 0.98
+  }
+}

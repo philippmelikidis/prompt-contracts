@@ -1,0 +1,19 @@
+{
+  "input_text": "Goldman Sachs lowered its target price for Tesla to $250 per share.",
+  "expected_output": {
+    "entities": [
+      {
+        "type": "ORGANIZATION",
+        "value": "Goldman Sachs"
+      },
+      {
+        "type": "ORGANIZATION",
+        "value": "Tesla"
+      },
+      {
+        "type": "MONEY",
+        "value": "$250 "
+      }
+    ]
+  }
+}
