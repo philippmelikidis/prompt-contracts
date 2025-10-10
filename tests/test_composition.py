@@ -3,6 +3,7 @@ Tests for contract composition semantics.
 """
 
 import pytest
+
 from promptcontracts.core.composition import (
     aggregate_confidence_intervals_delta_method,
     aggregate_confidence_intervals_intersection,

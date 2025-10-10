@@ -3,6 +3,7 @@ Tests for power analysis methods.
 """
 
 import pytest
+
 from promptcontracts.stats.power import effect_size_cohens_h, required_n_for_proportion
 
 

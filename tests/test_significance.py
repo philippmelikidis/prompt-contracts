@@ -3,6 +3,7 @@ Tests for significance testing methods.
 """
 
 import pytest
+
 from promptcontracts.stats.significance import bootstrap_diff_ci, mcnemar_test
 
 

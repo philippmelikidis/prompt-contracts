@@ -3,6 +3,7 @@ Tests for confidence interval methods.
 """
 
 import pytest
+
 from promptcontracts.stats.intervals import (
     jeffreys_interval,
     percentile_bootstrap_ci,

@@ -3,6 +3,7 @@ Tests for repair analysis and semantic change detection.
 """
 
 import pytest
+
 from promptcontracts.eval.repair_analysis import (
     RepairEvent,
     analyze_repair_events,

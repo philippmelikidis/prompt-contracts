@@ -8,6 +8,7 @@ Compares results with repair enabled vs disabled to assess:
 """
 
 import pytest
+
 from promptcontracts.core.runner import ContractRunner
 from promptcontracts.utils.normalization import strip_code_fences
 
