@@ -1,0 +1,21 @@
+{
+  "pcsl_version": "0.3.1",
+  "task_name": "summarization",
+  "task_type": "abstractive_summarization",
+  "created_at": "2025-01-09",
+  "random_seed": 42,
+  "statistics": {
+    "total_fixtures": 50,
+    "avg_input_length_tokens": 320,
+    "avg_summary_length_tokens": 48
+  },
+  "annotation": {
+    "num_annotators": 3,
+    "agreement_metric": "fleiss_kappa",
+    "agreement_score": 0.81,
+    "disagreement_resolution": "majority_vote"
+  },
+  "license": "CC-BY-4.0",
+  "source": "synthetic",
+  "domains": ["news", "articles", "reports"]
+}

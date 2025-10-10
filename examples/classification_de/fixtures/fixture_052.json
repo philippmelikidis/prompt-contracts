@@ -1,0 +1,7 @@
+{
+  "input_text": "Preis-Leistung stimmt absolut.",
+  "expected_output": {
+    "sentiment": "neutral",
+    "confidence": 0.81
+  }
+}

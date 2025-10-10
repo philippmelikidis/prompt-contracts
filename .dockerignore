@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Tests
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Docs
+docs/_build/
+*.pdf
+*.aux
+*.log
+*.bbl
+*.blg
+*.out
+
+# Artifacts
+artifacts/
+prompt_paper/
+
+# Misc
+*.md
+!README.md
+!examples/DATA_CARD.md
+.DS_Store

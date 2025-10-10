@@ -1,0 +1,11 @@
+{
+  "input_text": "JPMorgan Chase CEO Jamie Dimon warned of potential recession risks.",
+  "expected_output": {
+    "entities": [
+      {
+        "type": "ORGANIZATION",
+        "value": "JPMorgan Chase"
+      }
+    ]
+  }
+}

@@ -75,27 +75,31 @@ eval-small:  ## Run small evaluation suite (v0.3.0)
 		--save-io artifacts/eval-small \
 		--report json --out results-small.json
 
-eval-full:  ## Run full evaluation suite (v0.3.0)
-	@echo "Running full evaluation suite with N=10 sampling..."
-	prompt-contracts run \
-		--pd examples/extraction/pd.json \
-		--es examples/extraction/es.json \
-		--ep examples/extraction/ep.json \
-		--n 10 --seed 42 \
-		--save-io artifacts/eval-full \
-		--report json --out results-full.json
+eval-full:  ## Run full v0.3.2 evaluation (520 fixtures, real metrics)
+	@echo "Running full v0.3.2 evaluation (520 fixtures)..."
+	python scripts/run_full_evaluation.py
 
-docker-build:  ## Build Docker image (v0.3.0)
-	docker build -t prompt-contracts:0.3.0 .
+docker-build:  ## Build Docker image (v0.3.2)
+	docker build -t prompt-contracts:0.3.2 -t prompt-contracts:latest .
 
 docker-run:  ## Run Docker container interactively
-	docker run -it --rm -v $(PWD)/examples:/workspace/examples prompt-contracts:0.3.0 /bin/bash
+	docker run -it --rm \
+		-v $(PWD)/examples:/app/examples \
+		-v $(PWD)/artifacts:/app/artifacts \
+		-e OPENAI_API_KEY=${OPENAI_API_KEY} \
+		prompt-contracts:0.3.2 /bin/bash
+
+docker-eval-full:  ## Run full evaluation inside Docker (reproducible, v0.3.2)
+	docker run --rm \
+		-e PYTHONHASHSEED=42 \
+		-e OMP_NUM_THREADS=1 \
+		prompt-contracts:0.3.2 python scripts/run_full_evaluation.py
 
 pre-commit:  ## Run pre-commit hooks on all files
 	pre-commit run --all-files
 
 release-check:  ## Run all release checks (tests, lint, build, validate)
-	@echo "🚀 Running release checks for v0.3.0..."
+	@echo "Running release checks for v0.3.1..."
 	@echo ""
 	@echo "1️⃣  Running tests..."
 	@pytest -v --tb=short

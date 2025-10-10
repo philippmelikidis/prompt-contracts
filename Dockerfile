@@ -1,12 +1,13 @@
-# Dockerfile for prompt-contracts v0.3.0
-FROM python:3.11-slim
+# Dockerfile for Prompt Contracts v0.3.2
+# Reproducible evaluation environment with pinned dependencies
 
-LABEL maintainer="prompt-contracts team"
-LABEL version="0.3.0"
-LABEL description="Reproducible environment for prompt contract testing"
+FROM python:3.11.7-slim
 
-# Set working directory
-WORKDIR /workspace
+# Set reproducibility environment variables
+ENV PYTHONHASHSEED=42
+ENV OMP_NUM_THREADS=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -14,24 +15,31 @@ RUN apt-get update && apt-get install -y \
     make \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install dependencies
-COPY requirements.txt /workspace/
+# Set working directory
+WORKDIR /app
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt setup.py pyproject.toml ./
+COPY src/ ./src/
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -e .
 
-# Install optional dependencies for v0.3.0
-RUN pip install --no-cache-dir \
-    sentence-transformers==2.2.2 \
-    numpy==1.24.3
+# Copy examples and scripts
+COPY examples/ ./examples/
+COPY scripts/ ./scripts/
+COPY Makefile ./
 
-# Copy project files
-COPY . /workspace/
-
-# Install prompt-contracts in editable mode
-RUN pip install -e .
-
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
-ENV PCSL_VERSION=0.3.0
+# Verify installation
+RUN prompt-contracts --version
 
 # Default command
-CMD ["prompt-contracts", "--help"]
+CMD ["bash"]
+
+# To build:
+#   docker build -t prompt-contracts:0.3.2 .
+#
+# To run evaluation:
+#   docker run --rm prompt-contracts:0.3.2 python scripts/run_full_evaluation.py
+#
+# To run interactive shell:
+#   docker run --rm -it prompt-contracts:0.3.2

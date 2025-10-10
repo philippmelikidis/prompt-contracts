@@ -1,0 +1,7 @@
+{
+  "input_text": "Schnelle Lieferung, gute Qualität.",
+  "expected_output": {
+    "sentiment": "positive",
+    "confidence": 0.93
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "input_text": "I received the wrong item in my shipment",
+  "expected_output": {
+    "intent": "complaint",
+    "confidence": 0.93
+  }
+}

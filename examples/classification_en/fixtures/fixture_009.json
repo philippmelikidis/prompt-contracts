@@ -1,0 +1,7 @@
+{
+  "input_text": "What are your business hours?",
+  "expected_output": {
+    "intent": "inquiry",
+    "confidence": 0.87
+  }
+}

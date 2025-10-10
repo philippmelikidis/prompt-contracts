@@ -1,0 +1,7 @@
+{
+  "input_text": "Das Produkt ist ausgezeichnet, sehr zufrieden!",
+  "expected_output": {
+    "sentiment": "positive",
+    "confidence": 0.88
+  }
+}

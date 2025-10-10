@@ -1,0 +1,11 @@
+{
+  "input_text": "The S&P 500 index closed at 4,350 points on Friday.",
+  "expected_output": {
+    "entities": [
+      {
+        "type": "ORGANIZATION",
+        "value": "S&P 500"
+      }
+    ]
+  }
+}

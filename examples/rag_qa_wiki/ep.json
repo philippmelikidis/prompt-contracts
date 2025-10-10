@@ -1,0 +1,6 @@
+{
+  "prompt_template": "Answer the question based on the provided context.\n\nContext: {input_context}\n\nQuestion: {input_question}\n\nRespond with JSON containing 'answer' and 'confidence' fields.",
+  "model": "gpt-4o-mini",
+  "temperature": 0.0,
+  "seed": 42
+}

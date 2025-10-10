@@ -1,0 +1,7 @@
+{
+  "input_text": "I need a refund for this defective product Thanks!",
+  "expected_output": {
+    "intent": "refund",
+    "confidence": 0.87
+  }
+}

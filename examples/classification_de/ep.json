@@ -1,0 +1,6 @@
+{
+  "prompt_template": "Klassifizieren Sie das folgende Kundenfeedback als positiv, negativ oder neutral.\n\nFeedback: {input_text}\n\nAntworten Sie mit JSON mit 'sentiment' und 'confidence' Feldern.",
+  "model": "gpt-4o-mini",
+  "temperature": 0.0,
+  "seed": 42
+}

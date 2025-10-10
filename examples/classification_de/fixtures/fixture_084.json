@@ -1,0 +1,7 @@
+{
+  "input_text": "Leider nicht das, was ich erwartet habe.",
+  "expected_output": {
+    "sentiment": "negative",
+    "confidence": 0.93
+  }
+}

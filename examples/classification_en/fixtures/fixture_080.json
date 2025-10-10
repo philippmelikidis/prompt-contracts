@@ -1,0 +1,7 @@
+{
+  "input_text": "i want to cancel my subscription immediately",
+  "expected_output": {
+    "intent": "cancel",
+    "confidence": 0.9
+  }
+}

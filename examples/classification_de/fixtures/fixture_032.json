@@ -1,0 +1,7 @@
+{
+  "input_text": "Bin begeistert, gerne wieder!",
+  "expected_output": {
+    "sentiment": "positive",
+    "confidence": 0.95
+  }
+}

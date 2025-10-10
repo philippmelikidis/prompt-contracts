@@ -1,0 +1,7 @@
+{
+  "input_text": "Verpackung war beschädigt.",
+  "expected_output": {
+    "sentiment": "negative",
+    "confidence": 0.85
+  }
+}

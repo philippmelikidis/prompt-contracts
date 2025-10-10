@@ -1,0 +1,1 @@
+Classify this healthcare support ticket: Patient experiencing severe chest pain, requesting immediate callback.

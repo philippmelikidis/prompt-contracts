@@ -1,0 +1,7 @@
+{
+  "input_text": "Kundenservice war sehr unhöflich.",
+  "expected_output": {
+    "sentiment": "negative",
+    "confidence": 0.92
+  }
+}

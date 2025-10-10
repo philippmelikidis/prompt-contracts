@@ -1,0 +1,15 @@
+{
+  "input_text": "Bitcoin surged to $45,000 following ETF approval news.",
+  "expected_output": {
+    "entities": [
+      {
+        "type": "ORGANIZATION",
+        "value": "Bitcoin"
+      },
+      {
+        "type": "MONEY",
+        "value": "$45,000 "
+      }
+    ]
+  }
+}

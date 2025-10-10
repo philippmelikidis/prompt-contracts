@@ -1,0 +1,29 @@
+{
+  "checks": [
+    {
+      "type": "json_valid",
+      "severity": "error"
+    },
+    {
+      "type": "json_required",
+      "severity": "error",
+      "keys": ["intent", "confidence"]
+    },
+    {
+      "type": "enum_value",
+      "severity": "error",
+      "field": "intent",
+      "allowed": ["cancel", "upgrade", "inquiry", "refund", "support", "info", "sales", "access", "pricing", "complaint"]
+    },
+    {
+      "type": "latency_budget",
+      "severity": "warn",
+      "max_ms": 3000
+    },
+    {
+      "type": "token_budget",
+      "severity": "warn",
+      "max_tokens": 150
+    }
+  ]
+}

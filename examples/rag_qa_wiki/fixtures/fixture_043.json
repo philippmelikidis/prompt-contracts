@@ -1,0 +1,8 @@
+{
+  "input_context": "Photosynthesis is the process used by plants to convert light energy into chemical energy stored in glucose. It occurs primarily in the chloroplasts of plant cells. The overall equation is: 6CO2 + 6H2O + light \u2192 C6H12O6 + 6O2.",
+  "input_question": "Where does photosynthesis occur in plant cells?",
+  "expected_output": {
+    "answer": "In the chloroplasts",
+    "confidence": 0.9
+  }
+}
