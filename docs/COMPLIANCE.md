@@ -188,6 +188,284 @@ All execution artifacts comply with IEEE 730 quality record requirements:
 | NIST AI RMF | Risk Management | Measure + Govern functions |
 | ISO/IEC 25010 | Product Quality | Reliability, Maintainability, Portability |
 
+## Risk Matrix Example (EU AI Act Article 9)
+
+### Risk Assessment for Medical Diagnosis Assistant
+
+| Risk Category | Likelihood | Severity | PCSL Mitigation | Status |
+|---------------|------------|----------|-----------------|--------|
+| Hallucination | High | Critical | `json_required`, `enum`, enforce mode | MITIGATED |
+| Latency Spike | Medium | High | `pc.check.latency_budget` (2s) | MONITORED |
+| Token Overflow | Low | Medium | `pc.check.token_budget` (500) | CONTROLLED |
+| Schema Drift | Medium | Critical | N-sampling (N=5), bootstrap CI | VALIDATED |
+| Repair Failure | Low | High | `repair_ledger` tracking, alerts | TRANSPARENT |
+
+**Risk Score Calculation**:
+```
+Risk = Likelihood × Severity × (1 - Mitigation_Effectiveness)
+```
+
+**PCSL Configuration**:
+```json
+{
+  "execution": {
+    "mode": "enforce",
+    "strict_enforce": true,
+    "max_retries": 2
+  },
+  "sampling": {
+    "n": 5,
+    "aggregation": "majority",
+    "confidence_level": 0.95
+  }
+}
+```
+
+### Human Oversight Roles (Article 14)
+
+| Role | Mode | Responsibility | PCSL Support |
+|------|------|----------------|--------------|
+| Developer | observe | Define contracts, monitor metrics | ES creation, CLI reports |
+| QA Engineer | assist | Validate prompts, review failures | Artifact analysis, repair ledger |
+| Compliance Officer | enforce | Ensure regulatory adherence | Audit JSON, capability logs |
+| Domain Expert | assist/enforce | Review edge cases, set thresholds | LLM-as-judge, gold labels |
+
+---
+
+## Audit Bundle Example
+
+### Complete Audit Package Structure
+
+```
+audit_bundle_20250109_143022/
+├── audit_manifest.json          # SHA256 hashes + metadata
+├── prompt_definition.json       # PD artifact
+├── expectation_suite.json       # ES artifact
+├── evaluation_profile.json      # EP artifact
+├── run.json                     # Execution log
+├── fixtures/
+│   ├── input_001.txt
+│   ├── input_002.txt
+│   └── ...
+├── outputs/
+│   ├── output_001.json
+│   ├── output_002.json
+│   └── ...
+└── checksums.txt                # Line-by-line SHA256 verification
+```
+
+### audit_manifest.json
+
+```json
+{
+  "audit_id": "audit_20250109_143022",
+  "pcsl_version": "0.3.1",
+  "created_at": "2025-01-09T14:30:22.123Z",
+  "purpose": "Regulatory compliance audit for medical diagnosis assistant",
+  "system_under_test": {
+    "prompt_id": "med_diag.v2.5",
+    "provider": "openai",
+    "model": "gpt-4o-mini",
+    "capabilities": {
+      "schema_guided_json": true,
+      "supports_seed": true
+    }
+  },
+  "execution": {
+    "mode": "enforce",
+    "strict_enforce": true,
+    "fixtures_count": 200,
+    "seed": 42,
+    "sampling": {
+      "n": 5,
+      "aggregation": "majority"
+    }
+  },
+  "results": {
+    "validation_success": 0.965,
+    "task_accuracy": 0.942,
+    "repair_rate": 0.018,
+    "avg_latency_ms": 387,
+    "confidence_interval": [0.954, 0.976]
+  },
+  "checksums": {
+    "prompt_definition": "sha256:a3f2c8d1e9b4f6a7c2d8e1f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3",
+    "expectation_suite": "sha256:b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3",
+    "evaluation_profile": "sha256:c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4",
+    "run_json": "sha256:d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5",
+    "fixtures_archive": "sha256:e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6",
+    "outputs_archive": "sha256:f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7"
+  },
+  "compliance_tags": [
+    "ISO-29119-compliant",
+    "EU-AI-Act-Article-12",
+    "NIST-AI-RMF-Measure-2.2"
+  ],
+  "auditor": {
+    "name": "Compliance Verification System",
+    "version": "1.0.0",
+    "timestamp": "2025-01-09T14:30:22.123Z"
+  },
+  "signature": "gpg:0x1234567890ABCDEF"
+}
+```
+
+### Generating Audit Bundle
+
+```bash
+# Run evaluation with audit mode
+prompt-contracts run \
+  --pd prompts/med_diag_pd.json \
+  --es prompts/med_diag_es.json \
+  --ep prompts/med_diag_ep.json \
+  --save-io artifacts/audit_$(date +%Y%m%d_%H%M%S) \
+  --seed 42 \
+  --n 5 \
+  --report json \
+  --out audit_report.json
+
+# Generate checksums
+cd artifacts/audit_20250109_143022
+find . -type f -exec sha256sum {} \; > checksums.txt
+
+# Create audit manifest
+python scripts/create_audit_manifest.py \
+  --run-json run.json \
+  --checksums checksums.txt \
+  --output audit_manifest.json
+
+# Sign bundle (optional)
+gpg --detach-sign --armor audit_manifest.json
+```
+
+### Verification
+
+```bash
+# Verify checksums
+sha256sum -c checksums.txt
+
+# Verify GPG signature (if signed)
+gpg --verify audit_manifest.json.asc audit_manifest.json
+
+# Validate PCSL artifacts
+prompt-contracts validate \
+  --pd prompt_definition.json \
+  --es expectation_suite.json \
+  --ep evaluation_profile.json
+```
+
+---
+
+## SHA256 Hash Computation
+
+### Prompt Hash (for tamper detection)
+
+```python
+import hashlib
+import json
+
+def compute_prompt_hash(pd: dict, fixture: dict) -> str:
+    """
+    Compute SHA256 hash of final prompt for audit trail.
+
+    Args:
+        pd: Prompt Definition
+        fixture: Input fixture
+
+    Returns:
+        Hex string of SHA256 hash
+    """
+    # Construct final prompt
+    prompt_text = pd["prompt"]
+    if fixture.get("input"):
+        prompt_text = f"{prompt_text}\n\nInput: {fixture['input']}"
+
+    # Canonical JSON for reproducibility
+    canonical = json.dumps(
+        {"prompt": prompt_text, "fixture_id": fixture["id"]},
+        sort_keys=True,
+        separators=(',', ':')
+    )
+
+    # Compute hash
+    return hashlib.sha256(canonical.encode('utf-8')).hexdigest()
+```
+
+### Artifact Hash (for integrity verification)
+
+```python
+def compute_artifact_hash(artifact_path: str) -> str:
+    """Compute SHA256 of artifact file."""
+    sha256_hash = hashlib.sha256()
+    with open(artifact_path, "rb") as f:
+        for byte_block in iter(lambda: f.read(4096), b""):
+            sha256_hash.update(byte_block)
+    return sha256_hash.hexdigest()
+```
+
+### Usage in run.json
+
+```json
+{
+  "fixture_id": "fix_001",
+  "prompt_hash": "a3f2c8d1e9b4f6a7c2d8e1f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3",
+  "output_hash": "b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3",
+  "timestamp": "2025-01-09T14:30:22.123Z",
+  "checks": [...],
+  "status": "GREEN"
+}
+```
+
+---
+
+## Compliance Statement Template
+
+For organizations using prompt-contracts in regulated environments:
+
+```
+COMPLIANCE STATEMENT
+
+Organization: [Your Organization Name]
+System: [AI System Name and Version]
+Date: [YYYY-MM-DD]
+
+This system has been evaluated using prompt-contracts v0.3.1, which implements:
+
+1. ISO/IEC/IEEE 29119 Software Testing Standards
+   - Test planning, design, implementation, execution, and reporting
+   - Statistical test techniques (bootstrap CI)
+
+2. EU AI Act Compliance (Regulation 2024/XXX)
+   - Article 9: Risk management with latency/token budgets
+   - Article 10: Data governance via versioned fixtures
+   - Article 12: Complete audit trails with SHA256 hashes
+   - Article 13: Transparency via capability negotiation
+   - Article 14: Human oversight modes (observe/assist/enforce)
+   - Article 15: Statistical accuracy validation (bootstrap CI)
+
+3. IEEE 730 Software Quality Assurance
+   - Quality records with version control and traceability
+   - Reproducibility via seed-based execution
+
+4. NIST AI Risk Management Framework
+   - MEASURE 2.2: Statistically valid evaluations
+   - GOVERN 3.1: Appropriate deployment methods
+
+Audit Bundle: [SHA256 hash of audit_manifest.json]
+Results: [validation_success]% validation success, [task_accuracy]% task accuracy
+Confidence Interval: [CI_lower, CI_upper] (95% bootstrap)
+
+Certification: This evaluation was conducted in accordance with the above standards
+and regulatory requirements. All artifacts are available for independent verification.
+
+Signed: ___________________________
+        [Name, Title]
+        [Organization]
+        [Date]
+```
+
+---
+
 ## Limitations
 
 - **PCSL does not provide**: Fairness/bias testing, adversarial robustness, data privacy controls
@@ -203,6 +481,6 @@ All execution artifacts comply with IEEE 730 quality record requirements:
 
 ---
 
-**Document Version**: 1.0.0
-**PCSL Version**: 0.3.0
+**Document Version**: 1.1.0
+**PCSL Version**: 0.3.1
 **Last Updated**: 2025-01-09

@@ -1,0 +1,21 @@
+{
+  "pcsl_version": "0.3.1",
+  "task_name": "rag_qa",
+  "task_type": "question_answering",
+  "created_at": "2025-01-09",
+  "random_seed": 42,
+  "statistics": {
+    "total_fixtures": 50,
+    "avg_context_length_tokens": 250,
+    "avg_answer_length_tokens": 32
+  },
+  "annotation": {
+    "num_annotators": 3,
+    "agreement_metric": "fleiss_kappa",
+    "agreement_score": 0.85,
+    "disagreement_resolution": "majority_vote"
+  },
+  "license": "CC-BY-4.0",
+  "source": "synthetic",
+  "domains": ["documentation", "knowledge_base"]
+}

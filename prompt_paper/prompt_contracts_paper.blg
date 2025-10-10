@@ -21,8 +21,6 @@ Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
 Warning--empty publisher in bender2021stochasticparrots
 Warning--empty address in bender2021stochasticparrots
 Warning--page numbers missing in both pages and numpages fields in bender2021stochasticparrots
-Warning--no number and no volume in hendrycks2021mmlu
-Warning--page numbers missing in both pages and numpages fields in hendrycks2021mmlu
 Warning--empty publisher in liang2022holistic
 Warning--empty address in liang2022holistic
 Warning--page numbers missing in both pages and numpages fields in liang2022holistic
@@ -32,45 +30,45 @@ Warning--empty address in openapi2017
 Warning--page numbers missing in both pages and numpages fields in openapi2017
 Warning--no number and no volume in ribeiro2020beyond
 Warning--page numbers missing in both pages and numpages fields in zheng2023judging
-You've used 12 entries,
+You've used 11 entries,
             6056 wiz_defined-function locations,
-            1546 strings with 19806 characters,
-and the built_in function-call counts, 11766 in all, are:
-= -- 1444
-> -- 426
+            1542 strings with 19646 characters,
+and the built_in function-call counts, 10713 in all, are:
+= -- 1279
+> -- 387
 < -- 0
-+ -- 137
-- -- 151
-* -- 794
-:= -- 1212
-add.period$ -- 58
-call.type$ -- 12
-change.case$ -- 86
-chr.to.int$ -- 12
-cite$ -- 26
-duplicate$ -- 1024
-empty$ -- 729
-format.name$ -- 171
-if$ -- 2805
++ -- 124
+- -- 139
+* -- 718
+:= -- 1114
+add.period$ -- 53
+call.type$ -- 11
+change.case$ -- 79
+chr.to.int$ -- 11
+cite$ -- 23
+duplicate$ -- 942
+empty$ -- 669
+format.name$ -- 155
+if$ -- 2523
 int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 31
-newline$ -- 133
-num.names$ -- 84
-pop$ -- 435
+missing$ -- 27
+newline$ -- 125
+num.names$ -- 77
+pop$ -- 397
 preamble$ -- 1
-purify$ -- 182
+purify$ -- 167
 quote$ -- 0
-skip$ -- 371
+skip$ -- 347
 stack$ -- 0
-substring$ -- 733
-swap$ -- 65
+substring$ -- 679
+swap$ -- 61
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 304
-warning$ -- 14
-while$ -- 70
+type$ -- 288
+warning$ -- 12
+while$ -- 67
 width$ -- 0
-write$ -- 253
+write$ -- 235
 (There was 1 error message)

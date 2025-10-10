@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{12}
+\begin{thebibliography}{11}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -66,18 +66,6 @@
 \newblock
 \newblock
 \shownote{Available at: \url{https://artificialintelligenceact.eu/}}.
-
-
-\bibitem[Hendrycks et~al\mbox{.}(2021)]%
-        {hendrycks2021mmlu}
-\bibfield{author}{\bibinfo{person}{Dan Hendrycks}, \bibinfo{person}{Collin
-  Burns}, \bibinfo{person}{Steven Basart}, {et~al\mbox{.}}}
-  \bibinfo{year}{2021}\natexlab{}.
-\newblock \showarticletitle{Measuring Massive Multitask Language
-  Understanding}.
-\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2009.03300}}
-  (\bibinfo{year}{2021}).
-\newblock
 
 
 \bibitem[{ISO/IEC/IEEE}(2013)]%

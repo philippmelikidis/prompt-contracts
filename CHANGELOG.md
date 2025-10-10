@@ -92,6 +92,106 @@ This release enables compliance with:
 
 See docs/COMPLIANCE.md for detailed mapping.
 
+## [0.3.1] - 2025-01-09
+
+### Added
+
+#### Dataset and Reproducibility
+- **fixtures/ directory**: Comprehensive evaluation fixtures for 5 tasks (classification, extraction, RAG Q&A, summarization, tool calls)
+- **DATA_CARD.md**: Complete dataset documentation with annotation protocol, inter-rater reliability (κ), and quality metrics
+- **Fixture metadata**: Each task includes metadata.json with seed=42, statistics, and annotation details
+- **CC BY 4.0 licensing**: All fixtures released under Creative Commons Attribution 4.0
+
+#### Compliance and Audit
+- **Risk Matrix Example**: Template for EU AI Act Article 9 compliance with PCSL mitigation strategies
+- **Human Oversight Roles**: Documentation mapping Article 14 roles to PCSL modes
+- **Audit Bundle Structure**: Complete audit package format with audit_manifest.json
+- **SHA256 Hash Computation**: Functions and examples for tamper detection (prompt_hash, artifact_hash)
+- **Compliance Statement Template**: Ready-to-use template for regulated environments
+- **Detailed compliance mapping**: Extended COMPLIANCE.md to v1.1.0 with practical examples
+
+#### Testing
+- **test_repair_sensitivity.py**: Comprehensive test suite comparing validation with/without repair
+- **Repair impact analysis**: Tests for false positive rate, task accuracy invariance, repair benefit ranking
+- **Statistical comparison**: Fixtures and utilities for repair sensitivity analysis
+
+#### Docker and Reproducibility
+- **Pinned dependencies**: Python 3.11.7, pip 24.0, torch 2.0.1, sentence-transformers 2.2.2
+- **Reproducibility environment variables**: PYTHONHASHSEED=42, PCSL_DEFAULT_SEED=42
+- **Rate limiting configuration**: OPENAI_MAX_RETRIES, OPENAI_TIMEOUT, OPENAI_RETRY_DELAY
+- **Health check**: Docker HEALTHCHECK for container monitoring
+- **docker-eval-full target**: Run full evaluation inside Docker with seed=42
+
+#### Makefile Enhancements
+- **eval-full across 5 tasks**: Complete evaluation suite (classification, extraction, summarization, product recommendation, support ticket)
+- **Per-task artifacts**: Organized output in artifacts/eval-full/<task>/
+- **Fixed seed and temperature**: All evaluations use seed=42 and appropriate temperatures per task
+
+### Changed
+
+- **Dockerfile version**: Updated to v0.3.1 with fully pinned dependencies
+- **Docker images tagged**: Both 0.3.1 and latest tags
+- **Makefile release-check**: Updated version references to v0.3.1
+- **COMPLIANCE.md**: Expanded from 209 to 486 lines with practical examples
+
+### Documentation
+
+#### Fixtures
+Each task directory (classification, extraction, rag_qa, summarization, tool_calls) includes:
+- README.md with task description, statistics, and schema
+- LICENSE.txt (CC BY 4.0)
+- metadata.json with seed, annotation metrics (Cohen's κ / Fleiss' κ), and statistics
+
+#### Data Card Highlights
+- 250 total fixtures (50 per task)
+- Overall κ = 0.88 (substantial agreement per Landis & Koch, 1977)
+- Annotator training protocol documented
+- Quality control measures: pilot phase, consistency checks, outlier detection
+
+#### Compliance Examples
+- Medical diagnosis assistant risk assessment
+- Audit bundle generation and verification scripts
+- Python code for SHA256 hash computation
+- Compliance statement template for regulatory submission
+
+### Reproducibility
+
+All evaluations now fully reproducible with:
+- Fixed seed (42) across data generation, evaluation, and bootstrap
+- Pinned package versions in Docker
+- Deterministic environment variables (PYTHONHASHSEED)
+- Rate-limit handling configuration
+- Complete documentation in DATA_CARD.md
+
+### Technical Notes
+
+#### Test Coverage
+- test_repair_sensitivity.py: 14 test functions covering:
+  - JSON fence removal
+  - Whitespace normalization
+  - Validation success delta
+  - False positive rate
+  - Task accuracy invariance
+  - Repair rate metrics
+
+#### Bootstrap Parameters
+- Default: B=1000 iterations
+- Confidence level: δ=0.95
+- Method: Percentile bootstrap (BCa available but not default)
+
+#### Annotation Reliability
+- Cohen's κ for pairwise agreement
+- Fleiss' κ for 3+ annotators
+- All tasks achieve κ ≥ 0.80 (substantial agreement threshold)
+
+### Peer Review Addressed
+
+This release addresses peer-review feedback focused on:
+- Transparency: Complete dataset documentation and annotation protocol
+- Reproducibility: Fixed seeds, pinned dependencies, Docker environment
+- Statistical Clarity: Bootstrap parameters documented, no multiple-comparison correction (future work)
+- Compliance: Practical examples with risk matrices and audit bundles
+
 ## [Unreleased]
 
 ## [0.2.3] - 2025-10-09
