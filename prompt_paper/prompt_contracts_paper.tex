@@ -325,7 +325,12 @@ This gap becomes critical as LLMs deploy in regulated domains~\cite{euaiact2024}
 
 \textbf{Contract-based testing.} Design-by-contract~\cite{meyer1992applying} formalizes deterministic specifications. PCSL extends to probabilistic functions via N-sampling and statistical confidence bounds. OpenAPI~\cite{openapi2017} provides REST API contracts; PCSL adapts this for natural language interfaces.
 
-\textbf{LLM frameworks.} CheckList~\cite{ribeiro2020beyond} enables behavioral testing but requires manual test writing (120 min setup vs. PCSL's 2 min). HELM~\cite{liang2022holistic} focuses on model benchmarking, not prompt contracts. LangChain~\cite{langchain2023} abstracts development but lacks systematic testing. Guidance~\cite{guidance2023} constrains generation; PCSL validates post-hoc. OpenAI Structured Outputs~\cite{openai2023structured} enforces schemas but is vendor-locked. PCSL uniquely combines formal specification, probabilistic semantics, multi-provider execution, and compliance mapping (Table~\ref{tab:comparison}).
+\textbf{LLM frameworks.} CheckList~\cite{ribeiro2020beyond} enables behavioral testing but requires manual test writing (120 min setup vs. PCSL's 2 min).
+HELM~\cite{liang2022holistic} focuses on model benchmarking, not prompt contracts.
+LangChain~\cite{langchain2023} abstracts development but lacks systematic testing.
+Guidance~\cite{guidance2023} constrains generation; PCSL validates post-hoc.
+OpenAI Structured Outputs~\cite{openai2023structured} enforces schemas but is vendor-locked.
+PCSL uniquely combines formal specification, probabilistic semantics, multi-provider execution, and compliance mapping (Table~\ref{tab:comparison}).
 
 \begin{table}[t]
 \centering
@@ -450,7 +455,10 @@ Algorithm~\ref{alg:pipeline} formalizes sampling-enabled execution.
 
 \subsection{Repair Policy}
 
-\( \Pi = \langle \text{enabled}, \text{max\_steps}, \text{allowed} \rangle \). Strategies: \texttt{strip\_markdown\_fences} (\( O(n) \)), \texttt{json\_loose\_parse}, \texttt{lowercase\_fields} (\( O(d) \)).
+\( \Pi = \langle \text{enabled}, \text{max\_steps}, \text{allowed} \rangle \). Strategies:
+\texttt{strip\_markdown\_fences} (\( O(n) \)),
+\texttt{json\_loose\_parse},
+\texttt{lowercase\_fields} (\( O(d) \)).
 
 Risk: High repair rate (\( > 0.5 \)) signals quality issues. Modes: \texttt{max\_steps=0} (fail-safe), \texttt{max\_steps=2} (fail-open). All logged.
 
@@ -646,7 +654,8 @@ Repair (\%) & 68 & 71 & 74 & 65 & 69 & 69.4 & 3.1 \\
 
 \subsection{Comparative Benchmarks}
 
-Table~\ref{tab:comparative}: PCSL (enforce) F1=0.99, (assist) F1=0.92 vs. CheckList 0.82, Guidance 0.86, OpenAI Struct. 0.97. Setup: PCSL 2 min vs. CheckList 120 min.
+Table~\ref{tab:comparative}: PCSL (enforce) F1=0.99, (assist) F1=0.92 vs. CheckList 0.82, Guidance 0.86, OpenAI Struct. 0.97.
+Setup: PCSL 2 min vs. CheckList 120 min.
 
 \begin{table}[H]
 \centering
@@ -690,9 +699,13 @@ Human (inter) & - & - & 0.89 & 91\% & \$150 \\
 
 \subsection{Live Evaluation \& Drift}
 
-\textbf{Motivation.} Static evaluation provides baseline performance but fails to capture temporal dynamics in production LLM systems. We conduct a four-week live API study across three providers to assess empirical variance, repair stabilization effects, and CI calibration under non-stationary distributions.
+\textbf{Motivation.} Static evaluation provides baseline performance but fails to capture temporal dynamics in production LLM systems.
+We conduct a four-week live API study across three providers to assess empirical variance, repair stabilization effects, and CI calibration under non-stationary distributions.
 
-\textbf{Protocol.} Real endpoints under rate limits and intermittent retrieval errors. Daily batches of 50 fixtures per provider, randomized order, identical contracts. Drift detection uses rolling Wilson intervals (window=7 days) with sequential CI calibration. See \texttt{scripts/live\_eval.py} for implementation.
+\textbf{Protocol.} Real endpoints under rate limits and intermittent retrieval errors.
+Daily batches of 50 fixtures per provider, randomized order, identical contracts.
+Drift detection uses rolling Wilson intervals (window=7 days) with sequential CI calibration.
+See \texttt{scripts/live\_eval.py} for implementation.
 
 \begin{table}[H]
 \centering
@@ -728,7 +741,10 @@ Mistral & Mixtral 8x7B & 4w & 90.4 & 0.052 & +3.1 & 0.31 \\
 
 \textbf{Motivation.} LLMs frequently generate syntactically varied outputs (markdown fences, extra whitespace) that do not affect semantic correctness. Automated repair policies normalize outputs before validation.
 
-\textbf{Transformations.} PCSL applies ordered normalizations: (1)~\texttt{strip\_markdown\_fences}, (2)~\texttt{strip\_whitespace}, (3)~\texttt{normalize\_newlines}.
+\textbf{Transformations.} PCSL applies ordered normalizations:
+(1)~\texttt{strip\_markdown\_fences},
+(2)~\texttt{strip\_whitespace},
+(3)~\texttt{normalize\_newlines}.
 
 \textbf{Analysis.} Table~\ref{tab:repair_sensitivity} compares validation success with repair enabled vs. disabled.
 
@@ -752,11 +768,19 @@ RAG\_QA & 78\% & 92\% & +14\% & 29\% \\
 \end{tabular}
 \end{table}
 
-\textbf{Key Findings:} Repair improves validation by 14.5\% on average (77\% → 91.5\%). Semantic change rate only 1.2\%, confirming transformations preserve meaning. Repair rate 29.2\% indicates LLMs frequently generate syntactically varied but semantically correct outputs. German tasks show lower repair needs (24\%) than English (36\%), possibly due to simpler structures. \textbf{False Positives:} Repair does not mask genuine errors—malformed JSON remains invalid. The \texttt{repair\_ledger} tracks all transformations for audit transparency.
+\textbf{Key Findings:} Repair improves validation by 14.5\% on average (77\% → 91.5\%).
+Semantic change rate only 1.2\%, confirming transformations preserve meaning.
+Repair rate 29.2\% indicates LLMs frequently generate syntactically varied but semantically correct outputs.
+German tasks show lower repair needs (24\%) than English (36\%), possibly due to simpler structures.
+\textbf{False Positives:} Repair does not mask genuine errors—malformed JSON remains invalid.
+The \texttt{repair\_ledger} tracks all transformations for audit transparency.
 
 \subsection{Fair System Comparison}
 
-We compare PCSL against CheckList~\cite{ribeiro2020beyond} and Guidance~\cite{guidance2023} on 200 shared fixtures from classification\_en task. \textbf{Protocol:} Identical fixtures, configs (seed=42, temp=0, gpt-4o-mini), and evaluation criteria. Setup time measured from documentation access to first successful run. All implementation scripts open-sourced.
+We compare PCSL against CheckList~\cite{ribeiro2020beyond} and Guidance~\cite{guidance2023} on 200 shared fixtures from classification\_en task.
+\textbf{Protocol:} Identical fixtures, configs (seed=42, temp=0, gpt-4o-mini), and evaluation criteria.
+Setup time measured from documentation access to first successful run.
+All implementation scripts open-sourced.
 
 \begin{table}[H]
 \centering
