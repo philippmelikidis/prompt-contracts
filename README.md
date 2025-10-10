@@ -12,18 +12,21 @@ Prompt-Contracts is a specification and toolkit that brings contract testing to 
 
 ---
 
-## What's New in v0.3.0
+## What's New in v0.3.2
 
-**Major Release** - Probabilistic Contracts & Semantic Validation:
+**Statistical Rigor & Fair Comparison Release**:
 
-- **N-Sampling**: Generate multiple samples with configurable aggregation (majority/all/any/first)
-- **Bootstrap Confidence Intervals**: Statistical validation with δ=0.95 confidence
-- **Semantic Checks**: `contains_all`, `contains_any`, `regex_present`, `similarity` (embedding-based)
-- **LLM-as-Judge**: Automated evaluation with budget tracking
-- **Enhanced Parsing**: `json_loose()` and `regex_extract()` for robust output handling
-- **Repair Policies**: Structured normalization with repair ledgers
-- **Compliance Documentation**: ISO/IEC/IEEE 29119 and EU AI Act mapping
-- **Formal Capability Negotiation**: μ(Acap, Mreq) → Mactual for adapters
+- **Wilson/Jeffreys Intervals**: Default CI methods with solid statistical foundations (n ≥ 10: Wilson; n < 10: Jeffreys)
+- **McNemar Test**: Paired binary comparison for system evaluations
+- **Block Bootstrap**: Handle dependencies from repairs or batching
+- **Cross-Family Judge Validation**: Bias-controlled semantic evaluation with κ reliability metrics
+- **Fair Comparison Protocol**: Standardized baseline comparisons (CheckList, Guidance, OpenAI Structured)
+- **Repair Risk Analysis**: Semantic change detection and sensitivity reporting
+- **Audit Harness**: Tamper-evident bundles with SHA-256 hashes and GPG signatures
+- **Contract Composition**: Formal semantics for sequential/parallel contract aggregation
+- **Expanded Compliance**: Enhanced ISO/EU AI Act mapping with statistical methods
+
+See [CHANGELOG.md](CHANGELOG.md) for complete v0.3.2 details.
 
 ---
 

@@ -1,8 +1,15 @@
-# Compliance Mapping for prompt-contracts v0.3.0
+# Compliance Mapping for prompt-contracts v0.3.2
 
 ## Overview
 
 This document maps prompt-contracts' PCSL (Prompt Contract Specification Language) to established software testing standards and AI regulations. This demonstrates how prompt-contracts facilitates compliance with international standards and regulatory requirements.
+
+**Version 0.3.2 Updates**:
+- **Statistical Rigor**: Wilson/Jeffreys confidence intervals, McNemar significance tests
+- **Cross-family Judge Validation**: Bias-controlled semantic evaluation
+- **Fair Comparison Protocol**: Standardized baseline system comparisons
+- **Repair Risk Analysis**: Semantic change detection and sensitivity reporting
+- **Enhanced Audit Bundles**: Third-party verification with GPG signatures
 
 ## ISO/IEC/IEEE 29119: Software Testing Standards
 
@@ -481,6 +488,295 @@ Signed: ___________________________
 
 ---
 
-**Document Version**: 1.1.0
-**PCSL Version**: 0.3.1
-**Last Updated**: 2025-01-09
+**Document Version**: 1.2.0
+**PCSL Version**: 0.3.2
+**Last Updated**: 2025-01-10
+
+---
+
+## v0.3.2 Statistical Rigor Enhancements
+
+### Wilson Score Intervals (Brown et al. 2001)
+
+For validation success rates, PCSL now computes **Wilson score intervals** as default:
+
+```python
+from promptcontracts.stats import wilson_interval
+
+successes, n = 85, 100
+lower, upper = wilson_interval(successes, n, confidence=0.95)
+# (0.770, 0.910)
+```
+
+**Advantages**:
+- More accurate than normal approximation for small n or extreme proportions
+- Respects [0, 1] bounds (never produces negative CIs)
+- Recommended by Brown, Cai & DasGupta (2001) for n ≥ 10
+
+**Regulatory Value**:
+- **EU AI Act Article 15**: Demonstrable accuracy with statistically valid bounds
+- **NIST AI RMF MEASURE 2.2**: Evaluations are statistically sound
+
+### Jeffreys Interval (Bayesian)
+
+For very small samples (n < 10) or boundary cases (successes ∈ {0, n}):
+
+```python
+from promptcontracts.stats import jeffreys_interval
+
+successes, n = 3, 5
+lower, upper = jeffreys_interval(successes, n, confidence=0.95)
+# (0.188, 0.950)
+```
+
+**Advantages**:
+- Bayesian approach using Jeffreys prior Beta(0.5, 0.5)
+- Handles boundary cases gracefully
+- Invariant to reparameterization
+
+### Block Bootstrap for Dependent Data
+
+When repairs introduce dependencies, use **block bootstrap**:
+
+```python
+from promptcontracts.stats import percentile_bootstrap_ci
+
+values = [1, 1, 0, 1, 1, 0, ...]  # Binary outcomes
+lower, upper = percentile_bootstrap_ci(values, B=1000, block=10, seed=42)
+```
+
+**Use Cases**:
+- Samples with temporal dependencies
+- Batched evaluations where batch order matters
+- Repair policies that affect multiple samples
+
+**References**:
+- Künsch (1989). "The Jackknife and the Bootstrap for General Stationary Observations"
+- Hall (1992). "The Bootstrap and Edgeworth Expansion"
+
+### McNemar Test for System Comparisons
+
+For paired binary comparisons (e.g., PCSL vs CheckList):
+
+```python
+from promptcontracts.stats import mcnemar_test
+
+# Disagreements: A failed but B passed (a01), A passed but B failed (a10)
+a01, a10 = 15, 5
+p_value = mcnemar_test(a01, a10)
+
+if p_value < 0.05:
+    print("Systems differ significantly")
+```
+
+**Regulatory Value**:
+- **ISO 29119-4**: Statistical test technique for comparative evaluation
+- **Fair Comparison Protocol**: Ensures claims of superiority are statistically justified
+- **Article 13 Transparency**: Evidence-based performance claims
+
+### Cross-Family Judge Validation
+
+To mitigate LLM-as-judge bias, use judges from different model families:
+
+```python
+from promptcontracts.judge import cross_family_judge_config
+
+config = cross_family_judge_config(
+    primary_model="gpt-4o",           # OpenAI
+    secondary_model="claude-3-sonnet", # Anthropic
+    tertiary_model="gemini-pro"        # Google (tie-breaker)
+)
+```
+
+**Bias Control Measures**:
+1. **Randomization**: Shuffle evaluation order (per-fixture)
+2. **Masking**: Remove provider-identifying metadata
+3. **Cross-family**: Use judges from different providers
+4. **Inter-rater Reliability**: Report Cohen's κ or Fleiss' κ
+
+**Example κ Computation**:
+
+```python
+from promptcontracts.judge import cohens_kappa
+
+rater1 = [1, 1, 0, 1, 0, 1, 1, 0]
+rater2 = [1, 0, 0, 1, 0, 1, 1, 0]
+
+kappa = cohens_kappa(rater1, rater2)
+# 0.615 (substantial agreement)
+```
+
+**Interpretation** (Landis & Koch 1977):
+- κ < 0.00: Poor
+- 0.00–0.20: Slight
+- 0.21–0.40: Fair
+- 0.41–0.60: Moderate
+- 0.61–0.80: Substantial
+- 0.81–1.00: Almost perfect
+
+**Regulatory Value**:
+- **Article 14 Human Oversight**: Multi-rater validation protocol
+- **IEEE 730 Quality Assurance**: Independent verification
+- **NIST MEASURE 2.11**: Inter-rater reliability for subjective metrics
+
+### Repair Risk Analysis
+
+v0.3.2 introduces **semantic change detection** for repair policies:
+
+```python
+from promptcontracts.eval import estimate_semantic_change
+
+before = '```json\n{"key": "value"}\n```'
+after = '{"key": "value"}'
+
+changed = estimate_semantic_change(before, after)
+# False (only syntactic change)
+```
+
+**Sensitivity Analysis**:
+
+```python
+from promptcontracts.eval import generate_repair_sensitivity_report
+
+results_off = {"validation_success": 0.78, "task_accuracy": 0.92}
+results_syntactic = {"validation_success": 0.92, "task_accuracy": 0.92}
+results_full = {"validation_success": 0.95, "task_accuracy": 0.91}
+
+report = generate_repair_sensitivity_report(
+    results_off, results_syntactic, results_full
+)
+
+print(report["recommendation"])  # "syntactic"
+print(report["rationale"])
+# "Syntactic repair improves validation without affecting task accuracy"
+```
+
+**Regulatory Value**:
+- **Article 9 Risk Management**: Quantify repair policy risks
+- **Article 12 Record-Keeping**: Detailed repair ledgers with semantic diff flags
+- **Transparency**: Explicit disclosure of automated transformations
+
+### Enhanced Audit Bundles
+
+v0.3.2 provides programmatic audit bundle creation:
+
+```python
+from promptcontracts.eval import create_audit_bundle
+
+bundle_path = create_audit_bundle(
+    artifacts_dir="artifacts/run_20250110_143022",
+    output_path="audit_bundles/audit_20250110.zip",
+    run_id="run_20250110_143022",
+    sign=True,
+    gpg_key="0x1234567890ABCDEF"
+)
+
+# Verify bundle
+from promptcontracts.eval import verify_audit_bundle
+is_valid = verify_audit_bundle(bundle_path)
+```
+
+**Bundle Contents**:
+- `audit_manifest.json`: SHA-256 hashes + metadata
+- All artifacts (PD, ES, EP, run.json)
+- Input/output files
+- `checksums.txt`: Line-by-line verification
+- `audit_manifest.json.asc`: GPG signature (optional)
+
+**Third-Party Verification**:
+
+```bash
+# Extract bundle
+unzip audit_20250110.zip
+
+# Verify checksums
+sha256sum -c checksums.txt
+
+# Verify GPG signature
+gpg --verify audit_manifest.json.asc audit_manifest.json
+
+# Validate PCSL artifacts
+prompt-contracts validate \
+  --pd prompt_definition.json \
+  --es expectation_suite.json \
+  --ep evaluation_profile.json
+```
+
+**Regulatory Value**:
+- **Article 12 Record-Keeping**: Tamper-evident audit trails
+- **ISO 29119-3 Test Documentation**: Complete test records
+- **IEEE 730 Configuration Management**: Cryptographic integrity verification
+- **NIST GOVERN 4.1 Accountability**: Forensic audit capability
+
+---
+
+## Statistical Compliance Matrix
+
+| Standard Requirement | v0.3.2 Implementation | Reference |
+|----------------------|------------------------|-----------|
+| **Confidence Intervals** | Wilson (default), Jeffreys (small n), Bootstrap | Brown et al. (2001) |
+| **Hypothesis Testing** | McNemar (binary), Bootstrap diff (continuous) | McNemar (1947) |
+| **Effect Size** | Cohen's h for proportions | Cohen (1988) |
+| **Power Analysis** | Sample size calculation | Rosner (2015) |
+| **Block Bootstrap** | For dependent data (repairs, batching) | Künsch (1989) |
+| **Inter-rater Reliability** | Cohen's κ, Fleiss' κ | Landis & Koch (1977) |
+
+---
+
+## Fair Comparison Protocol
+
+See [FAIR_COMPARISON.md](FAIR_COMPARISON.md) for complete protocol.
+
+**Key Requirements**:
+1. Identical fixtures across all systems
+2. Identical configurations (seed, temperature, model)
+3. Paired statistical tests (McNemar or bootstrap)
+4. Standardized setup time measurement
+5. Reproducible evaluation (Docker, pinned dependencies)
+
+**Example Comparison**:
+
+```bash
+prompt-contracts compare \
+  --suite classification_en \
+  --systems pcsl,checklist,guidance \
+  --metric validation_success \
+  --sig mcnemar \
+  --out comparison_results.json
+```
+
+**Output**:
+
+```json
+{
+  "pcsl_vs_checklist": {
+    "mcnemar_test": {
+      "a01": 12, "a10": 5, "p_value": 0.076,
+      "significant": false
+    }
+  },
+  "pcsl_vs_guidance": {
+    "mcnemar_test": {
+      "a01": 18, "a10": 3, "p_value": 0.001,
+      "significant": true
+    }
+  }
+}
+```
+
+**Regulatory Value**:
+- **Article 13 Transparency**: Evidence-based performance claims
+- **ISO 29119-4 Test Techniques**: Statistical comparison methods
+- **Fair Competition**: Objective system benchmarking
+
+---
+
+## References (v0.3.2 Additions)
+
+6. Brown, Cai & DasGupta (2001). "Interval Estimation for a Binomial Proportion." *Statistical Science* 16(2):101-133.
+7. McNemar (1947). "Note on the sampling error of the difference between correlated proportions or percentages." *Psychometrika* 12:153-157.
+8. Künsch (1989). "The Jackknife and the Bootstrap for General Stationary Observations." *Annals of Statistics* 17(3):1217-1241.
+9. Hall (1992). "The Bootstrap and Edgeworth Expansion." *Springer Series in Statistics*.
+10. Landis & Koch (1977). "The Measurement of Observer Agreement for Categorical Data." *Biometrics* 33(1):159-174.
+11. Cohen (1988). "Statistical Power Analysis for the Behavioral Sciences." 2nd edition.
+12. Rosner (2015). "Fundamentals of Biostatistics." 8th edition.

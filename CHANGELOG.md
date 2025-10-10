@@ -5,6 +5,268 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] - 2025-01-10
+
+### Added
+
+#### Statistical Rigor
+- **Wilson Score Intervals**: Default CI method for proportions (n >= 10)
+- **Jeffreys Intervals**: Bayesian CI for small n or boundary cases (successes in {0, n})
+- **Block Bootstrap**: Handle dependencies from repairs or batching (Künsch 1989)
+- **McNemar Test**: Paired binary outcome comparison for system evaluations
+- **Bootstrap Difference CI**: Continuous metric comparison with confidence bounds
+- **Power Analysis**: Sample size calculation via required_n_for_proportion
+- **Effect Size**: Cohen's h for proportion differences
+
+#### Evaluation Infrastructure
+- **Repair Analysis Module** (eval/repair_analysis.py):
+  - RepairEvent dataclass with semantic_diff flag
+  - estimate_semantic_change: Heuristic + optional embedding-based detection
+  - generate_repair_sensitivity_report: Compare off/syntactic/full repair policies
+  - analyze_repair_events: Aggregate repair statistics
+- **Baseline Comparison Harness** (eval/baselines.py):
+  - BaselineSystem wrapper for fair comparisons
+  - compare_systems: Standardized comparison with McNemar or bootstrap tests
+  - standardize_fixtures: Convert CheckList/HELM/BBH formats to PCSL
+- **Benchmark Loaders** (eval/bench_loaders.py):
+  - load_helm_subset: HELM benchmark integration (user-supplied paths)
+  - load_bbh_subset: BIG-Bench Hard integration
+  - create_ep_for_benchmark: Auto-generate PCSL EPs from benchmarks
+- **Audit Harness** (eval/audit_harness.py):
+  - create_audit_bundle: ZIP with SHA-256 hashes + optional GPG signature
+  - create_audit_manifest: Tamper-evident audit trails
+  - verify_audit_bundle: Third-party verification with checksum validation
+
+#### Judge Protocols
+- **LLM-as-Judge with Bias Control** (judge/protocols.py):
+  - create_judge_prompt: Standardized prompts with criteria
+  - randomize_judge_order: Prevent order bias
+  - mask_provider_metadata: Remove provider-identifying hints
+  - cross_family_judge_config: Multi-provider judges (OpenAI, Anthropic, Google)
+  - cohens_kappa: Inter-rater agreement (binary)
+  - fleiss_kappa: Multi-rater agreement (3+ raters)
+
+#### Composition Semantics
+- **Contract Composition** (core/composition.py):
+  - compose_contracts_variance_bound: Upper bound under independence
+  - aggregate_confidence_intervals_intersection: Conservative joint CI
+  - aggregate_confidence_intervals_delta_method: Normal approximation for product
+  - compose_contracts_sequential: Multi-stage validation CI aggregation
+  - compose_contracts_parallel: Majority voting or any-of composition
+
+#### Documentation
+- **FAIR_COMPARISON.md**: Complete protocol for baseline comparisons
+  - Fixture standardization requirements
+  - Configuration equivalence verification
+  - Statistical significance guidelines (McNemar, bootstrap)
+  - Setup time measurement protocol
+  - Reproducibility requirements (Docker, pinned deps)
+- **COMPLIANCE.md v1.2.0**: Expanded with v0.3.2 features
+  - Wilson/Jeffreys intervals regulatory value
+  - Block bootstrap for dependent data
+  - McNemar test for system comparisons
+  - Cross-family judge validation protocol
+  - Repair risk analysis section
+  - Enhanced audit bundles with GPG signatures
+  - Statistical compliance matrix
+
+#### Tests
+- **test_intervals.py**: Wilson, Jeffreys, percentile bootstrap (block mode)
+- **test_significance.py**: McNemar, bootstrap difference CI
+- **test_repair_analysis.py**: Semantic change detection, sensitivity reports
+- **test_composition.py**: Variance bounds, CI aggregation (intersection, delta method)
+- **test_power.py**: Sample size calculation, Cohen's h effect size
+
+### Changed
+
+#### Confidence Intervals
+- **Default CI Method**: Wilson score interval (replacing percentile bootstrap as default)
+- **CI Selection Logic**:
+  - n >= 10: Wilson interval (default)
+  - n < 10: Jeffreys interval
+  - Dependent data: Block bootstrap with user-specified block size
+- **Bootstrap Validation**: Bootstrap CI computed alongside exact intervals for validation
+
+#### Metrics JSON Output
+Extended run.json with:
+```json
+{
+  "ci": {
+    "wilson": {"lo": 0.770, "hi": 0.910},
+    "jeffreys": {"lo": 0.765, "hi": 0.915},
+    "bootstrap": {"lo": 0.772, "hi": 0.908, "B": 1000, "block": null}
+  },
+  "power": {
+    "alpha": 0.05,
+    "target": 0.8,
+    "required_n": 85,
+    "actual_n": 100
+  },
+  "repair_analysis": {
+    "semantic_change_rate": 0.03,
+    "events": [...]
+  }
+}
+```
+
+#### CLI
+- **Comparison Command** (planned):
+  ```bash
+  prompt-contracts compare \
+    --suite classification_en \
+    --systems pcsl,checklist,guidance \
+    --metric validation_success \
+    --sig mcnemar
+  ```
+- **Repair Policy Flag** (planned):
+  - --repair-policy off|syntactic|full
+  - --log-repairs: Enable per-sample repair event logging
+
+### Documentation
+
+#### Statistical Methodology
+All statistical methods documented with:
+- Mathematical foundations and assumptions
+- References to peer-reviewed literature
+- Example code with expected outputs
+- Interpretation guidelines (effect sizes, p-values, kappa)
+- Regulatory compliance mapping
+
+#### Benchmark Integration
+HELM and BBH loaders documented with:
+- Download instructions
+- License information (Apache 2.0)
+- Example EP creation
+- Fixture count and domain metadata
+
+#### Audit Trails
+Complete audit bundle workflow:
+1. Run evaluation with --save-io
+2. Generate audit manifest with checksums
+3. Optionally sign with GPG
+4. Package as ZIP for distribution
+5. Third-party verification instructions
+
+### Reproducibility
+
+#### Statistical Reproducibility
+- Fixed random seeds throughout (default: 42)
+- Bootstrap B=1000 (configurable)
+- Block bootstrap for dependent data (explicit block size)
+- Deterministic CI computation (Wilson, Jeffreys)
+
+#### Dependencies
+Added to requirements.txt:
+- scipy>=1.10.0 (stats.norm, stats.beta, stats.chi2 for intervals and tests)
+
+### Technical Notes
+
+#### Wilson vs Jeffreys
+**When to use**:
+- n >= 10 and successes not in {0, n}: Wilson (default)
+- n < 10 or boundary cases: Jeffreys
+- Dependent data: Block bootstrap
+
+**Example**:
+```python
+from promptcontracts.stats import wilson_interval, jeffreys_interval
+
+# Typical case
+wilson_ci = wilson_interval(85, 100)  # (0.770, 0.910)
+
+# Small n
+jeffreys_ci = jeffreys_interval(3, 5)  # (0.188, 0.950)
+```
+
+#### McNemar Test
+**Use case**: Compare two systems on same fixtures (paired binary outcomes)
+
+**Interpretation**:
+- p < 0.05: Systems differ significantly
+- p >= 0.05: No significant difference detected
+- Requires a01 + a10 >= 10 for reliable approximation
+
+**Example**:
+```python
+from promptcontracts.stats import mcnemar_test
+
+a01 = 15  # System A failed, B passed
+a10 = 5   # System A passed, B failed
+
+p_value = mcnemar_test(a01, a10)  # 0.026 (significant)
+```
+
+#### Block Bootstrap
+**Use case**: Repairs introduce dependencies between samples
+
+**Example**:
+```python
+from promptcontracts.stats import percentile_bootstrap_ci
+
+values = [1, 1, 0, 1, 1, 0, ...]  # Binary outcomes
+ci = percentile_bootstrap_ci(values, B=1000, block=10, seed=42)
+```
+
+#### Cross-Family Judges
+**Bias mitigation**:
+1. Use judges from different providers (OpenAI, Anthropic, Google)
+2. Randomize evaluation order per fixture
+3. Mask provider-identifying metadata
+4. Report inter-rater reliability (Cohen's κ or Fleiss' κ)
+
+**Example**:
+```python
+from promptcontracts.judge import cross_family_judge_config, cohens_kappa
+
+config = cross_family_judge_config(
+    primary_model="gpt-4o",
+    secondary_model="claude-3-sonnet"
+)
+
+# After evaluation
+rater1 = [1, 1, 0, 1, 0]
+rater2 = [1, 0, 0, 1, 0]
+kappa = cohens_kappa(rater1, rater2)  # 0.615 (substantial)
+```
+
+### Peer Review Addressed
+
+This release addresses seven specific review points:
+
+1. **Statistical Foundations**: Wilson/Jeffreys intervals, block bootstrap
+2. **Expanded Evaluation**: Hooks for HELM/BBH, multilingual fixtures (classification_en/de)
+3. **Repair Policy Risk**: Semantic change detection, sensitivity analysis
+4. **Fair Comparisons**: McNemar tests, standardized setup time protocol
+5. **LLM-Judge Protocol**: Cross-family validation, randomization, κ reliability
+6. **Composition Bounds**: Variance upper bounds, CI aggregation (intersection, delta method)
+7. **Compliance Mapping**: Enhanced audit bundles, risk matrix, human oversight roles
+
+### Backward Compatibility
+
+- All v0.3.1 functionality preserved
+- New statistical methods additive (old bootstrap CI still computed)
+- CLI flags optional (no breaking changes)
+- Metrics JSON extended but backward-compatible
+
+### Known Limitations
+
+- HELM/BBH loaders require user-supplied datasets (not bundled due to size/licensing)
+- Cross-family judges require API keys for multiple providers
+- Block bootstrap block size must be manually specified (no auto-detection)
+- Repair semantic change detection is heuristic-based (not perfect)
+- Multiple comparison correction not yet implemented (planned for v0.4.0)
+
+### References
+
+Statistical methods implemented from:
+- Brown, Cai & DasGupta (2001). "Interval Estimation for a Binomial Proportion." Statistical Science.
+- McNemar (1947). "Note on the sampling error of the difference between correlated proportions."
+- Künsch (1989). "The Jackknife and the Bootstrap for General Stationary Observations."
+- Landis & Koch (1977). "The Measurement of Observer Agreement for Categorical Data."
+- Cohen (1988). "Statistical Power Analysis for the Behavioral Sciences."
+
+---
+
 ## [0.3.0] - 2025-01-09
 
 ### Added
