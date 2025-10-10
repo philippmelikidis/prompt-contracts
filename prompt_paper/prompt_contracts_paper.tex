@@ -474,7 +474,7 @@ Repair ledger & Incident (§8.4) & Art. 14 (oversight) \\
 
 \textbf{Scenario:} Healthcare support classifier (EU AI Act Art. 6(2): high-risk). Workflow: (1) Define contract, (2) Run \texttt{--save-io audit/}, (3) Generate \texttt{--report junit}.
 
-\textbf{Artifacts:} \texttt{input\_final.txt} (prompt with constraints), \texttt{output\_raw.txt} (model response), \texttt{output\_norm.txt} (post-repair), \texttt{run.json} (metadata: timestamp, seed, checks, repair ledger, SHA-256 prompt hash).
+\textbf{Artifacts:} \texttt{input\_final.txt}, \texttt{output\_raw.txt}, \texttt{output\_norm.txt}, \texttt{run.json} (timestamp, seed, checks, SHA-256 hash).
 
 \textbf{Verification:} ISO 29119 §8.3: test log \(\checkmark\). EU Art. 12: immutable hash, repair ledger \(\checkmark\). EU Art. 13: capability negotiation log \(\checkmark\).
 
@@ -482,7 +482,11 @@ Repair ledger & Incident (§8.4) & Art. 14 (oversight) \\
 
 \subsection{Setup}
 
-\textbf{Tasks:} Classification (English/German), Extraction (finance), RAG Q\&A (wiki), Summarization (news), Tool-calls (API). Total: 520 labeled fixtures (100+ per task). \textbf{Domains:} Business, finance, news, Wikipedia, tool use. \textbf{Languages:} English (320), German (200). \textbf{Models:} GPT-4o-mini (enforce), Mistral-7B (assist), GPT-4o (judge). \textbf{Metrics.} (1) \textit{validation\_success}: Percentage passing all checks with Wilson 95\% CI, (2) \textit{task\_accuracy}: Exact match to gold labels, (3) \textit{repair\_rate}: Fraction requiring normalization, (4) \textit{semantic\_change\_rate}: Fraction where repairs altered semantics, (5) \textit{latency\_ms}: Mean generation time, (6) \textit{overhead\_pct}: Check execution time percentage. \textbf{Reproducibility:} Fixed seed=42, temp=0, pinned dependencies (Python 3.11.7, torch 2.0.1, sentence-transformers 2.2.2). Docker: \texttt{prompt-contracts:0.3.2} with PYTHONHASHSEED=42, OMP\_NUM\_THREADS=1. Reproduction: \texttt{docker run prompt-contracts:0.3.2 make eval-full}.
+\textbf{Tasks:} Classification (EN/DE), Extraction (finance), RAG Q\&A (wiki), Summarization (news), Tool-calls (API). Total: 520 fixtures (100+ per task). \textbf{Domains:} Business, finance, news, Wikipedia. \textbf{Languages:} English (320), German (200). \textbf{Models:} GPT-4o-mini (enforce), Mistral-7B (assist), GPT-4o (judge).
+
+\textbf{Metrics:} (1)~\textit{validation\_success}: Passing all checks with Wilson 95\% CI, (2)~\textit{task\_accuracy}: Exact match, (3)~\textit{repair\_rate}: Normalization fraction, (4)~\textit{semantic\_change\_rate}: Semantic alteration fraction, (5)~\textit{latency\_ms}: Generation time, (6)~\textit{overhead\_pct}: Check time.
+
+\textbf{Reproducibility:} seed=42, temp=0, Python~3.11.7, torch~2.0.1, sentence-transformers~2.2.2. Docker \texttt{prompt-contracts:0.3.2} with \texttt{PYTHONHASHSEED=42}. Run: \texttt{docker run prompt-contracts:0.3.2 make eval-full}.
 
 \subsection{Statistical Methodology}
 
@@ -644,7 +648,7 @@ Human (inter) & - & - & 0.89 & 91\% & \$150 \\
 
 \textbf{Motivation.} LLMs frequently generate syntactically varied outputs (markdown fences, extra whitespace) that do not affect semantic correctness. Automated repair policies normalize outputs before validation.
 
-\textbf{Transformations.} PCSL applies ordered normalizations: (1)~\texttt{strip\_markdown\_fences}: Remove \texttt{```json```} wrappers, (2)~\texttt{strip\_whitespace}: Trim whitespace, (3)~\texttt{normalize\_newlines}: Unify line endings.
+\textbf{Transformations.} PCSL applies ordered normalizations: (1)~\texttt{strip\_markdown\_fences} (remove \texttt{```json```}), (2)~\texttt{strip\_whitespace}, (3)~\texttt{normalize\_newlines}.
 
 \textbf{Analysis.} Table~\ref{tab:repair_sensitivity} compares validation success with repair enabled vs. disabled.
 
