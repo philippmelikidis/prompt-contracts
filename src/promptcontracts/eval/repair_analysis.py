@@ -170,16 +170,24 @@ def generate_repair_sensitivity_report(
             "full": acc_full,
         }
         report["accuracy_invariance"] = (
-            abs(acc_off - acc_syn) < 0.01 and abs(acc_syn - acc_full) < 0.01
+            abs(acc_off - acc_syn) <= 0.01 and abs(acc_syn - acc_full) <= 0.01
         )
 
     # Recommendations
-    if val_syn > val_off and report.get("accuracy_invariance", True):
+    accuracy_inv = report.get("accuracy_invariance", True)
+
+    # Prefer syntactic if it improves and maintains accuracy
+    if val_syn > val_off and accuracy_inv:
         report["recommendation"] = "syntactic"
         report["rationale"] = "Syntactic repair improves validation without affecting task accuracy"
-    elif val_full > val_syn and not report.get("accuracy_invariance", True):
+    # If full changes semantics (not accuracy_inv) and val_syn helps, use syntactic
+    elif val_full > val_syn and not accuracy_inv and val_syn > val_off:
+        report["recommendation"] = "syntactic"
+        report["rationale"] = "Full repair changes task accuracy; syntactic repair safer"
+    # If repair hurts accuracy, don't use it
+    elif not accuracy_inv:
         report["recommendation"] = "off"
-        report["rationale"] = "Full repair changes semantic content; use off or syntactic only"
+        report["rationale"] = "Repair changes task accuracy; use off"
     else:
         report["recommendation"] = "full"
         report["rationale"] = (
