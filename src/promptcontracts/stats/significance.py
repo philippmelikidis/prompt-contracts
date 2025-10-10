@@ -1,12 +1,67 @@
 """
 Significance testing for paired comparisons of systems.
 
-Provides McNemar's test for binary outcomes and bootstrap-based
-difference CIs for continuous metrics.
+Provides McNemar's test for binary outcomes, bootstrap-based
+difference CIs for continuous metrics, and multiple comparison correction.
 """
 
 import numpy as np
 from scipy import stats
+
+
+def benjamini_hochberg_correction(p_values: list[float], alpha: float = 0.05) -> list[float]:
+    """
+    Benjamini-Hochberg procedure for controlling False Discovery Rate (FDR).
+
+    Controls the expected proportion of false discoveries among all discoveries.
+    More powerful than Bonferroni correction for multiple comparisons.
+
+    Args:
+        p_values: List of p-values from multiple tests
+        alpha: Desired FDR level (default 0.05)
+
+    Returns:
+        List of adjusted p-values
+
+    Example:
+        >>> p_values = [0.001, 0.01, 0.03, 0.05, 0.1]
+        >>> adjusted = benjamini_hochberg_correction(p_values, alpha=0.05)
+        >>> adjusted
+        [0.005, 0.025, 0.05, 0.0625, 0.1]
+
+    References:
+        Benjamini & Hochberg (1995). "Controlling the False Discovery Rate:
+        A Practical and Powerful Approach to Multiple Testing." J. R. Stat. Soc. B 57:289-300.
+    """
+    if not p_values:
+        return []
+
+    p_values = np.array(p_values)
+    n = len(p_values)
+
+    # Sort p-values and get original indices
+    sorted_indices = np.argsort(p_values)
+    sorted_p_values = p_values[sorted_indices]
+
+    # Calculate adjusted p-values
+    adjusted_p_values = np.zeros(n)
+    for i in range(n):
+        # BH procedure: p_adj = p * n / rank
+        rank = i + 1
+        adjusted_p_values[i] = sorted_p_values[i] * n / rank
+
+    # Ensure monotonicity (adjusted p-values should be non-decreasing)
+    for i in range(n - 2, -1, -1):
+        adjusted_p_values[i] = min(adjusted_p_values[i], adjusted_p_values[i + 1])
+
+    # Cap at 1.0
+    adjusted_p_values = np.minimum(adjusted_p_values, 1.0)
+
+    # Restore original order
+    final_adjusted = np.zeros(n)
+    final_adjusted[sorted_indices] = adjusted_p_values
+
+    return final_adjusted.tolist()
 
 
 def mcnemar_test(a01: int, a10: int, continuity_correction: bool = True) -> float:

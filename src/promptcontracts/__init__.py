@@ -4,7 +4,7 @@ Prompt Contracts - Test your LLM prompts like code.
 A specification and toolkit for contract testing of LLM prompts.
 """
 
-__version__ = "0.3.2"
+__version__ = "0.4.0"
 
 from .core.loader import load_ep, load_es, load_pd
 from .core.runner import ContractRunner
