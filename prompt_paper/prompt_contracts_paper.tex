@@ -444,7 +444,9 @@ Algorithm~\ref{alg:pipeline} formalizes sampling-enabled execution.
 
 \subsection{Repair Policy}
 
-\( \Pi = \langle \text{enabled}, \text{max\_steps}, \text{allowed} \rangle \). Strategies: \texttt{strip\_markdown\_fences} (\( O(n) \)), \texttt{json\_loose\_parse} (4 strategies), \texttt{lowercase\_fields} (\( O(d) \)). Risk: High repair rate (\( > 0.5 \)) signals quality issues. Fail-safe: \texttt{max\_steps=0}. Fail-open: \texttt{max\_steps=2}. All logged in repair ledger.
+\( \Pi = \langle \text{enabled}, \text{max\_steps}, \text{allowed} \rangle \). Strategies: \texttt{strip\_markdown\_fences} (\( O(n) \)), \texttt{json\_loose\_parse}, \texttt{lowercase\_fields} (\( O(d) \)).
+
+Risk: High repair rate (\( > 0.5 \)) signals quality issues. Modes: \texttt{max\_steps=0} (fail-safe), \texttt{max\_steps=2} (fail-open). All logged.
 
 \subsection{Compliance Mapping}
 
@@ -648,7 +650,7 @@ Human (inter) & - & - & 0.89 & 91\% & \$150 \\
 
 \textbf{Motivation.} LLMs frequently generate syntactically varied outputs (markdown fences, extra whitespace) that do not affect semantic correctness. Automated repair policies normalize outputs before validation.
 
-\textbf{Transformations.} PCSL applies ordered normalizations: (1)~\texttt{strip\_markdown\_fences} (remove \texttt{```json```}), (2)~\texttt{strip\_whitespace}, (3)~\texttt{normalize\_newlines}.
+\textbf{Transformations.} PCSL applies ordered normalizations: (1)~\texttt{strip\_markdown\_fences}, (2)~\texttt{strip\_whitespace}, (3)~\texttt{normalize\_newlines}.
 
 \textbf{Analysis.} Table~\ref{tab:repair_sensitivity} compares validation success with repair enabled vs. disabled.
 
