@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{11}
+\begin{thebibliography}{15}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -56,6 +56,16 @@
 \newblock
 
 
+\bibitem[Efron and Tibshirani(1993)]%
+        {efron1993bootstrap}
+\bibfield{author}{\bibinfo{person}{Bradley Efron} {and}
+  \bibinfo{person}{Robert~J. Tibshirani}.} \bibinfo{year}{1993}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{An Introduction to the Bootstrap}}.
+\newblock \bibinfo{publisher}{Chapman and Hall/CRC}, \bibinfo{address}{New
+  York}.
+\newblock
+
+
 \bibitem[{European Parliament and Council}(2024)]%
         {euaiact2024}
 \bibfield{author}{\bibinfo{person}{{European Parliament and Council}}.}
@@ -68,12 +78,44 @@
 \shownote{Available at: \url{https://artificialintelligenceact.eu/}}.
 
 
+\bibitem[Fleiss(1971)]%
+        {fleiss1971kappa}
+\bibfield{author}{\bibinfo{person}{Joseph~L. Fleiss}.}
+  \bibinfo{year}{1971}\natexlab{}.
+\newblock \showarticletitle{Measuring nominal scale agreement among many
+  raters}.
+\newblock \bibinfo{journal}{\emph{Psychological Bulletin}}
+  \bibinfo{volume}{76}, \bibinfo{number}{5} (\bibinfo{year}{1971}),
+  \bibinfo{pages}{378--382}.
+\newblock
+
+
+\bibitem[Hall(1992)]%
+        {hall1992bootstrap}
+\bibfield{author}{\bibinfo{person}{Peter Hall}.}
+  \bibinfo{year}{1992}\natexlab{}.
+\newblock \showarticletitle{The Bootstrap and Edgeworth Expansion}.
+\newblock  (\bibinfo{year}{1992}).
+\newblock
+
+
 \bibitem[{ISO/IEC/IEEE}(2013)]%
         {iso29119}
 \bibfield{author}{\bibinfo{person}{{ISO/IEC/IEEE}}.}
   \bibinfo{year}{2013}\natexlab{}.
 \newblock \bibinfo{title}{{ISO/IEC/IEEE 29119-1:2013 Software and Systems
   Engineering -- Software Testing -- Concepts and Definitions}}.
+\newblock
+
+
+\bibitem[Landis and Koch(1977)]%
+        {landis1977kappa}
+\bibfield{author}{\bibinfo{person}{J.~Richard Landis} {and}
+  \bibinfo{person}{Gary~G. Koch}.} \bibinfo{year}{1977}\natexlab{}.
+\newblock \showarticletitle{The measurement of observer agreement for
+  categorical data}.
+\newblock \bibinfo{journal}{\emph{Biometrics}} \bibinfo{volume}{33},
+  \bibinfo{number}{1} (\bibinfo{year}{1977}), \bibinfo{pages}{159--174}.
 \newblock
 
 

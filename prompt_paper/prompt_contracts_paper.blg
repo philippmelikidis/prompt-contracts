@@ -21,6 +21,9 @@ Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
 Warning--empty publisher in bender2021stochasticparrots
 Warning--empty address in bender2021stochasticparrots
 Warning--page numbers missing in both pages and numpages fields in bender2021stochasticparrots
+Warning--no journal in hall1992bootstrap
+Warning--no number and no volume in hall1992bootstrap
+Warning--page numbers missing in both pages and numpages fields in hall1992bootstrap
 Warning--empty publisher in liang2022holistic
 Warning--empty address in liang2022holistic
 Warning--page numbers missing in both pages and numpages fields in liang2022holistic
@@ -30,45 +33,45 @@ Warning--empty address in openapi2017
 Warning--page numbers missing in both pages and numpages fields in openapi2017
 Warning--no number and no volume in ribeiro2020beyond
 Warning--page numbers missing in both pages and numpages fields in zheng2023judging
-You've used 11 entries,
+You've used 15 entries,
             6056 wiz_defined-function locations,
-            1542 strings with 19646 characters,
-and the built_in function-call counts, 10713 in all, are:
-= -- 1279
-> -- 387
+            1566 strings with 20119 characters,
+and the built_in function-call counts, 14687 in all, are:
+= -- 1830
+> -- 483
 < -- 0
-+ -- 124
-- -- 139
-* -- 718
-:= -- 1114
-add.period$ -- 53
-call.type$ -- 11
-change.case$ -- 79
-chr.to.int$ -- 11
-cite$ -- 23
-duplicate$ -- 942
-empty$ -- 669
-format.name$ -- 155
-if$ -- 2523
++ -- 160
+- -- 181
+* -- 962
+:= -- 1499
+add.period$ -- 74
+call.type$ -- 15
+change.case$ -- 101
+chr.to.int$ -- 15
+cite$ -- 30
+duplicate$ -- 1302
+empty$ -- 926
+format.name$ -- 205
+if$ -- 3512
 int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 27
-newline$ -- 125
-num.names$ -- 77
-pop$ -- 397
+missing$ -- 41
+newline$ -- 157
+num.names$ -- 105
+pop$ -- 530
 preamble$ -- 1
-purify$ -- 167
+purify$ -- 221
 quote$ -- 0
-skip$ -- 347
+skip$ -- 470
 stack$ -- 0
-substring$ -- 679
-swap$ -- 61
+substring$ -- 991
+swap$ -- 95
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 288
-warning$ -- 12
-while$ -- 67
+type$ -- 351
+warning$ -- 15
+while$ -- 101
 width$ -- 0
-write$ -- 235
+write$ -- 311
 (There was 1 error message)
