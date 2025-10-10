@@ -10,7 +10,6 @@ import json
 import zipfile
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 
 def compute_file_hash(file_path: str) -> str:
@@ -100,7 +99,7 @@ def create_audit_bundle(
     output_path: str,
     run_id: str,
     sign: bool = False,
-    gpg_key: Optional[str] = None,
+    gpg_key: str | None = None,
 ) -> str:
     """
     Create audit bundle ZIP with manifest and all artifacts.

@@ -6,7 +6,7 @@ validation to mitigate bias in semantic evaluation.
 """
 
 import random
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 
@@ -15,7 +15,7 @@ def create_judge_prompt(
     task_description: str,
     output_to_judge: str,
     criteria: list[str],
-    reference: Optional[str] = None,
+    reference: str | None = None,
     scale: str = "1-10",
 ) -> str:
     """
@@ -107,7 +107,7 @@ def randomize_judge_order(
     return randomized, indices
 
 
-def mask_provider_metadata(output: str, provider_hints: Optional[list[str]] = None) -> str:
+def mask_provider_metadata(output: str, provider_hints: list[str] | None = None) -> str:
     """
     Remove provider-identifying metadata from output.
 
@@ -264,7 +264,7 @@ def fleiss_kappa(ratings_matrix: list[list[int]]) -> float:
 def cross_family_judge_config(
     primary_model: str = "gpt-4o",
     secondary_model: str = "claude-3-sonnet",
-    tertiary_model: Optional[str] = None,
+    tertiary_model: str | None = None,
 ) -> dict:
     """
     Create cross-family judge configuration.

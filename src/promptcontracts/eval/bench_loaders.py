@@ -7,13 +7,12 @@ them into PCSL format. Full datasets not included; users must provide paths.
 
 import json
 from pathlib import Path
-from typing import Optional
 
 
 def load_helm_subset(
     task_name: str,
     data_path: str,
-    max_fixtures: Optional[int] = 100,
+    max_fixtures: int | None = 100,
     seed: int = 42,
 ) -> list[dict]:
     """
@@ -88,7 +87,7 @@ def load_helm_subset(
 def load_bbh_subset(
     task_name: str,
     data_path: str,
-    max_fixtures: Optional[int] = 100,
+    max_fixtures: int | None = 100,
     seed: int = 42,
 ) -> list[dict]:
     """
