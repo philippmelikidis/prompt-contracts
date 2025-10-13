@@ -12,6 +12,17 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
+% Minimal overfull hbox fixes - preserve conference paper structure
+\usepackage{microtype}           % Micro-typography improvements
+\usepackage{seqsplit}            % Break long sequences
+
+% Allow emergency stretching for problematic lines
+\setlength{\emergencystretch}{2em}
+
+% Custom commands for breaking specific problematic text
+\newcommand{\breakablefunction}[1]{\texttt{\seqsplit{#1}}}
+\newcommand{\breakablepath}[1]{\texttt{\seqsplit{#1}}}
+
 \setcopyright{none}
 \settopmatter{printacmref=false}
 \pagestyle{plain}
@@ -323,7 +334,9 @@ This gap becomes critical as LLMs deploy in regulated domains~\cite{euaiact2024}
 
 \section{Related Work}
 
-\textbf{Contract-based testing.} Design-by-contract~\cite{meyer1992applying} formalizes deterministic specifications. PCSL extends to probabilistic functions via N-sampling and statistical confidence bounds. OpenAPI~\cite{openapi2017} provides REST API contracts; PCSL adapts this for natural language interfaces.
+\textbf{Contract-based testing.} Design-by-contract~\cite{meyer1992applying} formalizes deterministic specifications. 
+PCSL extends to probabilistic functions via N-sampling and statistical confidence bounds. 
+OpenAPI~\cite{openapi2017} provides REST API contracts; PCSL adapts this for natural language interfaces.
 
 \textbf{LLM frameworks.} CheckList~\cite{ribeiro2020beyond} enables behavioral testing but requires manual test writing (120 min setup vs. PCSL's 2 min).
 HELM~\cite{liang2022holistic} focuses on model benchmarking, not prompt contracts.
@@ -413,13 +426,21 @@ where \( o_{\text{inter}} \) is intermediate output.
 \[
 \text{Var}(p_{1 \circ 2}) \leq \text{Var}(p_1) + \text{Var}(p_2) + 2\rho\sqrt{\text{Var}(p_1)\text{Var}(p_2)}
 \]
-where \( \rho \) = empirical correlation between intermediate satisfaction rates. Sequential boundaries use Wald-type SPRT thresholds for early stopping. See Appendix B for derivation and simulation of adaptive CI width control.
+where \( \rho \) = empirical correlation between intermediate satisfaction rates. 
+Sequential boundaries use Wald-type SPRT thresholds for early stopping. 
+See Appendix B for derivation and simulation of adaptive CI width control.
 
-\textbf{Complexity.} Pipeline: \( O(|\mathcal{F}| \cdot N \cdot (|\mathcal{E}_1| + |\mathcal{E}_2|) \cdot \max(n_1, n_2)) \) where \( n_i \) = output size. Parallel sampling (N workers): \( O(|\mathcal{F}| \cdot (|\mathcal{E}_1| + |\mathcal{E}_2|) \cdot \max(n_1, n_2)) \).
+\textbf{Complexity.} Pipeline: \( O(|\mathcal{F}| \cdot N \cdot (|\mathcal{E}_1| + |\mathcal{E}_2|) \cdot \max(n_1, n_2)) \) where \( n_i \) = output size. 
+Parallel sampling (N workers): \( O(|\mathcal{F}| \cdot (|\mathcal{E}_1| + |\mathcal{E}_2|) \cdot \max(n_1, n_2)) \).
 
 \subsection{Check Catalog}
 
-\textbf{Structural} (\( O(n) \)): \texttt{json\_valid}, \texttt{json\_required}, \texttt{enum}, \texttt{regex\_absent}, \texttt{token\_budget}, \texttt{latency\_budget}. \textbf{Semantic}: \texttt{contains\_all}, \texttt{contains\_any}, \texttt{regex\_present}, \texttt{similarity} (sentence-transformers MiniLM-L6-v2~\cite{reimers2019sentencebert}, cosine threshold \( \geq 0.8 \)). \textbf{Judge}~\cite{zheng2023judging}: LLM-as-judge with natural language criteria.
+\textbf{Structural} (\( O(n) \)): \breakablefunction{json\_valid}, \breakablefunction{json\_required}, 
+\breakablefunction{enum}, \breakablefunction{regex\_absent}, \breakablefunction{token\_budget}, 
+\breakablefunction{latency\_budget}. 
+\textbf{Semantic}: \breakablefunction{contains\_all}, \breakablefunction{contains\_any}, 
+\breakablefunction{regex\_present}, \breakablefunction{similarity} (sentence-transformers MiniLM-L6-v2~\cite{reimers2019sentencebert}, cosine threshold \( \geq 0.8 \)). 
+\textbf{Judge}~\cite{zheng2023judging}: LLM-as-judge with natural language criteria.
 
 \section{Framework Architecture}
 
@@ -451,16 +472,19 @@ Algorithm~\ref{alg:pipeline} formalizes sampling-enabled execution.
 
 \subsection{Execution Modes}
 
-\textbf{observe}: Validation only. \textbf{assist}: Prompt augmentation with constraints. \textbf{enforce}: Schema-guided JSON (OpenAI \texttt{response\_format}). \textbf{auto}: Capability-based fallback (enforce \(\to\) assist \(\to\) observe). Negotiation: \( \mu(\mathcal{A}_{\text{cap}}, M_{\text{req}}) \to M_{\text{actual}} \).
+\textbf{observe}: Validation only. \textbf{assist}: Prompt augmentation with constraints. 
+\textbf{enforce}: Schema-guided JSON (OpenAI \breakablefunction{response\_format}). 
+\textbf{auto}: Capability-based fallback (enforce \(\to\) assist \(\to\) observe). 
+Negotiation: \( \mu(\mathcal{A}_{\text{cap}}, M_{\text{req}}) \to M_{\text{actual}} \).
 
 \subsection{Repair Policy}
 
-\( \Pi = \langle \text{enabled}, \text{max\_steps}, \text{allowed} \rangle \). Strategies:
-\texttt{strip\_markdown\_fences} (\( O(n) \)),
-\texttt{json\_loose\_parse},
-\texttt{lowercase\_fields} (\( O(d) \)).
+\( \Pi = \langle \text{enabled}, \text{max\_steps}, \text{allowed} \rangle \). Strategies: 
+\breakablefunction{strip\_markdown\_fences} (\( O(n) \)), 
+\breakablefunction{json\_loose\_parse}, 
+\breakablefunction{lowercase\_fields} (\( O(d) \)).
 
-Risk: High repair rate (\( > 0.5 \)) signals quality issues. Modes: \texttt{max\_steps=0} (fail-safe), \texttt{max\_steps=2} (fail-open). All logged.
+Risk: High repair rate (\( > 0.5 \)) signals quality issues. Modes: \breakablefunction{max\_steps=0} (fail-safe), \breakablefunction{max\_steps=2} (fail-open). All logged.
 
 \subsection{Compliance Mapping}
 
@@ -585,11 +609,17 @@ Tool-calls (160) & Enforce & 100\% & - & 0\% & 778 & 1.8 \\
 \scriptsize\(^*\)OH\% = Overhead\% = (check execution time / total latency) \(\times\) 100
 \end{table}
 
-\textbf{CIs (bootstrap percentile, B=1000):} Classification (assist, N=10): 95\% CI [0.89, 0.94]. Extraction (enforce): [0.98, 1.00]. \textbf{Repair:} 68\% (classification), 81\% fence stripping, 19\% lowercasing. Disabling reduces success 92\% \(\to\) 34\%. \textbf{Latency:} Enforce 847ms, assist 2,314ms (2.7\(\times\)). Overhead: \(<\)3\%.
+\textbf{CIs (bootstrap percentile, B=1000):} Classification (assist, N=10): 95\% CI [0.89, 0.94]. 
+Extraction (enforce): [0.98, 1.00]. 
+\textbf{Repair:} 68\% (classification), 81\% fence stripping, 19\% lowercasing. 
+Disabling reduces success 92\% \(\to\) 34\%. 
+\textbf{Latency:} Enforce 847ms, assist 2,314ms (2.7\(\times\)). Overhead: \(<\)3\%.
 
 \subsection{Ablation Studies}
 
-\textbf{Sample size N} (Table~\ref{tab:ablation_n}): N=3: 85\%, N=10: 92\%, N=30: 93\% (diminishing returns). CI width: 0.12 \(\to\) 0.05 \(\to\) 0.03. \textbf{Recommendation: N=10} (cost-confidence balance).
+\textbf{Sample size N} (Table~\ref{tab:ablation_n}): N=3: 85\%, N=10: 92\%, N=30: 93\% (diminishing returns). 
+CI width: 0.12 \(\to\) 0.05 \(\to\) 0.03. 
+\textbf{Recommendation: N=10} (cost-confidence balance).
 
 \begin{table}[H]
 \centering
@@ -610,7 +640,8 @@ Tool-calls (160) & Enforce & 100\% & - & 0\% & 778 & 1.8 \\
 \scriptsize\(^*\)CI Width = upper bound - lower bound (95\% bootstrap percentile)
 \end{table}
 
-\textbf{Aggregation} (Table~\ref{tab:ablation_agg}): Majority (92\%) optimal. All (87\%): safety-critical. Any (97\%): exploratory.
+\textbf{Aggregation} (Table~\ref{tab:ablation_agg}): Majority (92\%) optimal. 
+All (87\%): safety-critical. Any (97\%): exploratory.
 
 \begin{table}[H]
 \centering
@@ -629,11 +660,14 @@ any & 97\% & 8\% & 0\% & Exploratory \\
 \end{tabular}
 \end{table}
 
-\textbf{Repair depth:} max\_steps=0: 34\%, =1: 78\%, =2: 92\%, =3: 92\%. \textbf{Rec: 2}. \textbf{Tolerance \( \tau \):} Optimal \( \tau = 0.9 \) (F1=0.94).
+\textbf{Repair depth:} \breakablefunction{max\_steps=0}: 34\%, \breakablefunction{=1}: 78\%, \breakablefunction{=2}: 92\%, \breakablefunction{=3}: 92\%. 
+\textbf{Rec: 2}. 
+\textbf{Tolerance \( \tau \):} Optimal \( \tau = 0.9 \) (F1=0.94).
 
 \subsection{Seed Robustness}
 
-5 seeds (42, 123, 456, 789, 999): Mean 91.8\%, Std 1.2\% (empirical), Range [90.3\%, 93.1\%]. Low variance confirms determinism despite LLM stochasticity.
+5 seeds (42, 123, 456, 789, 999): Mean 91.8\%, Std 1.2\% (empirical), Range [90.3\%, 93.1\%]. 
+Low variance confirms determinism despite LLM stochasticity.
 
 \begin{table}[H]
 \centering
@@ -695,7 +729,9 @@ Human (inter) & - & - & 0.89 & 91\% & \$150 \\
 \end{tabular}
 \end{table}
 
-\textbf{Result:} \( \kappa = 0.82 \) (substantial), 62\(\times\) cheaper. \textbf{ROC:} Similarity AUC=0.91 (threshold=0.82, F1=0.88). Judge AUC=0.89 (rating \( \geq \) 7, F1=0.85).
+\textbf{Result:} \( \kappa = 0.82 \) (substantial), 62\(\times\) cheaper. 
+\textbf{ROC:} Similarity AUC=0.91 (threshold=0.82, F1=0.88). 
+Judge AUC=0.89 (rating \( \geq \) 7, F1=0.85).
 
 \subsection{Live Evaluation \& Drift}
 
@@ -705,7 +741,7 @@ We conduct a four-week live API study across three providers to assess empirical
 \textbf{Protocol.} Real endpoints under rate limits and intermittent retrieval errors.
 Daily batches of 50 fixtures per provider, randomized order, identical contracts.
 Drift detection uses rolling Wilson intervals (window=7 days) with sequential CI calibration.
-See \texttt{scripts/live\_eval.py} for implementation.
+See \breakablepath{scripts/live\_eval.py} for implementation.
 
 \begin{table}[H]
 \centering
@@ -741,10 +777,10 @@ Mistral & Mixtral 8x7B & 4w & 90.4 & 0.052 & +3.1 & 0.31 \\
 
 \textbf{Motivation.} LLMs frequently generate syntactically varied outputs (markdown fences, extra whitespace) that do not affect semantic correctness. Automated repair policies normalize outputs before validation.
 
-\textbf{Transformations.} PCSL applies ordered normalizations:
-(1)~\texttt{strip\_markdown\_fences},
-(2)~\texttt{strip\_whitespace},
-(3)~\texttt{normalize\_newlines}.
+\textbf{Transformations.} PCSL applies ordered normalizations: 
+(1)~\breakablefunction{strip\_markdown\_fences}, 
+(2)~\breakablefunction{strip\_whitespace}, 
+(3)~\breakablefunction{normalize\_newlines}.
 
 \textbf{Analysis.} Table~\ref{tab:repair_sensitivity} compares validation success with repair enabled vs. disabled.
 
@@ -773,7 +809,7 @@ Semantic change rate only 1.2\%, confirming transformations preserve meaning.
 Repair rate 29.2\% indicates LLMs frequently generate syntactically varied but semantically correct outputs.
 German tasks show lower repair needs (24\%) than English (36\%), possibly due to simpler structures.
 \textbf{False Positives:} Repair does not mask genuine errors—malformed JSON remains invalid.
-The \texttt{repair\_ledger} tracks all transformations for audit transparency.
+The \breakablefunction{repair\_ledger} tracks all transformations for audit transparency.
 
 \subsection{Fair System Comparison}
 
