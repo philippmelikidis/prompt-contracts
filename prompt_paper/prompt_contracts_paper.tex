@@ -494,18 +494,18 @@ Table~\ref{tab:compliance} maps PCSL to ISO 29119 and EU AI Act.
 \centering
 \caption{Compliance Mapping}
 \label{tab:compliance}
-\tiny
-\begin{tabular}{@{}p{1.8cm}p{1.8cm}p{2cm}@{}}
+\footnotesize
+\begin{tabular}{@{}p{1.5cm}p{1.5cm}p{1.8cm}@{}}
 \toprule
 \textbf{PCSL} & \textbf{ISO 29119} & \textbf{EU AI Act} \\
 \midrule
 PD & Test Item (§7.1) & - \\
-ES & Test Conditions (§7.2) & Art. 15 (accuracy) \\
-EP & Test Case (§7.3) & Art. 9 (risk mgmt) \\
-\breakablefunction{save\_io} & Test Log (§8.3) & Art. 12 (records) \\
-Negotiation & Test Env (§8.1) & Art. 13 (transparency) \\
-N-sampling+CI & Statistical (29119-4) & Art. 15 (robustness) \\
-Repair ledger & Incident (§8.4) & Art. 14 (oversight) \\
+ES & Test Conditions (§7.2) & Art. 15 \\
+EP & Test Case (§7.3) & Art. 9 \\
+\breakablefunction{save\_io} & Test Log (§8.3) & Art. 12 \\
+Negotiation & Test Env (§8.1) & Art. 13 \\
+N-sampling+CI & Statistical (29119-4) & Art. 15 \\
+Repair ledger & Incident (§8.4) & Art. 14 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -747,10 +747,10 @@ See \breakablepath{scripts/live\_eval.py} for implementation.
 \centering
 \caption{Live Evaluation Results (4 weeks, 3 providers)}
 \label{tab:live_eval}
-\scriptsize
+\footnotesize
 \begin{tabular}{@{}lcccccc@{}}
 \toprule
-\textbf{Provider} & \textbf{Model} & \textbf{Duration} & \textbf{Mean Val\%} & \textbf{CI Width} & \textbf{Drift $\Delta$} & \textbf{Repair Rate} \\
+\textbf{Provider} & \textbf{Model} & \textbf{Dur.} & \textbf{Val\%} & \textbf{CI W.} & \textbf{Drift} & \textbf{Repair} \\
 \midrule
 OpenAI & GPT-4o-mini & 4w & 95.8 & 0.037 & +1.6 & 0.28 \\
 Anthropic & Claude 3 Sonnet & 4w & 93.2 & 0.041 & +2.4 & 0.25 \\
@@ -758,7 +758,7 @@ Mistral & Mixtral 8x7B & 4w & 90.4 & 0.052 & +3.1 & 0.31 \\
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\scriptsize Drift $\Delta$ = week 4 mean - week 1 mean. CI Width = 95\% Wilson interval width.
+\footnotesize Drift = week 4 - week 1 mean. CI Width = 95\% Wilson interval width.
 \end{table}
 
 \textbf{Findings.} (1) \textbf{Repair stabilization:} Repair rates remain stable (\(\pm\)0.03) despite provider-specific drift patterns. (2) \textbf{CI calibration:} Empirical coverage matches nominal 95\% within \(\pm\)2\% across all providers. (3) \textbf{Temporal variance:} Week-to-week coefficient of variation ranges 2.1\%-3.8\%, confirming non-stationarity. (4) \textbf{Provider differences:} Mistral shows highest variance (CI width 0.052) but consistent repair effectiveness.
