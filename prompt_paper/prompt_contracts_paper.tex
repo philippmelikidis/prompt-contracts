@@ -494,15 +494,15 @@ Table~\ref{tab:compliance} maps PCSL to ISO 29119 and EU AI Act.
 \centering
 \caption{Compliance Mapping}
 \label{tab:compliance}
-\scriptsize
-\begin{tabular}{@{}p{2cm}p{2cm}p{2.3cm}@{}}
+\tiny
+\begin{tabular}{@{}p{1.8cm}p{1.8cm}p{2cm}@{}}
 \toprule
 \textbf{PCSL} & \textbf{ISO 29119} & \textbf{EU AI Act} \\
 \midrule
 PD & Test Item (§7.1) & - \\
 ES & Test Conditions (§7.2) & Art. 15 (accuracy) \\
 EP & Test Case (§7.3) & Art. 9 (risk mgmt) \\
-\texttt{save\_io} & Test Log (§8.3) & Art. 12 (records) \\
+\breakablefunction{save\_io} & Test Log (§8.3) & Art. 12 (records) \\
 Negotiation & Test Env (§8.1) & Art. 13 (transparency) \\
 N-sampling+CI & Statistical (29119-4) & Art. 15 (robustness) \\
 Repair ledger & Incident (§8.4) & Art. 14 (oversight) \\
@@ -822,10 +822,10 @@ All implementation scripts open-sourced.
 \centering
 \caption{System Comparison (n=200 shared fixtures, McNemar tests with FDR correction)}
 \label{tab:fair_comparison}
-\scriptsize
+\tiny
 \begin{tabular}{@{}lcccccc@{}}
 \toprule
-\textbf{System} & \textbf{Schema Val.} & \textbf{Task Acc.} & \textbf{Setup Time (min)} & \textbf{Latency (ms)} & \textbf{McNemar p} & \textbf{FDR p} \\
+\textbf{System} & \textbf{Schema Val.} & \textbf{Task Acc.} & \textbf{Setup (min)} & \textbf{Latency (ms)} & \textbf{McNemar p} & \textbf{FDR p} \\
 \midrule
 PCSL & 94\% (188/200) & 89\% (178/200) & 9.9 & 1,192 $\pm$ 376 & - & - \\
 CheckList & 82\% (164/200) & 78\% (156/200) & 47.8 & 1,420 $\pm$ 450 & 0.001 & 0.003 \\
@@ -833,7 +833,7 @@ Guidance & 90\% (180/200) & 85\% (170/200) & 36.5 & 1,305 $\pm$ 412 & 0.089 & 0.
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\scriptsize Schema Val. = Schema validation success, Task Acc. = Task accuracy. FDR = Benjamini-Hochberg correction. Setup time: docs to first run.
+\tiny Schema Val. = Schema validation success, Task Acc. = Task accuracy. FDR = Benjamini-Hochberg correction. Setup time: docs to first run.
 \end{table}
 
 \textbf{Findings:} PCSL significantly outperforms CheckList on both schema validation (McNemar p=0.001, FDR p=0.003) and task accuracy with 4.8$\times$ faster setup (9.9 vs. 47.8 min). No significant difference vs. Guidance (FDR p=0.134), but 3.7$\times$ faster setup. PCSL's declarative JSON contracts reduce integration complexity vs. imperative test code (CheckList) or constraint programming (Guidance).
