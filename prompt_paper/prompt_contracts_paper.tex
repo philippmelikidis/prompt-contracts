@@ -349,8 +349,8 @@ PCSL uniquely combines formal specification, probabilistic semantics, multi-prov
 \centering
 \caption{Framework Comparison}
 \label{tab:comparison}
-\scriptsize
-\begin{tabular}{@{}lccccc@{}}
+\footnotesize
+\begin{tabular}{@{}p{2.2cm}cccccc@{}}
 \toprule
 \textbf{Framework} & \textbf{Contracts} & \textbf{Probabilistic} & \textbf{CI/CD} & \textbf{Semantic} & \textbf{Compliance} \\
 \midrule
@@ -358,7 +358,7 @@ HELM~\cite{liang2022holistic} & \(\times\) & \(\times\) & \(\times\) & \(\times\
 CheckList~\cite{ribeiro2020beyond} & Manual & \(\times\) & Partial & \(\times\) & \(\times\) \\
 Guidance~\cite{guidance2023} & \(\times\) & \(\times\) & \(\times\) & \(\times\) & \(\times\) \\
 OpenAI Struct.~\cite{openai2023structured} & Partial & \(\times\) & \(\times\) & \(\times\) & \(\times\) \\
-\textbf{PCSL v0.3} & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\textbf{PCSL v0.4} & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -495,7 +495,7 @@ Table~\ref{tab:compliance} maps PCSL to ISO 29119 and EU AI Act.
 \caption{Compliance Mapping}
 \label{tab:compliance}
 \footnotesize
-\begin{tabular}{@{}p{1.5cm}p{1.5cm}p{1.8cm}@{}}
+\begin{tabular}{@{}p{2.2cm}p{2.2cm}p{2.2cm}@{}}
 \toprule
 \textbf{PCSL} & \textbf{ISO 29119} & \textbf{EU AI Act} \\
 \midrule
@@ -560,10 +560,10 @@ Table~\ref{tab:master_metrics} consolidates all key metrics with statistical met
 \centering
 \caption{Master Metrics Summary (v0.4.0)}
 \label{tab:master_metrics}
-\scriptsize
-\begin{tabular}{@{}lcccccc@{}}
+\footnotesize
+\begin{tabular}{@{}p{2.5cm}p{1.2cm}p{1.2cm}p{1.8cm}p{1.2cm}p{1.2cm}@{}}
 \toprule
-\textbf{Metric} & \textbf{Value} & \textbf{Method} & \textbf{95\% CI} & \textbf{Source} & \textbf{Version} \\
+\textbf{Metric} & \textbf{Value} & \textbf{Method} & \textbf{95\% CI} & \textbf{Source} & \textbf{Ver.} \\
 \midrule
 Validation Success & 96.2\% & Wilson & [0.941, 0.978] & Full eval & v0.4.0 \\
 Validation Success (static) & 91.5\% & Bootstrap & [0.888, 0.936] & Offline sim & v0.3.1 \\
@@ -575,15 +575,15 @@ Repair Rate & 28.5\% & Wilson & [0.245, 0.328] & Live eval & v0.4.0 \\
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\scriptsize H–H = Human-Human agreement, J–H = Judge-Human agreement. CI = Confidence Interval.
+\footnotesize H–H = Human-Human agreement, J–H = Judge-Human agreement. CI = Confidence Interval.
 \end{table}
 
 \begin{table}[H]
 \centering
 \caption{Validation Results Across Tasks (all CIs: bootstrap percentile, B=1000, 95\%)}
 \label{tab:results}
-\scriptsize
-\begin{tabular}{@{}lcccccc@{}}
+\footnotesize
+\begin{tabular}{@{}p{2.2cm}p{1.2cm}p{1cm}p{1.2cm}p{1cm}p{1.2cm}p{1cm}@{}}
 \toprule
 \textbf{Task (N)} & \textbf{Mode} & \textbf{Val.} & \textbf{Task Acc.} & \textbf{Repair} & \textbf{Lat. (ms)} & \textbf{OH\%}\(^*\) \\
 \midrule
@@ -606,7 +606,7 @@ Tool-calls (160) & Enforce & 100\% & - & 0\% & 778 & 1.8 \\
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\scriptsize\(^*\)OH\% = Overhead\% = (check execution time / total latency) \(\times\) 100
+\footnotesize\(^*\)OH\% = Overhead\% = (check execution time / total latency) \(\times\) 100
 \end{table}
 
 \textbf{CIs (bootstrap percentile, B=1000):} Classification (assist, N=10): 95\% CI [0.89, 0.94]. 
@@ -748,7 +748,7 @@ See \breakablepath{scripts/live\_eval.py} for implementation.
 \caption{Live Evaluation Results (4 weeks, 3 providers)}
 \label{tab:live_eval}
 \footnotesize
-\begin{tabular}{@{}lcccccc@{}}
+\begin{tabular}{@{}p{2.2cm}p{2.2cm}p{1.2cm}p{1.2cm}p{1.2cm}p{1.2cm}p{1.2cm}@{}}
 \toprule
 \textbf{Provider} & \textbf{Model} & \textbf{Dur.} & \textbf{Val\%} & \textbf{CI W.} & \textbf{Drift} & \textbf{Repair} \\
 \midrule
@@ -822,8 +822,8 @@ All implementation scripts open-sourced.
 \centering
 \caption{System Comparison (n=200 shared fixtures, McNemar tests with FDR correction)}
 \label{tab:fair_comparison}
-\tiny
-\begin{tabular}{@{}lcccccc@{}}
+\footnotesize
+\begin{tabular}{@{}p{2.2cm}p{1.5cm}p{1.5cm}p{1.5cm}p{1.5cm}p{1.5cm}p{1.5cm}@{}}
 \toprule
 \textbf{System} & \textbf{Schema Val.} & \textbf{Task Acc.} & \textbf{Setup (min)} & \textbf{Latency (ms)} & \textbf{McNemar p} & \textbf{FDR p} \\
 \midrule
@@ -833,7 +833,7 @@ Guidance & 90\% (180/200) & 85\% (170/200) & 36.5 & 1,305 $\pm$ 412 & 0.089 & 0.
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\tiny Schema Val. = Schema validation success, Task Acc. = Task accuracy. FDR = Benjamini-Hochberg correction. Setup time: docs to first run.
+\footnotesize Schema Val. = Schema validation success, Task Acc. = Task accuracy. FDR = Benjamini-Hochberg correction. Setup time: docs to first run.
 \end{table}
 
 \textbf{Findings:} PCSL significantly outperforms CheckList on both schema validation (McNemar p=0.001, FDR p=0.003) and task accuracy with 4.8$\times$ faster setup (9.9 vs. 47.8 min). No significant difference vs. Guidance (FDR p=0.134), but 3.7$\times$ faster setup. PCSL's declarative JSON contracts reduce integration complexity vs. imperative test code (CheckList) or constraint programming (Guidance).
