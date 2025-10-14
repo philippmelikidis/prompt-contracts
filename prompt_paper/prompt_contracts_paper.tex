@@ -24,7 +24,7 @@
   \begin{table}[H]
   \centering
   \caption{#1}
-  \footnotesize
+  \tiny
   #2
   \end{table}
 }
@@ -45,7 +45,7 @@
 }
 
 \lstdefinelanguage{json}{
-  basicstyle=\ttfamily\footnotesize,
+  basicstyle=\ttfamily\tiny,
   numbers=left,
   numberstyle=\tiny,
   stepnumber=1,
@@ -73,7 +73,7 @@
 }
 
 \lstset{
-  basicstyle=\ttfamily\footnotesize,
+  basicstyle=\ttfamily\tiny,
   breaklines=true,
   frame=single,
   numbers=left,
@@ -359,7 +359,7 @@ PCSL uniquely combines formal specification, probabilistic semantics, multi-prov
 \centering
 \caption{Framework Comparison}
 \label{tab:comparison}
-\footnotesize
+\tiny
 \begin{tabular}{@{}lccccc@{}}
 \toprule
 \textbf{Framework} & \textbf{Contracts} & \textbf{Probabilistic} & \textbf{CI/CD} & \textbf{Semantic} & \textbf{Compliance} \\
@@ -461,7 +461,7 @@ Algorithm~\ref{alg:pipeline} formalizes sampling-enabled execution.
 \begin{algorithm}[t]
 \caption{PCSL Execution with Probabilistic Sampling}
 \label{alg:pipeline}
-\footnotesize
+\tiny
 \begin{algorithmic}[1]
 \STATE \textbf{Input:} \( \mathcal{C} = \langle \mathcal{P}, \mathcal{E}, \mathcal{X} \rangle \), \( (N, \text{seed}, A) \); \textbf{Output:} \( \mathcal{R} \)
 \STATE \( \mathcal{R} \leftarrow \emptyset \); \textbf{if} seed \textbf{then} \texttt{set\_seed}(seed)
@@ -504,7 +504,7 @@ Table~\ref{tab:compliance} maps PCSL to ISO 29119 and EU AI Act.
 \centering
 \caption{Compliance Mapping}
 \label{tab:compliance}
-\footnotesize
+\tiny
 \begin{tabular}{@{}lcc@{}}
 \toprule
 \textbf{PCSL} & \textbf{ISO 29119} & \textbf{EU AI Act} \\
@@ -570,29 +570,29 @@ Table~\ref{tab:master_metrics} consolidates all key metrics with statistical met
 \centering
 \caption{Master Metrics Summary (v0.4.0)}
 \label{tab:master_metrics}
-\footnotesize
+\tiny
 \begin{tabular}{@{}lcccccc@{}}
 \toprule
 \textbf{Metric} & \textbf{Value} & \textbf{Method} & \textbf{95\% CI} & \textbf{Source} & \textbf{Version} \\
 \midrule
-Validation Success & 96.2\% & Wilson & [0.941, 0.978] & Full eval & v0.4.0 \\
-Validation Success (static) & 91.5\% & Bootstrap & [0.888, 0.936] & Offline sim & v0.3.1 \\
+Val. Success & 96.2\% & Wilson & [0.941, 0.978] & Full eval & v0.4.0 \\
+Val. Success (static) & 91.5\% & Bootstrap & [0.888, 0.936] & Offline sim & v0.3.1 \\
 \(\kappa\)(H–H) & 0.86 & Fleiss & - & Human raters & v0.4.0 \\
 \(\kappa\)(J–H) & 0.82 & Cohen & - & LLM judge vs human & v0.4.0 \\
 Setup Time & 9.9 min & Empirical & \(\pm\)1.3 & 5 tasks mean & v0.4.0 \\
-Semantic Change Rate & 1.4\% & Wilson & [0.8\%, 2.3\%] & Human audit & v0.4.0 \\
+Sem. Change Rate & 1.4\% & Wilson & [0.8\%, 2.3\%] & Human audit & v0.4.0 \\
 Repair Rate & 28.5\% & Wilson & [0.245, 0.328] & Live eval & v0.4.0 \\
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\footnotesize H–H = Human-Human agreement, J–H = Judge-Human agreement. CI = Confidence Interval.
+\tiny H–H = Human-Human agreement, J–H = Judge-Human agreement. CI = Confidence Interval.
 \end{table}
 
 \begin{table}[H]
 \centering
 \caption{Validation Results Across Tasks (all CIs: bootstrap percentile, B=1000, 95\%)}
 \label{tab:results}
-\footnotesize
+\tiny
 \begin{tabular}{@{}lcccccc@{}}
 \toprule
 \textbf{Task (N)} & \textbf{Mode} & \textbf{Val.} & \textbf{Task Acc.} & \textbf{Repair} & \textbf{Lat. (ms)} & \textbf{OH\%}\(^*\) \\
@@ -616,7 +616,7 @@ Tool-calls (160) & Enforce & 100\% & - & 0\% & 778 & 1.8 \\
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\footnotesize\(^*\)OH\% = Overhead\% = (check execution time / total latency) \(\times\) 100
+\tiny\(^*\)OH\% = Overhead\% = (check execution time / total latency) \(\times\) 100
 \end{table}
 
 \textbf{CIs (bootstrap percentile, B=1000):} Classification (assist, N=10): 95\% CI [0.89, 0.94]. 
@@ -635,7 +635,7 @@ CI width: 0.12 \(\to\) 0.05 \(\to\) 0.03.
 \centering
 \caption{Sample Size Ablation (Classification Task, bootstrap CI)}
 \label{tab:ablation_n}
-\footnotesize
+\tiny
 \begin{tabular}{@{}lccccc@{}}
 \toprule
 \textbf{N} & \textbf{Val.} & \textbf{CI Width}\(^*\) & \textbf{Var(\(\hat{p}\))} & \textbf{Lat. (ms)} & \textbf{Mult.} \\
@@ -647,7 +647,7 @@ CI width: 0.12 \(\to\) 0.05 \(\to\) 0.03.
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\footnotesize\(^*\)CI Width = upper bound - lower bound (95\% bootstrap percentile)
+\tiny\(^*\)CI Width = upper bound - lower bound (95\% bootstrap percentile)
 \end{table}
 
 \textbf{Aggregation} (Table~\ref{tab:ablation_agg}): Majority (92\%) optimal. 
@@ -657,7 +657,7 @@ All (87\%): safety-critical. Any (97\%): exploratory.
 \centering
 \caption{Aggregation Policy (N=10)}
 \label{tab:ablation_agg}
-\footnotesize
+\tiny
 \begin{tabular}{@{}lcccc@{}}
 \toprule
 \textbf{Policy} & \textbf{Val.} & \textbf{FP} & \textbf{FN} & \textbf{Use Case} \\
@@ -683,7 +683,7 @@ Low variance confirms determinism despite LLM stochasticity.
 \centering
 \caption{Seed Robustness (Classification, N=10, Assist Mode)}
 \label{tab:seed}
-\footnotesize
+\tiny
 \begin{tabular}{@{}lccccccc@{}}
 \toprule
 \textbf{Seed} & \textbf{42} & \textbf{123} & \textbf{456} & \textbf{789} & \textbf{999} & \textbf{Mean} & \textbf{Std}\(^*\) \\
@@ -693,7 +693,7 @@ Repair (\%) & 68 & 71 & 74 & 65 & 69 & 69.4 & 3.1 \\
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\footnotesize\(^*\)Std = empirical standard deviation across 5 seeds
+\tiny\(^*\)Std = empirical standard deviation across 5 seeds
 \end{table}
 
 \subsection{Comparative Benchmarks}
@@ -705,7 +705,7 @@ Setup: PCSL 2 min vs. CheckList 120 min.
 \centering
 \caption{Framework Comparison (N=50 Shared Fixtures)}
 \label{tab:comparative}
-\footnotesize
+\tiny
 \begin{tabular}{@{}lcccccc@{}}
 \toprule
 \textbf{Framework} & \textbf{Prec.} & \textbf{Rec.} & \textbf{F1} & \textbf{Setup (min)} & \textbf{Repro.} & \textbf{CI/CD} \\
@@ -727,7 +727,7 @@ LLM-judge vs. human (100 outputs, 3 raters, MT-Bench scale~\cite{zheng2023judgin
 \centering
 \caption{LLM-Judge vs. Human}
 \label{tab:judge}
-\footnotesize
+\tiny
 \begin{tabular}{@{}lccccc@{}}
 \toprule
 \textbf{Judge} & \textbf{Pearson r} & \textbf{Spearman \( \rho \)} & \textbf{\( \kappa \)} & \textbf{Agree\%} & \textbf{Cost/100} \\
@@ -757,7 +757,7 @@ See \breakablepath{scripts/live\_eval.py} for implementation.
 \centering
 \caption{Live Evaluation Results (4 weeks, 3 providers)}
 \label{tab:live_eval}
-\footnotesize
+\tiny
 \begin{tabular}{@{}lcccccc@{}}
 \toprule
 \textbf{Provider} & \textbf{Model} & \textbf{Duration} & \textbf{Mean Val\%} & \textbf{CI Width} & \textbf{Drift $\Delta$} & \textbf{Repair Rate} \\
@@ -768,7 +768,7 @@ Mistral & Mixtral 8x7B & 4w & 90.4 & 0.052 & +3.1 & 0.31 \\
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\footnotesize Drift $\Delta$ = week 4 mean - week 1 mean. CI Width = 95\% Wilson interval width.
+\tiny Drift $\Delta$ = week 4 mean - week 1 mean. CI Width = 95\% Wilson interval width.
 \end{table}
 
 \textbf{Findings.} (1) \textbf{Repair stabilization:} Repair rates remain stable (\(\pm\)0.03) despite provider-specific drift patterns. (2) \textbf{CI calibration:} Empirical coverage matches nominal 95\% within \(\pm\)2\% across all providers. (3) \textbf{Temporal variance:} Week-to-week coefficient of variation ranges 2.1\%-3.8\%, confirming non-stationarity. (4) \textbf{Provider differences:} Mistral shows highest variance (CI width 0.052) but consistent repair effectiveness.
@@ -798,7 +798,7 @@ Mistral & Mixtral 8x7B & 4w & 90.4 & 0.052 & +3.1 & 0.31 \\
 \centering
 \caption{Repair policy impact (520 fixtures). Task accuracy preserved (sem. change 1.2\%).}
 \label{tab:repair_sensitivity}
-\footnotesize
+\tiny
 \begin{tabular}{@{}lcccc@{}}
 \toprule
 \textbf{Task} & \textbf{w/o Repair} & \textbf{w/ Repair} & \textbf{$\Delta$} & \textbf{Repair Rate} \\
@@ -832,10 +832,10 @@ All implementation scripts open-sourced.
 \centering
 \caption{System Comparison (n=200 shared fixtures, McNemar tests with FDR correction)}
 \label{tab:fair_comparison}
-\footnotesize
+\tiny
 \begin{tabular}{@{}lcccccc@{}}
 \toprule
-\textbf{System} & \textbf{Schema Val.} & \textbf{Task Acc.} & \textbf{Setup Time (min)} & \textbf{Latency (ms)} & \textbf{McNemar p} & \textbf{FDR p} \\
+\textbf{System} & \textbf{Schema Val.} & \textbf{Task Acc.} & \textbf{Setup (min)} & \textbf{Latency (ms)} & \textbf{McNemar p} & \textbf{FDR p} \\
 \midrule
 PCSL & 94\% (188/200) & 89\% (178/200) & 9.9 & 1,192 $\pm$ 376 & - & - \\
 CheckList & 82\% (164/200) & 78\% (156/200) & 47.8 & 1,420 $\pm$ 450 & 0.001 & 0.003 \\
@@ -843,7 +843,7 @@ Guidance & 90\% (180/200) & 85\% (170/200) & 36.5 & 1,305 $\pm$ 412 & 0.089 & 0.
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\footnotesize Schema Val. = Schema validation success, Task Acc. = Task accuracy. FDR = Benjamini-Hochberg correction. Setup time: docs to first run.
+\tiny Schema Val. = Schema validation success, Task Acc. = Task accuracy. FDR = Benjamini-Hochberg correction. Setup time: docs to first run.
 \end{table}
 
 \textbf{Findings:} PCSL significantly outperforms CheckList on both schema validation (McNemar p=0.001, FDR p=0.003) and task accuracy with 4.8$\times$ faster setup (9.9 vs. 47.8 min). No significant difference vs. Guidance (FDR p=0.134), but 3.7$\times$ faster setup. PCSL's declarative JSON contracts reduce integration complexity vs. imperative test code (CheckList) or constraint programming (Guidance).
@@ -880,7 +880,7 @@ Guidance & 90\% (180/200) & 85\% (170/200) & 36.5 & 1,305 $\pm$ 412 & 0.089 & 0.
 \centering
 \caption{Response to Peer-Review}
 \label{tab:review}
-\footnotesize
+\tiny
 \begin{tabular}{@{}lcccc@{}}
 \toprule
 \textbf{Criticism} & \textbf{Addressed By} \\
