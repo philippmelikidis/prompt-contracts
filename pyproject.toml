@@ -76,11 +76,8 @@ Documentation = "https://promptcontracts.org/docs"
 Repository = "https://github.com/promptcontracts/prompt-contracts"
 "Bug Tracker" = "https://github.com/promptcontracts/prompt-contracts/issues"
 
-[tool.setuptools]
-package-dir = {"" = "src"}
-
 [tool.setuptools.packages.find]
-where = ["src"]
+include = ["promptcontracts*"]
 
 [tool.setuptools.package-data]
 promptcontracts = ["spec/**/*.json", "spec/**/*.md"]
@@ -140,7 +137,7 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["src/promptcontracts"]
+source = ["promptcontracts"]
 omit = [
     "*/tests/*",
     "*/__pycache__/*",

@@ -1,7 +1,7 @@
 # PCSL v0.1 – Prompt Contract Specification Language
 
-**Version:** 0.1.0  
-**Status:** Draft  
+**Version:** 0.1.0
+**Status:** Draft
 **Last Updated:** October 2025
 
 ---
@@ -360,4 +360,3 @@ Custom checks can be registered via the validator registry. Check types MUST use
 ---
 
 **End of PCSL v0.1 Specification**
-
