@@ -561,9 +561,9 @@ Table~\ref{tab:master_metrics} consolidates all key metrics with statistical met
 \caption{Master Metrics Summary (v0.4.0)}
 \label{tab:master_metrics}
 \footnotesize
-\begin{tabular}{@{}p{2.5cm}p{1.2cm}p{1.2cm}p{1.8cm}p{1.2cm}p{1.2cm}@{}}
+\begin{tabular}{@{}lcccccc@{}}
 \toprule
-\textbf{Metric} & \textbf{Value} & \textbf{Method} & \textbf{95\% CI} & \textbf{Source} & \textbf{Ver.} \\
+\textbf{Metric} & \textbf{Value} & \textbf{Method} & \textbf{95\% CI} & \textbf{Source} & \textbf{Version} \\
 \midrule
 Validation Success & 96.2\% & Wilson & [0.941, 0.978] & Full eval & v0.4.0 \\
 Validation Success (static) & 91.5\% & Bootstrap & [0.888, 0.936] & Offline sim & v0.3.1 \\
@@ -583,7 +583,7 @@ Repair Rate & 28.5\% & Wilson & [0.245, 0.328] & Live eval & v0.4.0 \\
 \caption{Validation Results Across Tasks (all CIs: bootstrap percentile, B=1000, 95\%)}
 \label{tab:results}
 \footnotesize
-\begin{tabular}{@{}p{2.2cm}p{1.2cm}p{1cm}p{1.2cm}p{1cm}p{1.2cm}p{1cm}@{}}
+\begin{tabular}{@{}lcccccc@{}}
 \toprule
 \textbf{Task (N)} & \textbf{Mode} & \textbf{Val.} & \textbf{Task Acc.} & \textbf{Repair} & \textbf{Lat. (ms)} & \textbf{OH\%}\(^*\) \\
 \midrule
@@ -748,9 +748,9 @@ See \breakablepath{scripts/live\_eval.py} for implementation.
 \caption{Live Evaluation Results (4 weeks, 3 providers)}
 \label{tab:live_eval}
 \footnotesize
-\begin{tabular}{@{}p{2.2cm}p{2.2cm}p{1.2cm}p{1.2cm}p{1.2cm}p{1.2cm}p{1.2cm}@{}}
+\begin{tabular}{@{}lcccccc@{}}
 \toprule
-\textbf{Provider} & \textbf{Model} & \textbf{Dur.} & \textbf{Val\%} & \textbf{CI W.} & \textbf{Drift} & \textbf{Repair} \\
+\textbf{Provider} & \textbf{Model} & \textbf{Duration} & \textbf{Mean Val\%} & \textbf{CI Width} & \textbf{Drift $\Delta$} & \textbf{Repair Rate} \\
 \midrule
 OpenAI & GPT-4o-mini & 4w & 95.8 & 0.037 & +1.6 & 0.28 \\
 Anthropic & Claude 3 Sonnet & 4w & 93.2 & 0.041 & +2.4 & 0.25 \\
@@ -758,7 +758,7 @@ Mistral & Mixtral 8x7B & 4w & 90.4 & 0.052 & +3.1 & 0.31 \\
 \bottomrule
 \end{tabular}
 \vspace{1mm}
-\footnotesize Drift = week 4 - week 1 mean. CI Width = 95\% Wilson interval width.
+\footnotesize Drift $\Delta$ = week 4 mean - week 1 mean. CI Width = 95\% Wilson interval width.
 \end{table}
 
 \textbf{Findings.} (1) \textbf{Repair stabilization:} Repair rates remain stable (\(\pm\)0.03) despite provider-specific drift patterns. (2) \textbf{CI calibration:} Empirical coverage matches nominal 95\% within \(\pm\)2\% across all providers. (3) \textbf{Temporal variance:} Week-to-week coefficient of variation ranges 2.1\%-3.8\%, confirming non-stationarity. (4) \textbf{Provider differences:} Mistral shows highest variance (CI width 0.052) but consistent repair effectiveness.
@@ -823,9 +823,9 @@ All implementation scripts open-sourced.
 \caption{System Comparison (n=200 shared fixtures, McNemar tests with FDR correction)}
 \label{tab:fair_comparison}
 \footnotesize
-\begin{tabular}{@{}p{2.2cm}p{1.5cm}p{1.5cm}p{1.5cm}p{1.5cm}p{1.5cm}p{1.5cm}@{}}
+\begin{tabular}{@{}lcccccc@{}}
 \toprule
-\textbf{System} & \textbf{Schema Val.} & \textbf{Task Acc.} & \textbf{Setup (min)} & \textbf{Latency (ms)} & \textbf{McNemar p} & \textbf{FDR p} \\
+\textbf{System} & \textbf{Schema Val.} & \textbf{Task Acc.} & \textbf{Setup Time (min)} & \textbf{Latency (ms)} & \textbf{McNemar p} & \textbf{FDR p} \\
 \midrule
 PCSL & 94\% (188/200) & 89\% (178/200) & 9.9 & 1,192 $\pm$ 376 & - & - \\
 CheckList & 82\% (164/200) & 78\% (156/200) & 47.8 & 1,420 $\pm$ 450 & 0.001 & 0.003 \\
