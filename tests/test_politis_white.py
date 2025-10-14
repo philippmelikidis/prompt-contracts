@@ -4,6 +4,7 @@ Tests for Politis-White block size estimator.
 
 import numpy as np
 import pytest
+
 from promptcontracts.stats.intervals import politis_white_block_size
 
 

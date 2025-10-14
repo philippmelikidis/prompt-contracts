@@ -17,7 +17,7 @@ echo ""
 
 # 2. Linting
 echo "2️⃣  Running code quality checks..."
-ruff check src/ tests/
+ruff check promptcontracts/ tests/
 echo "✅ Linting passed"
 echo ""
 

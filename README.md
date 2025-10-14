@@ -1041,7 +1041,7 @@ prompt-contracts run --report junit [--out junit.xml]
 ### Project Structure
 
 ```
-src/promptcontracts/
+promptcontracts/
   cli.py                    # CLI entry points
   core/
     loader.py               # Artefact loading and schema validation
@@ -1177,7 +1177,7 @@ pytest tests/ --cov=promptcontracts --cov-report=html
 
 ### Spec Governance
 
-The PCSL specification lives under `src/promptcontracts/spec/`. Changes to the specification follow an RFC process:
+The PCSL specification lives under `promptcontracts/spec/`. Changes to the specification follow an RFC process:
 
 1. Open a GitHub Issue describing the proposed change
 2. Label as `spec-rfc`
@@ -1232,7 +1232,7 @@ See LICENSE file for details.
 - **Documentation:** See [QUICKSTART.md](QUICKSTART.md) for getting started guide
 - **Best Practices:** Read [BEST_PRACTICES.md](BEST_PRACTICES.md) for production guidance
 - **Troubleshooting:** Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for common issues and solutions
-- **Specification:** Read `src/promptcontracts/spec/pcsl-v0.1.md` for detailed spec
+- **Specification:** Read `promptcontracts/spec/pcsl-v0.1.md` for detailed spec
 - **Examples:** Explore [examples/](examples/) for real-world use cases
 - **Issues:** Report bugs and request features via GitHub Issues
 - **Discussions:** Join community discussions on GitHub Discussions

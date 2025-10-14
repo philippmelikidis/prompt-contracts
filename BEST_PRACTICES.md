@@ -1059,7 +1059,7 @@ prompt-contracts run --pd pd.json --es es.json --ep ep.auto.json
 - **Full Documentation:** [README.md](README.md)
 - **Getting Started:** [QUICKSTART.md](QUICKSTART.md)
 - **Examples:** [examples/](examples/)
-- **PCSL Specification:** [src/promptcontracts/spec/pcsl-v0.1.md](src/promptcontracts/spec/pcsl-v0.1.md)
+- **PCSL Specification:** [promptcontracts/spec/pcsl-v0.1.md](promptcontracts/spec/pcsl-v0.1.md)
 - **GitHub:** https://github.com/philippmelikidis/prompt-contracts
 
 ---

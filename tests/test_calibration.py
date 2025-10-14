@@ -4,6 +4,7 @@ Tests for CI calibration module.
 
 import numpy as np
 import pytest
+
 from promptcontracts.stats.calibration import (
     calibrate_ci_coverage,
     compare_ci_methods,
