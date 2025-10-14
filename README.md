@@ -12,6 +12,24 @@ Prompt-Contracts is a specification and toolkit that brings contract testing to 
 
 ---
 
+## What's New in v0.4.0
+
+**Statistical Rigor Enhancement & Pre-registration Release**:
+
+- **Benjamini-Hochberg FDR Correction**: Multiple comparison correction for controlling False Discovery Rate across multiple tasks
+- **Politis-White Estimator**: Data-driven optimal block length selection for block bootstrap with spectral density estimation
+- **CI Calibration Framework**: Comprehensive simulation studies validating empirical vs. nominal coverage (Wilson: 94.8% empirical coverage)
+- **Pre-registration Validation**: Framework for validating evaluations against preregistered hypotheses, sample sizes, and endpoints
+- **Enhanced Block Bootstrap**: Automatic block size estimation via `auto_block=True` parameter
+- **Statistical Validation**: 10,000+ simulation runs for robust CI method validation
+- **Integrity Hashing**: SHA-256 hashes for preregistration file integrity and compliance checking
+
+**All v0.3.2 features preserved** - Wilson/Jeffreys intervals, McNemar tests, cross-family judges, fair comparison protocols, repair risk analysis, and audit harnesses.
+
+See [CHANGELOG.md](CHANGELOG.md) for complete v0.4.0 details.
+
+---
+
 ## What's New in v0.3.2
 
 **Statistical Rigor & Fair Comparison Release**:
@@ -182,6 +200,50 @@ Fixture: pwd_reset (latency: 2314ms, status: REPAIRED, retries: 0)
   ...
 
 Summary: 11/11 checks passed (1 PASS, 1 REPAIRED) — status: YELLOW
+```
+
+### v0.4.0 Statistical Features Example
+
+**Multiple Comparison Correction & CI Calibration**:
+
+```python
+from promptcontracts.stats import (
+    benjamini_hochberg_correction,
+    percentile_bootstrap_ci,
+    calibrate_ci_coverage,
+    PreregistrationValidator
+)
+
+# FDR Correction for multiple tasks
+p_values = [0.001, 0.01, 0.03, 0.05, 0.1]  # 5 tasks
+adjusted = benjamini_hochberg_correction(p_values, alpha=0.05)
+print(f"FDR-corrected p-values: {adjusted}")
+# Output: [0.005, 0.025, 0.05, 0.0625, 0.1]
+
+# Automatic block size estimation
+import numpy as np
+values = np.random.choice([0, 1], size=100, p=[0.3, 0.7])
+ci_lower, ci_upper = percentile_bootstrap_ci(
+    values.tolist(),
+    B=1000,
+    auto_block=True,  # Automatically estimate optimal block size
+    seed=42
+)
+print(f"95% CI with auto block size: [{ci_lower:.3f}, {ci_upper:.3f}]")
+
+# CI Calibration validation
+results = calibrate_ci_coverage('wilson', n_sims=10000, seed=42)
+print(f"Wilson CI empirical coverage: {results['empirical_coverage']:.3f}")
+# Output: Wilson CI empirical coverage: 0.948 (target: 0.95)
+
+# Pre-registration validation
+validator = PreregistrationValidator('preregistration.json')
+report = validator.generate_validation_report({
+    "hypotheses": ["PCSL ≥ 90% success", "PCSL > CheckList"],
+    "sample_sizes": {"classification_en": 100, "extraction": 100},
+    "endpoints": {"validation_success": {"metric": "proportion", "threshold": 0.90}}
+})
+print(f"Pre-registration compliance: {report['overall_valid']}")
 ```
 
 ---
@@ -979,7 +1041,7 @@ prompt-contracts run --report junit [--out junit.xml]
 ### Project Structure
 
 ```
-src/promptcontracts/
+promptcontracts/
   cli.py                    # CLI entry points
   core/
     loader.py               # Artefact loading and schema validation
@@ -1115,7 +1177,7 @@ pytest tests/ --cov=promptcontracts --cov-report=html
 
 ### Spec Governance
 
-The PCSL specification lives under `src/promptcontracts/spec/`. Changes to the specification follow an RFC process:
+The PCSL specification lives under `promptcontracts/spec/`. Changes to the specification follow an RFC process:
 
 1. Open a GitHub Issue describing the proposed change
 2. Label as `spec-rfc`
@@ -1170,7 +1232,7 @@ See LICENSE file for details.
 - **Documentation:** See [QUICKSTART.md](QUICKSTART.md) for getting started guide
 - **Best Practices:** Read [BEST_PRACTICES.md](BEST_PRACTICES.md) for production guidance
 - **Troubleshooting:** Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for common issues and solutions
-- **Specification:** Read `src/promptcontracts/spec/pcsl-v0.1.md` for detailed spec
+- **Specification:** Read `promptcontracts/spec/pcsl-v0.1.md` for detailed spec
 - **Examples:** Explore [examples/](examples/) for real-world use cases
 - **Issues:** Report bugs and request features via GitHub Issues
 - **Discussions:** Join community discussions on GitHub Discussions

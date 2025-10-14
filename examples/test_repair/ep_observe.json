@@ -1,5 +1,5 @@
 {
-  "$schema": "../../src/promptcontracts/spec/schema/pcsl-ep.schema.json",
+  "$schema": "../../promptcontracts/spec/schema/pcsl-ep.schema.json",
   "pcsl": "0.1.0",
   "targets": [
     {

@@ -22,14 +22,14 @@ test-cov:  ## Run tests with coverage
 	pytest --cov=promptcontracts --cov-report=html --cov-report=term
 
 lint:  ## Run linters
-	ruff check src/ tests/
-	black --check src/ tests/
-	isort --check-only src/ tests/
+	ruff check promptcontracts/ tests/
+	black --check promptcontracts/ tests/
+	isort --check-only promptcontracts/ tests/
 
 format:  ## Format code
-	black src/ tests/
-	isort src/ tests/
-	ruff check --fix src/ tests/
+	black promptcontracts/ tests/
+	isort promptcontracts/ tests/
+	ruff check --fix promptcontracts/ tests/
 
 clean:  ## Clean build artifacts
 	rm -rf build/

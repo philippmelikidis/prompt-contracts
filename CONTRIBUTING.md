@@ -141,9 +141,9 @@ Pre-commit hooks will automatically format your code:
 
 Manual formatting:
 ```bash
-black src/ tests/
-isort src/ tests/
-ruff check src/ tests/
+black promptcontracts/ tests/
+isort promptcontracts/ tests/
+ruff check promptcontracts/ tests/
 ```
 
 ### Code Structure
@@ -159,10 +159,10 @@ from promptcontracts import local_imports
 def public_function(param: str) -> dict:
     """
     Function docstring.
-    
+
     Args:
         param: Description
-        
+
     Returns:
         Description
     """
@@ -171,7 +171,7 @@ def public_function(param: str) -> dict:
 
 class PublicClass:
     """Class docstring."""
-    
+
     def __init__(self):
         """Initialize."""
         pass
@@ -233,13 +233,13 @@ For tests requiring LLMs:
 1. **Run all checks**:
    ```bash
    # Linting
-   ruff check src/ tests/
-   black --check src/ tests/
-   isort --check src/ tests/
-   
+   ruff check promptcontracts/ tests/
+   black --check promptcontracts/ tests/
+   isort --check promptcontracts/ tests/
+
    # Tests
    pytest
-   
+
    # Pre-commit (runs all hooks)
    pre-commit run --all-files
    ```
@@ -292,8 +292,8 @@ Changes to the PCSL specification require:
    - Major: Breaking changes
 
 4. **Documentation**: Update:
-   - `src/promptcontracts/spec/pcsl-vX.Y.md`
-   - JSON Schemas in `src/promptcontracts/spec/schema/`
+   - `promptcontracts/spec/pcsl-vX.Y.md`
+   - JSON Schemas in `promptcontracts/spec/schema/`
    - Examples
    - Migration guide (if breaking)
 
@@ -309,7 +309,7 @@ When modifying schemas:
 
 ```
 prompt-contracts/
-├── src/promptcontracts/          # Main package
+├── promptcontracts/          # Main package
 │   ├── core/                     # Core logic
 │   │   ├── loader.py            # Artifact loading
 │   │   ├── validator.py         # Validation logic
@@ -339,4 +339,3 @@ Contributors will be recognized in:
 - Release notes
 
 Thank you for contributing!
-

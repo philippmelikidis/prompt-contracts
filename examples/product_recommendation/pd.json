@@ -1,5 +1,5 @@
 {
-  "$schema": "../../src/promptcontracts/spec/schema/pcsl-pd.schema.json",
+  "$schema": "../../promptcontracts/spec/schema/pcsl-pd.schema.json",
   "pcsl": "0.1.0",
   "id": "product.recommendation.v1",
   "io": {

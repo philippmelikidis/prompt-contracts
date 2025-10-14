@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "prompt-contracts"
-version = "0.3.2"
+version = "0.4.0"
 description = "Contract testing framework for LLM prompts - PCSL (Prompt Contract Specification Language)"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -76,11 +76,8 @@ Documentation = "https://promptcontracts.org/docs"
 Repository = "https://github.com/promptcontracts/prompt-contracts"
 "Bug Tracker" = "https://github.com/promptcontracts/prompt-contracts/issues"
 
-[tool.setuptools]
-package-dir = {"" = "src"}
-
 [tool.setuptools.packages.find]
-where = ["src"]
+include = ["promptcontracts*"]
 
 [tool.setuptools.package-data]
 promptcontracts = ["spec/**/*.json", "spec/**/*.md"]
@@ -140,7 +137,7 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["src/promptcontracts"]
+source = ["promptcontracts"]
 omit = [
     "*/tests/*",
     "*/__pycache__/*",

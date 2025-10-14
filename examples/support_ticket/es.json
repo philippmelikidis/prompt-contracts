@@ -1,5 +1,5 @@
 {
-  "$schema": "../../src/promptcontracts/spec/schema/pcsl-es.schema.json",
+  "$schema": "../../promptcontracts/spec/schema/pcsl-es.schema.json",
   "pcsl": "0.1.0",
   "checks": [
     {
@@ -28,4 +28,3 @@
     }
   ]
 }
-

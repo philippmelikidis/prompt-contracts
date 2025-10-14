@@ -7,9 +7,9 @@ pytest -v
 
 echo ""
 echo "🎨 Schritt 2: Code-Formatierung prüfen..."
-black --check src/ tests/ || (echo "❌ Black-Formatierung nötig. Führe aus: make format" && exit 1)
-isort --check-only src/ tests/ || (echo "❌ isort nötig. Führe aus: make format" && exit 1)
-ruff check src/ tests/ || (echo "❌ Ruff-Fehler gefunden" && exit 1)
+black --check promptcontracts/ tests/ || (echo "❌ Black-Formatierung nötig. Führe aus: make format" && exit 1)
+isort --check-only promptcontracts/ tests/ || (echo "❌ isort nötig. Führe aus: make format" && exit 1)
+ruff check promptcontracts/ tests/ || (echo "❌ Ruff-Fehler gefunden" && exit 1)
 
 echo ""
 echo "✅ Schritt 3: Beispiele validieren..."

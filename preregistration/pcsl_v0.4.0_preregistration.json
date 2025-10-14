@@ -1,0 +1,51 @@
+{
+  "endpoints": {
+    "judge_agreement": {
+      "method": "Cohen's kappa",
+      "metric": "kappa",
+      "threshold": 0.8
+    },
+    "semantic_change": {
+      "method": "Wilson interval",
+      "metric": "proportion",
+      "threshold": 0.05
+    },
+    "system_comparison": {
+      "method": "McNemar test",
+      "metric": "binary_outcome",
+      "threshold": 0.05
+    },
+    "validation_success": {
+      "method": "Wilson interval",
+      "metric": "proportion",
+      "threshold": 0.9
+    }
+  },
+  "hypotheses": [
+    "PCSL validation success rate \u2265 90% (Wilson CI)",
+    "PCSL significantly outperforms CheckList (McNemar p < 0.05)",
+    "Repair policies maintain semantic invariance (< 5% change rate)",
+    "Cross-family judge agreement \u03ba \u2265 0.8 (substantial)"
+  ],
+  "metadata": {
+    "author": "Philippos Melikidis",
+    "date": "2024-01-15",
+    "osf_url": "https://osf.io/xyz",
+    "study_title": "PCSL v0.4.0 Framework Validation",
+    "version": "1.0"
+  },
+  "preregistration_hash": "78af843aefb744561f1fbf4852e57c71f24656762eae77e830bda77d828dc9f0",
+  "sample_sizes": {
+    "classification_de": 100,
+    "classification_en": 100,
+    "extraction_finance": 100,
+    "rag_qa_wiki": 120,
+    "summarization_news": 100
+  },
+  "statistical_methods": {
+    "confidence_intervals": "Wilson (n\u226510), Jeffreys (n<10)",
+    "effect_sizes": "Cohen's h for proportions",
+    "multiple_comparisons": "Benjamini-Hochberg FDR correction",
+    "significance_tests": "McNemar for binary, Bootstrap for continuous"
+  }
+}

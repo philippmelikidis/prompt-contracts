@@ -925,7 +925,7 @@ prompt-contracts run --report junit --out junit.xml
 ### Read Documentation
 
 - **Full README:** `README.md` - Complete feature documentation
-- **PCSL Specification:** `src/promptcontracts/spec/pcsl-v0.1.md` - Formal specification
+- **PCSL Specification:** `promptcontracts/spec/pcsl-v0.1.md` - Formal specification
 - **Examples:** Explore `examples/` directory for more contract examples
 
 ### Customize
@@ -946,7 +946,7 @@ prompt-contracts run --report junit --out junit.xml
 
 **Documentation:**
 - Main README: `README.md`
-- PCSL Spec: `src/promptcontracts/spec/pcsl-v0.1.md`
+- PCSL Spec: `promptcontracts/spec/pcsl-v0.1.md`
 
 **Community:**
 - GitHub Issues: Report bugs and request features
