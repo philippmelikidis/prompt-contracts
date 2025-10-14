@@ -46,10 +46,12 @@ This is the easiest way to get started. The package and all dependencies will be
 ```bash
 git clone https://github.com/philippmelikidis/prompt-contracts.git
 cd prompt-contracts
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -e .
 ```
 
-This makes the `prompt-contracts` command available globally.
+**Note:** v0.4.0 uses a standard Python package layout for maximum compatibility and stability. This ensures reliable editable installs across all environments.
 
 ### Step 3: Verify Installation
 

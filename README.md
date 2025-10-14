@@ -14,17 +14,19 @@ Prompt-Contracts is a specification and toolkit that brings contract testing to 
 
 ## What's New in v0.4.0
 
-**Statistical Rigor Enhancement & Pre-registration Release**:
+**Fundamental Installation Fix & Package Layout Migration**:
 
-- **Benjamini-Hochberg FDR Correction**: Multiple comparison correction for controlling False Discovery Rate across multiple tasks
-- **Politis-White Estimator**: Data-driven optimal block length selection for block bootstrap with spectral density estimation
-- **CI Calibration Framework**: Comprehensive simulation studies validating empirical vs. nominal coverage (Wilson: 94.8% empirical coverage)
-- **Pre-registration Validation**: Framework for validating evaluations against preregistered hypotheses, sample sizes, and endpoints
-- **Enhanced Block Bootstrap**: Automatic block size estimation via `auto_block=True` parameter
-- **Statistical Validation**: 10,000+ simulation runs for robust CI method validation
-- **Integrity Hashing**: SHA-256 hashes for preregistration file integrity and compliance checking
+- **Standard Package Layout**: Migrated from `src/` layout to standard Python package structure
+- **Robust Installation**: Fixed `ModuleNotFoundError` issues that occurred randomly after pushes or environment changes
+- **Stable Development Setup**: Reliable editable installs across all Python versions and environments
+- **Updated Tooling**: All CI/CD, linting, and build tools updated for new package structure
+- **Comprehensive Documentation**: Updated all documentation with correct paths and installation instructions
+- **Release Scripts**: Updated release and build scripts for new layout
+- **Docker Support**: Fixed Dockerfile for new package structure
 
-**All v0.3.2 features preserved** - Wilson/Jeffreys intervals, McNemar tests, cross-family judges, fair comparison protocols, repair risk analysis, and audit harnesses.
+**All v0.3.2 statistical features preserved** - Wilson/Jeffreys intervals, McNemar tests, cross-family judges, fair comparison protocols, repair risk analysis, and audit harnesses.
+
+**This release fundamentally solves the installation instability that users experienced with previous versions.**
 
 See [CHANGELOG.md](CHANGELOG.md) for complete v0.4.0 details.
 
@@ -158,8 +160,12 @@ pip install prompt-contracts
 ```bash
 git clone https://github.com/philippmelikidis/prompt-contracts.git
 cd prompt-contracts
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -e .
 ```
+
+**Note:** v0.4.0 uses a standard Python package layout for maximum compatibility and stability. If you encounter any installation issues, see [DEVELOPMENT.md](DEVELOPMENT.md) for troubleshooting.
 
 ### Setup Ollama (Optional)
 
@@ -202,48 +208,27 @@ Fixture: pwd_reset (latency: 2314ms, status: REPAIRED, retries: 0)
 Summary: 11/11 checks passed (1 PASS, 1 REPAIRED) — status: YELLOW
 ```
 
-### v0.4.0 Statistical Features Example
+### Installation Example
 
-**Multiple Comparison Correction & CI Calibration**:
+**From PyPI (recommended):**
 
-```python
-from promptcontracts.stats import (
-    benjamini_hochberg_correction,
-    percentile_bootstrap_ci,
-    calibrate_ci_coverage,
-    PreregistrationValidator
-)
+```bash
+pip install prompt-contracts
+```
 
-# FDR Correction for multiple tasks
-p_values = [0.001, 0.01, 0.03, 0.05, 0.1]  # 5 tasks
-adjusted = benjamini_hochberg_correction(p_values, alpha=0.05)
-print(f"FDR-corrected p-values: {adjusted}")
-# Output: [0.005, 0.025, 0.05, 0.0625, 0.1]
+**From source (for development):**
 
-# Automatic block size estimation
-import numpy as np
-values = np.random.choice([0, 1], size=100, p=[0.3, 0.7])
-ci_lower, ci_upper = percentile_bootstrap_ci(
-    values.tolist(),
-    B=1000,
-    auto_block=True,  # Automatically estimate optimal block size
-    seed=42
-)
-print(f"95% CI with auto block size: [{ci_lower:.3f}, {ci_upper:.3f}]")
+```bash
+git clone https://github.com/philippmelikidis/prompt-contracts.git
+cd prompt-contracts
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -e .
+```
 
-# CI Calibration validation
-results = calibrate_ci_coverage('wilson', n_sims=10000, seed=42)
-print(f"Wilson CI empirical coverage: {results['empirical_coverage']:.3f}")
-# Output: Wilson CI empirical coverage: 0.948 (target: 0.95)
-
-# Pre-registration validation
-validator = PreregistrationValidator('preregistration.json')
-report = validator.generate_validation_report({
-    "hypotheses": ["PCSL ≥ 90% success", "PCSL > CheckList"],
-    "sample_sizes": {"classification_en": 100, "extraction": 100},
-    "endpoints": {"validation_success": {"metric": "proportion", "threshold": 0.90}}
-})
-print(f"Pre-registration compliance: {report['overall_valid']}")
+**Verify installation:**
+```bash
+prompt-contracts --version
 ```
 
 ---
@@ -645,20 +630,29 @@ Summary: 6/6 checks passed (1 REPAIRED) — status: YELLOW
 
 ## Installation
 
-### From Source
+### From PyPI (Recommended)
 
 ```bash
-git clone https://github.com/promptcontracts/prompt-contracts.git
+pip install prompt-contracts
+```
+
+### From Source (Development)
+
+```bash
+git clone https://github.com/philippmelikidis/prompt-contracts.git
 cd prompt-contracts
-pip install -r requirements.txt
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -e .
 ```
 
 ### Verify Installation
 
 ```bash
-prompt-contracts --help
+prompt-contracts --version
 ```
+
+**Note:** v0.4.0 uses a standard Python package layout for maximum compatibility and stability. If you encounter any installation issues, see [DEVELOPMENT.md](DEVELOPMENT.md) for troubleshooting.
 
 ---
 
@@ -1132,7 +1126,29 @@ pytest tests/ --cov=promptcontracts --cov-report=html
 - CLI, JSON, and JUnit reporters
 - Conformance levels L1-L3 (scaffold)
 
-### Planned (v0.2)
+### Completed (v0.3.2)
+- Wilson/Jeffreys confidence intervals
+- McNemar test for paired comparisons
+- Block bootstrap for dependent data
+- Cross-family judge validation
+- Fair comparison protocols
+- Repair risk analysis
+- Audit harnesses with integrity hashing
+- Contract composition semantics
+
+### Completed (v0.4.0)
+- **Fundamental installation stability fix**
+- Migration from `src/` layout to standard package layout
+- Robust development environment setup
+- Updated tooling and CI/CD pipelines
+- Comprehensive documentation updates
+
+### Planned (v0.5)
+- **Statistical Rigor Enhancement** (moved from v0.4.0)
+  - Benjamini-Hochberg FDR correction
+  - Politis-White estimator for block bootstrap
+  - CI calibration framework
+  - Pre-registration validation
 - L3 Differential runner enhancements
   - Statistical significance testing
   - Drift detection algorithms
@@ -1147,7 +1163,7 @@ pytest tests/ --cov=promptcontracts --cov-report=html
   - Cross-field dependencies
   - String length validation
 
-### Planned (v0.3)
+### Planned (v0.6)
 - L4 Security conformance
   - Jailbreak escape-rate metrics
   - PII leakage detection
