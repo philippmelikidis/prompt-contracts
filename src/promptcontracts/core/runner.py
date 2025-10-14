@@ -297,11 +297,7 @@ class ContractRunner:
             "repair_details": {},
             "repair_ledger": repair_ledger,
             "status": status,
-            "checks": (
-                aggregated.selected_parsed
-                if aggregated.selected_parsed
-                else aggregated.samples[0].check_results
-            ),
+            "checks": aggregated.samples[0].check_results,
             "sampling_metadata": {
                 "n_samples": len(aggregated.samples),
                 "aggregation_policy": aggregated.aggregation_policy,

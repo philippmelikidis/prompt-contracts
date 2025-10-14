@@ -73,6 +73,8 @@ class Validator:
         response_text: str,
         parsed_json: Any = None,
         all_latencies: list[int] = None,
+        embedding_adapter: Any = None,
+        judge_adapter: Any = None,
     ) -> dict[str, Any]:
         """
         Run a single check.
@@ -103,6 +105,8 @@ class Validator:
                 check_spec=check_spec,
                 parsed_json=parsed_json,
                 all_latencies=all_latencies,
+                embedding_adapter=embedding_adapter,
+                judge_adapter=judge_adapter,
             )
 
             return {"type": check_type, "passed": passed, "message": message, "data": data}
@@ -120,6 +124,8 @@ class Validator:
         response_text: str,
         parsed_json: Any = None,
         all_latencies: list[int] = None,
+        embedding_adapter: Any = None,
+        judge_adapter: Any = None,
     ) -> list[dict[str, Any]]:
         """Run all checks and return results."""
         results = []
@@ -130,6 +136,8 @@ class Validator:
                 response_text=response_text,
                 parsed_json=parsed_json,
                 all_latencies=all_latencies,
+                embedding_adapter=embedding_adapter,
+                judge_adapter=judge_adapter,
             )
             results.append(result)
 

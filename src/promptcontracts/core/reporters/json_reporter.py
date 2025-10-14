@@ -22,14 +22,7 @@ class JSONReporter:
             "_metadata": {
                 "pcsl_version": results.get("pcsl_version", "0.3.0"),
                 "artifact_base_dir": results.get("artifact_base_dir"),
-                "timestamp": (
-                    results.get("targets", [{}])[0]
-                    .get("fixtures", [{}])[0]
-                    .get("artifact_paths", {})
-                    .get("run")
-                    if results.get("targets")
-                    else None
-                ),
+                "timestamp": None,  # Simplified for now
                 "sampling_enabled": any(
                     t.get("execution", {}).get("sampling", {}).get("n", 1) > 1
                     for t in results.get("targets", [])
